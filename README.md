@@ -7,6 +7,8 @@ Kotlin Android Architecture
 
 Kotlin playground to investigate some "kind-of-functional" approaches for architecture of Android apps.
 
+**Kotlin version used:** 1.1
+
 Developed By
 ------------
 * Jorge Castillo Pérez - <jorge.castillo.prz@gmail.com>
