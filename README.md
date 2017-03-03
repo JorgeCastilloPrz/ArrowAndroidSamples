@@ -1,6 +1,6 @@
 Kotlin Android Architecture
 ===========================
-[![Build Status](https://travis-ci.org/JorgeCastilloPrz/AndroidFillableLoaders.svg?branch=master)](https://travis-ci.org/JorgeCastilloPrz/AndroidFillableLoaders)
+[![Build Status](https://travis-ci.org/JorgeCastilloPrz/KotlinAndroidArchitecture.svg?branch=master)](https://travis-ci.org/JorgeCastilloPrz/KotlinAndroidArchitecture)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 
 Kotlin playground to investigate some "kind-of-functional" approaches for architecture of Android apps.
