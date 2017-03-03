@@ -3,7 +3,8 @@ Kotlin Android Architecture
 [![Build Status](https://travis-ci.org/JorgeCastilloPrz/KotlinAndroidArchitecture.svg?branch=master)](https://travis-ci.org/JorgeCastilloPrz/KotlinAndroidArchitecture)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 
-![Kotlin logo][logo]
+![Kotlin logo](./assets/kotlin_logo.png)
+
 Kotlin playground to investigate some "kind-of-functional" approaches for architecture of Android apps.
 
 Developed By
@@ -30,5 +31,4 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
-[logo]: ./assets/kotlin_logo.png
+    
