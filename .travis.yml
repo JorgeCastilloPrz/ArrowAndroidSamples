@@ -7,11 +7,6 @@ android:
     - extra-android-support
     - extra-google-m2repository
     - extra-android-m2repository
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "vNXroNa7a6+feIWRG0DgVn/041uv+nwLXvfD+mJI3pMCaL2tvtXjJqifJDfIj8INtkWxba+Lw7WZ3OC1oNw2PbaFdF3006UXtO1AJxZ0M8moRYhku4RdHbLFDU3f2GH9cWalDlgedxPSFOxDI7Dy1Kbgp3vda9BHoRFiI9PaAhvDr4Sua8zJ+oS3BSYwge2n3CVStMhTXltg95XVLJN8QR2MIgEjDx0uX/qGPopmQw9I6TZZt2gZfWDxVcJ4Bz/qKIyTW8rh9NkZSflyiWh6044ymOJToe7BeH2n/w5DIE8KuEkTeSksQKp+l5jKHqjbVVg2WlEUR8/Gh+3/GXIxbxJBzrqLuHKWC8h4ZJNtbptT1ZGxDdTMhW6rGu5vP6oCTAsZ36AkN6bDJCtHECXbayi2cOsQhUquTtvPMlya8amI1Mixr0YlzQ4MBWhyzn5aupJGywHJNFWuFT31wHYvccMEaWiD92tue9qxSqfjGOA1aeDMPVLKoKYaN9wE1AlSIpMYvwWQTnHoLdfGacGNyLm2gLJlu7AnHMm+vwRX69rF/51R5fy1e2pWF7gZCz1OQu5H2LXqGgBms7lV8hFc6lsSSqPEEglrga90MRX1bFRla0uzyJ69z4LGfkZ12I66sWKKjGWJEoNLE2xE1gm9C6syYfStIX1ikTyk3ywJQxo="
 
 addons:
   coverity_scan:
@@ -19,7 +14,7 @@ addons:
       name: "JorgeCastilloPrz/KotlinAndroidArchitecture"
       description: ""
     notification_email: jorge.castillo.prz@gmail.com
-    build_command_prepend: "Kotlin playground to investigate some "kind-of-functional" approaches for architecture of Android apps."
+    build_command_prepend: "Kotlin playground to investigate some kind-of-functional approaches for architecture of Android apps."
     build_command:   "./gradlew checkstyle build"
     branch_pattern: develop
 
