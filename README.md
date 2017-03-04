@@ -17,6 +17,8 @@ Integrate errors and successful results alltogether using monads. The purpose is
 ### Testing Coroutines
 JetBrains [introduced the concept of *Coroutines*](https://blog.jetbrains.com/kotlin/2017/03/kotlin-1-1/) on Kotlin 1.1 as an easy to use way to implement asynchronous tasks. JetBrains defines the concept like this: *"Coroutines are just much better threads: almost free to start and keep around, extremely cheap to suspend (suspension is for coroutines what blocking is for threads), very easy to compose and customize."*. So wouldn't be nice to give it a try?
 
+Let's keep an eye on [the official coroutines guide](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md).
+
 ### Alternative roads to Dependency Injection
 From centuries ago, Android devs have been using complex frameworks like Dagger to achieve dependency injection. But **DI is just a concept not bound to any library. It's is all about passing collaborators to your classes from the outside world**. That means DI would also be to just add some setters or a constructor with some collaborator arguments to your class. The moment you do that, the class gets open to receive it's behaviors from the external world, and you are free to use a framework or something just created by you to bind the instance.
 
