@@ -24,6 +24,10 @@ From centuries ago, Android devs have been using complex frameworks like Dagger 
 
 Also, we need to take into account that instances are always passed at runtime, but binding strategies can be solved at compile time, which is ideal in terms of fast error feedback. So investigating different ways to deal with DI seems like a very interesting way to find new paths to follow, as we might be able to do something different with Kotlin.
 
+#### Reader monad
+
+The initial approach is going to be based on the Reader monad, which is just a way to defer the dependency resolution to the very moment when you want to run all the execution chain in the edge of your system (i.e: Activity / Framgnet / CustomView for Android). The idea is to concatenate Reader monad construction for the whole execution chain agnostically about how dependencies are going to be resolved, and provide the dependency resolution strategy when you need to run it. It's validated at compile time also, as the bidnings are statically declared in the entity responsible of creating the mentioned strategies.
+
 Developed By
 ------------
 * Jorge Castillo Pérez - <jorge.castillo.prz@gmail.com>
