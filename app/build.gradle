@@ -42,6 +42,8 @@ dependencies {
 
   compile 'nl.komponents.kovenant:kovenant-functional:3.3.0'
   compile "org.funktionale:funktionale-all:1.0.0-final"
+  compile "com.github.h0tk3y:kotlin-monads:0.5"
+  compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.12'
 }
 repositories {
   mavenCentral()
