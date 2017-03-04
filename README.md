@@ -9,7 +9,7 @@ Kotlin playground to investigate some "kind-of-functional" approaches for archit
 
 **Kotlin version used:** 1.1
 
-## Goals
+# Goals
 
 ### Error handling
 Integrate errors and successful results alltogether using monads. The purpose is to benefit from functional structures to manage use case results by just thinking about the happy case. Exceptional cases can be managed at the end, and just when it's needed. Avoid using exceptions as those do not surpass context switch (thread boundaries) and they force you to use callbacks for async result propagation to the main thread.
