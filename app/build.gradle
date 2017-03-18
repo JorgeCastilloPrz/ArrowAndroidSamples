@@ -38,8 +38,17 @@ kotlin {
   }
 }
 
+kapt {
+  generateStubs = true
+}
+
 dependencies {
-  compile 'com.android.support:appcompat-v7:25.1.1'
+
+  def kotlinxCollectionsImmutableVersion = '0.1'
+  def kotlinxCoroutinesVersion = '0.14'
+  def anko_version = '0.9.1a'
+
+  compile 'com.android.support:appcompat-v7:25.2.0'
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   compile "org.jetbrains.anko:anko-sdk15:$anko_version"
   compile "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
@@ -49,8 +58,7 @@ dependencies {
   compile 'nl.komponents.kovenant:kovenant-functional:3.3.0'
   compile "org.funktionale:funktionale-all:1.0.0-final"
   compile "com.github.h0tk3y:kotlin-monads:0.5"
-  compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.12'
-}
-repositories {
-  mavenCentral()
+  compile "org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsImmutableVersion"
+  compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
+  compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
 }
