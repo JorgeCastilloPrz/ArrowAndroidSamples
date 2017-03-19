@@ -21,12 +21,12 @@ class SuperHeroListActivity : JobDispatcherActivity(), SuperHeroesView {
   override fun onResume() {
     super.onResume()
     launch(contextJob + UI) {
-      getSuperHeroes().run(GetHeroesReaderContext(this@SuperHeroListActivity))
-      resultText.text = "Heros loaded!"
+      val heroes = getSuperHeroes().run(GetHeroesReaderContext(this@SuperHeroListActivity))
     }
   }
 
   override fun drawHeroes(heroes: NonEmptyList<SuperHeroViewModel>) {
+    resultText.text = "Heros loaded!"
   }
 
   override fun showHeroesNotFoundError() {

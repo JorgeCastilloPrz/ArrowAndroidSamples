@@ -12,7 +12,5 @@ open class Reader<C : ReaderContext, A>(val rd: (C) -> A) {
 
   fun <B> flatMap(f: (A) -> Reader<C, B>): Reader<C, B> = Reader { c -> f(rd(c)).rd(c) }
 
-  fun run(c: C) {
-    rd(c)
-  }
+  fun run(c: C) = rd(c)
 }
