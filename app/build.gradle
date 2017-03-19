@@ -61,4 +61,6 @@ dependencies {
   compile "org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsImmutableVersion"
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
+
+  compile 'com.karumi:marvelapiclient:0.0.4'
 }
