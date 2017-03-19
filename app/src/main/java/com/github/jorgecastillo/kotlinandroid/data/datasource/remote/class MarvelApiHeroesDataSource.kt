@@ -8,7 +8,6 @@ import com.github.jorgecastillo.kotlinandroid.domain.model.SuperHero
 import com.github.jorgecastillo.kotlinandroid.domain.raiseError
 import com.github.jorgecastillo.kotlinandroid.domain.result
 import com.github.jorgecastillo.kotlinandroid.lang.NonEmptyList
-import com.github.jorgecastillo.kotlinandroid.presentation.mapper.mapApiCharacterToSuperHero
 import com.karumi.marvelapiclient.CharacterApiClient
 import com.karumi.marvelapiclient.model.CharactersQuery
 
