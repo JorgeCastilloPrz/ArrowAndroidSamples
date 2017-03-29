@@ -2,7 +2,7 @@ package com.github.jorgecastillo.kotlinandroid.view
 
 import android.os.Bundle
 import com.github.jorgecastillo.kotlinandroid.R
-import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesReaderContext
+import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.lang.NonEmptyList
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
@@ -21,7 +21,7 @@ class SuperHeroListActivity : JobDispatcherActivity(), SuperHeroesView {
   override fun onResume() {
     super.onResume()
     launch(contextJob + UI) {
-      val heroes = getSuperHeroes().run(GetHeroesReaderContext(this@SuperHeroListActivity))
+      getSuperHeroes().run(GetHeroesContext(this@SuperHeroListActivity))
     }
   }
 
