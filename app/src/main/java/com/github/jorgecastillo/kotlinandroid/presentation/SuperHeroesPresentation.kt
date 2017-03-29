@@ -15,9 +15,6 @@ interface SuperHeroesView {
   fun showServerError()
 }
 
-/**
- * Suspend function that will always run on a background thread using the CommonPool (ForkJoinPool).
- */
 fun getSuperHeroes(): Reader<GetHeroesContext, Unit> = Reader {
   val c = it
   it.getSuperHeroesInteractor.getSuperHeroes().map {
