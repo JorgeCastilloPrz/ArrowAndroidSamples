@@ -33,12 +33,6 @@ android {
   }
 }
 
-kotlin {
-  experimental {
-    coroutines 'enable'
-  }
-}
-
 kapt {
   generateStubs = true
 }
@@ -46,7 +40,7 @@ kapt {
 dependencies {
 
   def kotlinxCollectionsImmutableVersion = '0.1'
-  def kotlinxCoroutinesVersion = '0.14'
+  def kotlinxCoroutinesVersion = '0.14.1'
   def anko_version = '0.9.1a'
 
   compile 'com.android.support:appcompat-v7:25.2.0'
