@@ -1,16 +1,40 @@
 package com.github.jorgecastillo.kotlinandroid.lang
 
-import org.funktionale.composition.compose
-
 /**
  * Basic implementation of the Reader monad. Provides an "implicit" context (configuration) for
  * function execution. Intended to provide Dependency Injection.
  */
-open class Reader<C : ReaderContext, A>(val rd: (C) -> A) {
+class Reader<C : Any, out A : Any>(val run: (C) -> A) {
 
-  fun <B> map(f: (A) -> B): Reader<C, B> = Reader(f compose rd)
+  inline fun <B : Any> map(crossinline fa: (A) -> B): Reader<C, B> = Reader { c -> fa(run(c)) }
 
-  fun <B> flatMap(f: (A) -> Reader<C, B>): Reader<C, B> = Reader { c -> f(rd(c)).rd(c) }
+  inline fun <B : Any> flatMap(crossinline fa: (A) -> Reader<C, B>): Reader<C, B> = Reader { c ->
+    fa(run(c)).run(c)
+  }
 
-  fun run(c: C) = rd(c)
+  fun <B : Any> zip(other: Reader<C, B>): Reader<C, Pair<A, B>> =
+      this.flatMap { a ->
+        other.map { b -> Pair(a, b) }
+      }
+
+  /**
+   * local combinator allows switching the environment to unify two different dependency types, so
+   * you can compose readers with different type dependencies.
+   *
+   * D: type represents a different context than C.
+   * @param fd: function to convert from a D context to a context of type C.
+   */
+  inline fun <D : Any> local(crossinline fd: (D) -> C): Reader<D, A> = Reader { d ->
+    run(fd(d))
+  }
+
+  companion object Factory {
+
+    /**
+     * Lifts an A value to Reader wrapping it in a supplier function with a Nothing argument.
+     */
+    fun <C : Any, A : Any> pure(a: A): Reader<C, A> = Reader { _ -> a }
+  }
 }
+
+fun <A : Any, B : Any> ((A) -> B).reader() : Reader<A, B> = Reader(this)
