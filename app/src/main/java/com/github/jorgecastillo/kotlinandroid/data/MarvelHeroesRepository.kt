@@ -7,6 +7,6 @@ import com.github.jorgecastillo.kotlinandroid.lang.Reader
 class MarvelHeroesRepository {
 
   fun getHeroes() = Reader<GetHeroesContext, List<SuperHero>> {
-    it.heroesDataSources[0].getAll().run(it)
+    it.heroesDataSources[0].getAll()
   }
 }

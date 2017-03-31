@@ -6,7 +6,6 @@ import com.github.jorgecastillo.kotlinandroid.lang.Reader
 
 class GetSuperHeroesInteractor {
 
-  fun getSuperHeroes() = Reader<GetHeroesContext, List<SuperHero>> {
-    it.heroesRepository.getHeroes().run(it)
-  }
+  fun getSuperHeroes(): Reader<GetHeroesContext, List<SuperHero>> =
+      Reader.ask<GetHeroesContext>().flatMap { ctx -> ctx.heroesRepository.getHeroes() }
 }

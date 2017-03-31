@@ -13,9 +13,10 @@ interface SuperHeroesView {
   fun showServerError()
 }
 
-fun getSuperHeroes(): Reader<GetHeroesContext, Unit> = Reader { c: GetHeroesContext ->
-  c.getSuperHeroesInteractor.getSuperHeroes().map {
-    if (it.isEmpty()) c.view.showHeroesNotFoundError()
-    else c.view.drawHeroes(it.map { SuperHeroViewModel(it.name) })
-  }.run(c)
-}
+fun getSuperHeroes(): Reader<GetHeroesContext, Unit> =
+    Reader.ask<GetHeroesContext>().flatMap { ctx ->
+      ctx.getSuperHeroesInteractor.getSuperHeroes().map {
+        if (it.isEmpty()) ctx.view.showHeroesNotFoundError()
+        else ctx.view.drawHeroes(it.map { SuperHeroViewModel(it.name) })
+      }
+    }

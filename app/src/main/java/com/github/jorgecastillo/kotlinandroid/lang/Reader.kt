@@ -34,6 +34,8 @@ class Reader<C : Any, out A : Any>(val run: (C) -> A) {
      * Lifts an A value to Reader wrapping it in a supplier function with a Nothing argument.
      */
     fun <C : Any, A : Any> pure(a: A): Reader<C, A> = Reader { _ -> a }
+
+    fun <C : Any> ask(): Reader<C, C> = Reader { it }
   }
 }
 
