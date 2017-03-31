@@ -8,5 +8,5 @@
     android:textSize="20sp"
     android:textColor="@android:color/black"
     tools:text="Spider-Man"
-    android:padding="8dp"
+    android:padding="16dp"
     />

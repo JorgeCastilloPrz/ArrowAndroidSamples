@@ -11,7 +11,7 @@ class StubHeroesDataSource : HeroesDataSource {
     listOf(SuperHero("IronMan"), SuperHero("Spider-Man"),
         SuperHero("Batman"), SuperHero("Goku"), SuperHero("Vegeta"), SuperHero("SuperMan"),
         SuperHero("Ant-Man"), SuperHero("Krilin"), SuperHero("Super Mario"), SuperHero("Wolverine"),
-        SuperHero("Massacre"))
+        SuperHero("Massacre"), SuperHero("Jake Wharton"), SuperHero("Jesus Christ"), SuperHero("Donald Trump (villain)"))
   }
 }
 
