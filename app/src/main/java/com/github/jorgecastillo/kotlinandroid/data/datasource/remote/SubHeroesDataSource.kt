@@ -9,7 +9,9 @@ class StubHeroesDataSource : HeroesDataSource {
 
   override fun getAll() = Reader<GetHeroesContext, List<SuperHero>> {
     listOf(SuperHero("IronMan"), SuperHero("Spider-Man"),
-        SuperHero("Batman"), SuperHero("Goku"), SuperHero("Vegeta"), SuperHero("SuperMan"))
+        SuperHero("Batman"), SuperHero("Goku"), SuperHero("Vegeta"), SuperHero("SuperMan"),
+        SuperHero("Ant-Man"), SuperHero("Krilin"), SuperHero("Super Mario"), SuperHero("Wolverine"),
+        SuperHero("Massacre"))
   }
 }
 

@@ -42,8 +42,10 @@ dependencies {
   def kotlinxCollectionsImmutableVersion = '0.1'
   def kotlinxCoroutinesVersion = '0.14.1'
   def anko_version = '0.9.1a'
+  def supportLibrary = '25.3.1'
 
-  compile 'com.android.support:appcompat-v7:25.3.1'
+  compile "com.android.support:appcompat-v7:$supportLibrary"
+  compile "com.android.support:recyclerview-v7:$supportLibrary"
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   compile "org.jetbrains.anko:anko-sdk15:$anko_version"
   compile "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
