@@ -3,7 +3,6 @@ package com.github.jorgecastillo.kotlinandroid.view
 import android.os.Bundle
 import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
-import com.github.jorgecastillo.kotlinandroid.lang.NonEmptyList
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
@@ -25,7 +24,7 @@ class SuperHeroListActivity : JobDispatcherActivity(), SuperHeroesView {
     }
   }
 
-  override fun drawHeroes(heroes: NonEmptyList<SuperHeroViewModel>) {
+  override fun drawHeroes(heroes: List<SuperHeroViewModel>) {
     resultText.text = "Heros loaded!"
   }
 

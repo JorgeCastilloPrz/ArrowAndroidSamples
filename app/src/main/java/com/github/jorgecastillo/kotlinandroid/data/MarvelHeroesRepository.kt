@@ -1,8 +1,12 @@
 package com.github.jorgecastillo.kotlinandroid.data
 
-import com.github.jorgecastillo.kotlinandroid.data.datasource.HeroesDataSource
+import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
+import com.github.jorgecastillo.kotlinandroid.domain.model.SuperHero
+import com.github.jorgecastillo.kotlinandroid.lang.Reader
 
-class MarvelHeroesRepository(val dataSources: List<HeroesDataSource>) : HeroesRepository {
+class MarvelHeroesRepository {
 
-  override fun getHeroes() = dataSources[0].getAll()
+  fun getHeroes() = Reader<GetHeroesContext, List<SuperHero>> {
+    it.heroesDataSources[0].getAll().run(it)
+  }
 }
