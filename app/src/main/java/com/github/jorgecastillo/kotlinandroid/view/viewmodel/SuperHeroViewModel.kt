@@ -1,3 +1,3 @@
 package com.github.jorgecastillo.kotlinandroid.view.viewmodel
 
-data class SuperHeroViewModel(val name: String)
+data class SuperHeroViewModel(val name: String, val photoUrl: String)

@@ -8,13 +8,13 @@ import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
-import com.github.jorgecastillo.kotlinandroid.view.adapter.HeroesAdapter
+import com.github.jorgecastillo.kotlinandroid.view.adapter.HeroesCardAdapter
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
 
-  private var adapter: HeroesAdapter? = null
+  private lateinit var adapter: HeroesCardAdapter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
   fun setupList() {
     heroesList.setHasFixedSize(true)
     heroesList.layoutManager = LinearLayoutManager(this)
-    adapter = HeroesAdapter()
+    adapter = HeroesCardAdapter(itemClick = {})
     heroesList.adapter = adapter
   }
 
@@ -35,7 +35,7 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
   }
 
   override fun drawHeroes(heroes: List<SuperHeroViewModel>) {
-    adapter?.renderHeroes(heroes)
+    adapter.characters = heroes
   }
 
   override fun showHeroesNotFoundError() {

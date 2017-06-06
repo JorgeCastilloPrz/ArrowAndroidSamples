@@ -3,6 +3,7 @@ package com.github.jorgecastillo.kotlinandroid.presentation
 import com.github.jorgecastillo.architecturecomponentssample.model.error.CharacterError.*
 import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
+import com.karumi.marvelapiclient.model.MarvelImage
 import katz.Either.Left
 import katz.Either.Right
 import katz.Id
@@ -27,7 +28,11 @@ fun getSuperHeroes() = Reader.ask<GetHeroesContext>(Id).flatMap { ctx ->
         is UnknownServerError -> ctx.view.showGenericError()
         is AuthenticationError -> ctx.view.showAuthenticationError()
       }
-      is Right -> ctx.view.drawHeroes(res.b.map { SuperHeroViewModel(it.name) })
+      is Right -> ctx.view.drawHeroes(res.b.map {
+        SuperHeroViewModel(
+            it.name,
+            it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY))
+      })
     }
   }
 }
