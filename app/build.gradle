@@ -56,7 +56,7 @@ dependencies {
   compile "org.jetbrains.anko:anko-design:$anko_version"
   compile "org.jetbrains.anko:anko-recyclerview-v7:$anko_version"
 
-  compile "com.github.FineCinnamon:Katz:0.3.2"
+  compile 'com.github.FineCinnamon:Katz:fix-reader-implicits-SNAPSHOT'
   compile 'nl.komponents.kovenant:kovenant-functional:3.3.0'
   compile "org.funktionale:funktionale-all:1.0.0-final"
   compile 'com.karumi:marvelapiclient:1.0.1'

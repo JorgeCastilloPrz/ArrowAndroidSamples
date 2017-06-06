@@ -5,6 +5,7 @@ import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import katz.Either.Left
 import katz.Either.Right
+import katz.Id
 import katz.Reader
 
 interface SuperHeroesView {
@@ -18,7 +19,7 @@ interface SuperHeroesView {
   fun showAuthenticationError()
 }
 
-fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap { ctx ->
+fun getSuperHeroes() = Reader.ask<GetHeroesContext>(Id).flatMap { ctx ->
   ctx.getSuperHeroesInteractor.get().map { res ->
     when (res) {
       is Left -> when (res.a) {

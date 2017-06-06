@@ -8,6 +8,7 @@ import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery
 import katz.Either.Left
 import katz.Either.Right
+import katz.Id
 import katz.Reader
 import java.net.HttpURLConnection
 
@@ -25,7 +26,7 @@ import java.net.HttpURLConnection
  */
 class MarvelNetworkDataSource {
 
-  fun getAll() = Reader.ask<GetHeroesContext>().map {
+  fun getAll() = Reader.ask<GetHeroesContext>(Id).map {
     ctx ->
     try {
       val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
