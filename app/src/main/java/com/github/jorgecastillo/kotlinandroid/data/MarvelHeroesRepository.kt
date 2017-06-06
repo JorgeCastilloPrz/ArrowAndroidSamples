@@ -1,12 +1,15 @@
 package com.github.jorgecastillo.kotlinandroid.data
 
 import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
-import com.github.jorgecastillo.kotlinandroid.domain.model.SuperHero
-import com.github.jorgecastillo.kotlinandroid.lang.Reader
+import katz.Reader
 
 class MarvelHeroesRepository {
 
-  fun getHeroes() = Reader<GetHeroesContext, List<SuperHero>> {
-    it.heroesDataSources[0].getAll()
+  fun getHeroes() = Reader.ask<GetHeroesContext>().flatMap {
+    it.networkDataSource.getAll()
+  }
+
+  fun getHeroesFromAvengerComics() = Reader.ask<GetHeroesContext>().flatMap {
+    it.networkDataSource.getHeroesFromAvengerComics()
   }
 }

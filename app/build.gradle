@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
   compileSdkVersion 25
-  buildToolsVersion "25.0.2"
+  buildToolsVersion "25.0.3"
   defaultConfig {
     applicationId "com.github.jorgecastillo.kotlinandroid"
     minSdkVersion 16
@@ -12,6 +12,9 @@ android {
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    buildConfigField "String", "MARVEL_PUBLIC_KEY", marvelPublicKey
+    buildConfigField "String", "MARVEL_PRIVATE_KEY", marvelPrivateKey
   }
   buildTypes {
     release {
@@ -39,12 +42,13 @@ kapt {
 
 dependencies {
 
-  def kotlinxCollectionsImmutableVersion = '0.1'
-  def kotlinxCoroutinesVersion = '0.14.1'
+  def kotlinTestVersion = '2.0.0'
   def anko_version = '0.9.1a'
   def supportLibrary = '25.3.1'
 
   compile "com.android.support:appcompat-v7:$supportLibrary"
+  compile "com.android.support:design:$supportLibrary"
+  compile "com.android.support:cardview-v7:$supportLibrary"
   compile "com.android.support:recyclerview-v7:$supportLibrary"
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   compile "org.jetbrains.anko:anko-sdk15:$anko_version"
@@ -52,13 +56,11 @@ dependencies {
   compile "org.jetbrains.anko:anko-design:$anko_version"
   compile "org.jetbrains.anko:anko-recyclerview-v7:$anko_version"
 
-  compile 'com.github.FineCinnamon:Katz:v0.2'
+  compile "com.github.FineCinnamon:Katz:0.3.2"
   compile 'nl.komponents.kovenant:kovenant-functional:3.3.0'
   compile "org.funktionale:funktionale-all:1.0.0-final"
-  compile "com.github.h0tk3y:kotlin-monads:0.5"
-  compile "org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsImmutableVersion"
-  compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
-  compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
+  compile 'com.karumi:marvelapiclient:1.0.1'
 
-  compile 'com.karumi:marvelapiclient:0.0.4'
+  testCompile "io.kotlintest:kotlintest:$kotlinTestVersion"
+
 }
