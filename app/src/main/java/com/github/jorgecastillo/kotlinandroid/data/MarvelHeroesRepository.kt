@@ -6,11 +6,11 @@ import katz.Reader
 
 class MarvelHeroesRepository {
 
-  fun getHeroes() = Reader.ask<GetHeroesContext>(Id).flatMap {
+  fun getHeroes() = Reader.ask<GetHeroesContext>().flatMap {
     it.networkDataSource.getAll()
   }
 
-  fun getHeroesFromAvengerComics() = Reader.ask<GetHeroesContext>(Id).flatMap {
+  fun getHeroesFromAvengerComics() = Reader.ask<GetHeroesContext>().flatMap {
     it.networkDataSource.getHeroesFromAvengerComics()
   }
 }

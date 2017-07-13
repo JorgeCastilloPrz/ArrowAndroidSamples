@@ -6,7 +6,7 @@ import katz.Reader
 
 class GetSuperHeroesInteractor {
 
-  fun get() = Reader.ask<GetHeroesContext>(Id).flatMap {
+  fun get() = Reader.ask<GetHeroesContext>().flatMap {
     it.heroesRepository.getHeroes()
   }
 }

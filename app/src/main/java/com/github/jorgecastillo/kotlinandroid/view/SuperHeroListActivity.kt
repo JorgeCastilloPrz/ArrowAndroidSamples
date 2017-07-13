@@ -10,6 +10,7 @@ import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
 import com.github.jorgecastillo.kotlinandroid.view.adapter.HeroesCardAdapter
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
+import katz.Id
 import kotlinx.android.synthetic.main.activity_main.*
 
 class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
@@ -31,6 +32,7 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
 
   override fun onResume() {
     super.onResume()
+    val id = Id(1)
     getSuperHeroes().run(GetHeroesContext(this@SuperHeroListActivity))
   }
 

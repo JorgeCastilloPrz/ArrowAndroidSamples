@@ -26,7 +26,7 @@ import java.net.HttpURLConnection
  */
 class MarvelNetworkDataSource {
 
-  fun getAll() = Reader.ask<GetHeroesContext>(Id).map {
+  fun getAll() = Reader.ask<GetHeroesContext>().map {
     ctx ->
     try {
       val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()

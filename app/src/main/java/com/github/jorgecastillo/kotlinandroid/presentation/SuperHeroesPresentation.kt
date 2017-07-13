@@ -20,7 +20,7 @@ interface SuperHeroesView {
   fun showAuthenticationError()
 }
 
-fun getSuperHeroes() = Reader.ask<GetHeroesContext>(Id).flatMap { ctx ->
+fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap { ctx ->
   ctx.getSuperHeroesInteractor.get().map { res ->
     when (res) {
       is Left -> when (res.a) {
