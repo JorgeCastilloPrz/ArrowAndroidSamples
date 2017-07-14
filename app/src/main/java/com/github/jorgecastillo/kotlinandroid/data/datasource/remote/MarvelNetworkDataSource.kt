@@ -1,6 +1,6 @@
-package com.github.jorgecastillo.architecturecomponentssample.sourcesofdata.network
+package com.github.jorgecastillo.kotlinandroid.data.datasource.remote
 
-import com.github.jorgecastillo.architecturecomponentssample.model.error.CharacterError
+import com.github.jorgecastillo.architecturecomponentssample.model.error.CharacterError.*
 import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.functional.Future
 import com.karumi.marvelapiclient.MarvelApiException
@@ -32,12 +32,12 @@ class MarvelNetworkDataSource {
         val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
         Right<List<CharacterDto>>(ctx.apiClient.getAll(query).response.characters)
       } catch (e: MarvelAuthApiException) {
-        Left(CharacterError.AuthenticationError())
+        Left(AuthenticationError())
       } catch (e: MarvelApiException) {
         if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) {
-          Left(CharacterError.NotFoundError())
+          Left(NotFoundError())
         } else {
-          Left(CharacterError.UnknownServerError())
+          Left(UnknownServerError())
         }
       }
     }

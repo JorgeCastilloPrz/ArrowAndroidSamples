@@ -1,6 +1,6 @@
 package com.github.jorgecastillo.kotlinandroid.di.context
 
-import com.github.jorgecastillo.architecturecomponentssample.sourcesofdata.network.MarvelNetworkDataSource
+import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.MarvelNetworkDataSource
 import com.github.jorgecastillo.kotlinandroid.data.MarvelHeroesRepository
 import com.github.jorgecastillo.kotlinandroid.domain.interactor.GetHeroesFromAvengerComicsInteractor
 import com.github.jorgecastillo.kotlinandroid.domain.interactor.GetSuperHeroesInteractor
