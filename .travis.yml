@@ -23,4 +23,4 @@ addons:
     branch_pattern: develop
 
 script:
-  ./gradlew detektCheck build -DmarvelPublicKey=whatever -DmarvelPrivateKey=whatever
+  ./gradlew detektCheck build -PmarvelPublicKey=whatever -PmarvelPrivateKey=whatever
