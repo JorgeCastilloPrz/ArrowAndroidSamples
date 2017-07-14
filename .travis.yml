@@ -23,4 +23,4 @@ addons:
     branch_pattern: develop
 
 script:
-  ./gradlew checkstyle build
+  ./gradlew detektCheck build
