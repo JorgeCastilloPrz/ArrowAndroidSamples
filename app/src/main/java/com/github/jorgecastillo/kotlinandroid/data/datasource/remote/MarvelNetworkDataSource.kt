@@ -2,14 +2,14 @@ package com.github.jorgecastillo.architecturecomponentssample.sourcesofdata.netw
 
 import com.github.jorgecastillo.architecturecomponentssample.model.error.CharacterError
 import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
+import com.github.jorgecastillo.kotlinandroid.functional.Future
 import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery
-import katz.Either.Left
-import katz.Either.Right
-import katz.Id
-import katz.Reader
+import kategory.Either.Left
+import kategory.Either.Right
+import kategory.Reader
 import java.net.HttpURLConnection
 
 /**
@@ -26,32 +26,35 @@ import java.net.HttpURLConnection
  */
 class MarvelNetworkDataSource {
 
-  fun getAll() = Reader.ask<GetHeroesContext>().map {
-    ctx ->
-    try {
-      val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
-      Right<List<CharacterDto>>(ctx.apiClient.getAll(query).response.characters)
-    } catch (e: MarvelAuthApiException) {
-      Left(CharacterError.AuthenticationError())
-    } catch (e: MarvelApiException) {
-      if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) {
-        Left(CharacterError.NotFoundError())
-      } else {
-        Left(CharacterError.UnknownServerError())
+  fun getAll() = Reader.ask<GetHeroesContext>().map { ctx ->
+    Future {
+      try {
+        val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
+        Right<List<CharacterDto>>(ctx.apiClient.getAll(query).response.characters)
+      } catch (e: MarvelAuthApiException) {
+        Left(CharacterError.AuthenticationError())
+      } catch (e: MarvelApiException) {
+        if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) {
+          Left(CharacterError.NotFoundError())
+        } else {
+          Left(CharacterError.UnknownServerError())
+        }
       }
     }
   }
 
-  fun getHeroesFromAvengerComics() = getAll().map { res ->
-    when (res) {
-      is Right -> res.map {
-        it.filter {
-          it.comics.items.map { it.name }.filter {
-            it.contains("Avenger", true)
-          }.count() > 0
+  fun getHeroesFromAvengerComics() = getAll().map { future ->
+    future.map {
+      when (it) {
+        is Right -> it.map {
+          it.filter {
+            it.comics.items.map { it.name }.filter {
+              it.contains("Avenger", true)
+            }.count() > 0
+          }
         }
+        is Left -> it
       }
-      is Left -> res
     }
   }
 }

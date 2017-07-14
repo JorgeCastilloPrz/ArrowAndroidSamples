@@ -1,7 +1,7 @@
 package com.github.jorgecastillo.kotlinandroid.domain.interactor
 
 import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
-import katz.Reader
+import kategory.Reader
 
 class GetHeroesFromAvengerComicsInteractor {
 
