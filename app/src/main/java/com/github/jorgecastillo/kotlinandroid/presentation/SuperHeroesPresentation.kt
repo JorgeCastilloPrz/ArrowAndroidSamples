@@ -4,8 +4,6 @@ import com.github.jorgecastillo.architecturecomponentssample.model.error.Charact
 import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.MarvelImage
-import kategory.Either.Left
-import kategory.Either.Right
 import kategory.Reader
 
 interface SuperHeroesView {
@@ -22,18 +20,21 @@ interface SuperHeroesView {
 fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap { ctx ->
   ctx.getSuperHeroesInteractor.get().map { future ->
     future.onComplete { res ->
-      when (res) {
-        is Left -> when (res.a) {
+      res.fold({
+        error ->
+        when (error) {
           is NotFoundError -> ctx.view.showHeroesNotFoundError()
           is UnknownServerError -> ctx.view.showGenericError()
           is AuthenticationError -> ctx.view.showAuthenticationError()
         }
-        is Right -> ctx.view.drawHeroes(res.b.map {
+      }, {
+        success ->
+        ctx.view.drawHeroes(success.map {
           SuperHeroViewModel(
               it.name,
               it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY))
         })
-      }
+      })
     }
   }
 }
