@@ -36,6 +36,7 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
 
   override fun drawHeroes(heroes: List<SuperHeroViewModel>) {
     adapter.characters = heroes
+    adapter.notifyDataSetChanged()
   }
 
   override fun showHeroesNotFoundError() {
