@@ -18,7 +18,7 @@ interface SuperHeroesView {
 }
 
 fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap { ctx ->
-  ctx.getSuperHeroesInteractor.get().map { future ->
+  ctx.getSuperHeroesUseCase.get().map { future ->
     future.onComplete { res ->
       res.fold({
         error ->

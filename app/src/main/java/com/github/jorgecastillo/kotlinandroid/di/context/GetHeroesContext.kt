@@ -2,8 +2,8 @@ package com.github.jorgecastillo.kotlinandroid.di.context
 
 import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.MarvelNetworkDataSource
 import com.github.jorgecastillo.kotlinandroid.data.MarvelHeroesRepository
-import com.github.jorgecastillo.kotlinandroid.domain.interactor.GetHeroesFromAvengerComicsInteractor
-import com.github.jorgecastillo.kotlinandroid.domain.interactor.GetSuperHeroesInteractor
+import com.github.jorgecastillo.kotlinandroid.domain.interactor.GetHeroesFromAvengerComicsUseCase
+import com.github.jorgecastillo.kotlinandroid.domain.interactor.GetSuperHeroesUseCase
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesView
 import com.karumi.marvelapiclient.CharacterApiClient
 
@@ -16,6 +16,6 @@ data class GetHeroesContext(val view: SuperHeroesView) {
 
   val networkDataSource = MarvelNetworkDataSource()
   val heroesRepository = MarvelHeroesRepository()
-  val getSuperHeroesInteractor = GetSuperHeroesInteractor()
-  val getHeroesFromAvengerComicsInteractor = GetHeroesFromAvengerComicsInteractor()
+  val getSuperHeroesUseCase = GetSuperHeroesUseCase()
+  val getHeroesFromAvengerComicsUseCase = GetHeroesFromAvengerComicsUseCase()
 }
