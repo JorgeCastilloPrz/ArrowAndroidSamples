@@ -19,8 +19,8 @@ addons:
       description: ""
     notification_email: jorge.castillo.prz@gmail.com
     build_command_prepend: "Kotlin playground to investigate some kind-of-functional approaches for architecture of Android apps."
-    build_command:   "./gradlew checkstyle build"
+    build_command:   "./gradlew detektCheck build"
     branch_pattern: develop
 
 script:
-  ./gradlew detektCheck build
+  ./gradlew detektCheck build -DmarvelPublicKey=whatever -DmarvelPrivateKey=whatever
