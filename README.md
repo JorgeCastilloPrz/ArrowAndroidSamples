@@ -93,6 +93,17 @@ It's validated while you type, since the bindings are statically declared in the
 responsible of creating the mentioned strategies. That means you are not going to be able to 
 compile if your dependency tree is not correctly prepared.
 
+### No state
+
+Trying to achieve purity on this repo, as much as I can. Purity means determinism, and functional 
+behaviors are abstracted to functions, not to classes. I found out that I don't really need to play 
+with instances most of the time since all the operations and transformations over the data can 
+always be pure and just wrapped in functions as first class citizens.
+ 
+The only dependencies I am passing in on the `Reader` are the `ApiClient` and the `MVP view` 
+reference, so I can switch both at testing environments. Everything else can be exercised as it is 
+in production.
+
 Developed By
 ------------
 * Jorge Castillo Pérez - <jorge.castillo.prz@gmail.com>
