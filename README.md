@@ -104,6 +104,15 @@ The only dependencies I am passing in on the `Reader` are the `ApiClient` and th
 reference, so I can switch both at testing environments. Everything else can be exercised as it is 
 in production.
 
+Attributions
+------------
+The library being used here to fetch super heroes is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid) 
+from [Karumi](https://github.com/Karumi). Of course it's targeting the real [Marvel API](https://developer.marvel.com/), 
+so you will need to add `marvelPublicKey=your_public_key` and `marvelPrivateKey=your_private_key` to 
+your home `gradle.properties` to be able to compile or run it. You can also add them by command line: 
+
+`./gradlew detektCheck build -PmarvelPublicKey="\"whatever\"" -PmarvelPrivateKey="\"whatever\""`
+
 Developed By
 ------------
 * Jorge Castillo Pérez - <jorge.castillo.prz@gmail.com>
