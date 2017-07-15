@@ -10,13 +10,23 @@ Kotlin playground to investigate some functional progamming approaches for archi
 
 **Kotlin version used:** 1.1.3-2
 
+# Main framework being used
+
+To achieve **functional programing** over Kotlin I am using a library that we have been working on 
+in the spanish dev community. It's called [kategory](https://github.com/kategory/kategory) and it's 
+still in alpha stages, but the typeclasses and constructs available are working quite ok. The first 
+release is around the corner!
+
+Big thanks to @raulraja for his interest on making functional style feelings grow on the Android dev 
+community, along with really good devs from Spain working on it. [Here is the list of contributors](https://github.com/kategory/kategory/graphs/contributors). 
+
 # Strategies showcased on this repo
 
 * [Nested monads](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/tree/nested-monads):
 There is a separated branch for it. You will find there an approach where I am nesting monads like 
 `Reader`, `Future`, or `Either` to construct the asynchronous result I want to get.
-* Tagless-Final: TBA. Still not ready.
-* Free: TBA. Still not ready.
+* **Tagless-Final:** TBA. Still not ready.
+* **Free:** TBA. Still not ready.
 
 # Some goals to achieve
 
