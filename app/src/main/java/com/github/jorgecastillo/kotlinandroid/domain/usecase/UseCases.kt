@@ -1,12 +1,8 @@
 package com.github.jorgecastillo.kotlinandroid.domain.usecase
 
-import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
-import kategory.Reader
+import com.github.jorgecastillo.kotlinandroid.data.getHeroesFromAvengerComicsWithCachePolicy
+import com.github.jorgecastillo.kotlinandroid.data.getHeroesWithCachePolicy
 
-fun getHeroes() = Reader.ask<GetHeroesContext>().flatMap {
-  it.heroesRepository.getHeroes()
-}
+fun getHeroesUseCase() = getHeroesWithCachePolicy()
 
-fun getHeroesFromAvengerComics() = Reader.ask<GetHeroesContext>().flatMap {
-  it.heroesRepository.getHeroesFromAvengerComics()
-}
+fun getHeroesFromAvengerComicsUseCase() = getHeroesFromAvengerComicsWithCachePolicy()

@@ -2,7 +2,7 @@ package com.github.jorgecastillo.kotlinandroid.presentation
 
 import com.github.jorgecastillo.architecturecomponentssample.model.error.CharacterError.*
 import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
-import com.github.jorgecastillo.kotlinandroid.domain.usecase.getHeroes
+import com.github.jorgecastillo.kotlinandroid.domain.usecase.getHeroesUseCase
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.MarvelImage
 import kategory.Reader
@@ -19,7 +19,7 @@ interface SuperHeroesView {
 }
 
 fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap { (view) ->
-  getHeroes().map { future ->
+  getHeroesUseCase().map { future ->
     future.onComplete { res ->
       res.fold({
         error ->
