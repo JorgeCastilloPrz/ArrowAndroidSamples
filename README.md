@@ -121,8 +121,7 @@ Developed By
   <img alt="Add me to Linkedin" src="https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/blob/master/assets/linkedin.png" />
 </a>
 <a href="https://medium.com/@jorgecastillopr">
-assets/kotlin_logo.png
-  <img alt="Medium blog" src="https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/blob/master/assets/medium_logo.png" />
+  <img alt="Medium blog" src="https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/blob/master/assets/medium_blog_logo.png" />
 </a>
 
 License
