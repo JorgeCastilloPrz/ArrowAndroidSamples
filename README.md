@@ -4,7 +4,7 @@ Kotlin Android Functional Architecture
 [![Kotlin version badge](https://img.shields.io/badge/kotlin-1.1.3.2-blue.svg)](http://kotlinlang.org/)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 
-![Kotlin logo](./assets/medium_logo.png)
+![Kotlin logo](assets/kotlin_logo.png)
 
 Kotlin playground to investigate some functional progamming approaches for architecture of Android apps.
 
@@ -118,7 +118,11 @@ Developed By
 * Jorge Castillo Pérez - <jorge.castillo.prz@gmail.com>
 
 <a href="https://www.linkedin.com/in/jorgecastilloprz">
-  <img alt="Add me to Linkedin" src="https://github.com/JorgeCastilloPrz/EasyMVP/blob/master/art/linkedin.png" />
+  <img alt="Add me to Linkedin" src="https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/blob/master/assets/linkedin.png" />
+</a>
+<a href="https://medium.com/@jorgecastillopr">
+assets/kotlin_logo.png
+  <img alt="Medium blog" src="https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/blob/master/assets/medium_logo.png" />
 </a>
 
 License
