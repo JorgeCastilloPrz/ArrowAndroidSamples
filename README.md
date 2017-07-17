@@ -8,8 +8,6 @@ Kotlin Android Functional Architecture
 
 Kotlin playground to investigate some functional progamming approaches for architecture of Android apps.
 
-**Kotlin version used:** 1.1.3-2
-
 # Main framework being used
 
 To achieve **functional programing** over Kotlin I am using a library that we have been working on 
@@ -25,7 +23,11 @@ community, along with really good devs from Spain working on it. [Here is the li
 * [Nested monads](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/tree/nested-monads):
 There is a separated branch for it. You will find there an approach where I am nesting monads like 
 `Reader`, `Future`, or `Either` to construct the asynchronous result I want to get.
-* **Tagless-Final:** TBA. Still not ready.
+* [Tagless-Final](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/tree/tagless-final): 
+You have a separate branch with this approach. Tagless-Final style is focused on never depending on 
+concrete types like Option, but use Higher Kinds to just depend on typeclass defined behaviors, 
+leaving the decision about which concrete types to use to the moment when we want to run the code.
+[Look at this PR  to have a very good and detailed description of it](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/2).
 * **Free:** TBA. Still not ready.
 
 # Some goals to achieve
