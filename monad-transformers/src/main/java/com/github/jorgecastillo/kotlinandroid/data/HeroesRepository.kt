@@ -2,7 +2,11 @@ package com.github.jorgecastillo.kotlinandroid.data
 
 import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.fetchAllHeroes
 import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.fetchHeroesFromAvengerComics
+import com.karumi.marvelapiclient.model.CharacterDto
+import kategory.HK
 
-fun getHeroesWithCachePolicy() = fetchAllHeroes()
+inline fun <reified F> getHeroesWithCachePolicy(): HK<F, List<CharacterDto>> =
+    fetchAllHeroes()
 
-fun getHeroesFromAvengerComicsWithCachePolicy() = fetchHeroesFromAvengerComics()
+inline fun <reified F> getHeroesFromAvengerComicsWithCachePolicy(): HK<F, List<CharacterDto>> =
+    fetchHeroesFromAvengerComics()

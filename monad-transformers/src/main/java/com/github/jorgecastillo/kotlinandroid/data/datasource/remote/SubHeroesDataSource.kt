@@ -5,10 +5,9 @@ import com.github.jorgecastillo.kotlinandroid.domain.model.SuperHero
 
 class StubHeroesDataSource : HeroesDataSource {
 
-  override fun getAll() = listOf(SuperHero("IronMan"), SuperHero("Spider-Man"),
+  override fun getAll() = listOf(SuperHero("LambdaMan"), SuperHero("AlfredoLambda"), SuperHero("IronMan"), SuperHero("Spider-Man"),
       SuperHero("Batman"), SuperHero("Goku"), SuperHero("Vegeta"), SuperHero("SuperMan"),
       SuperHero("Ant-Man"), SuperHero("Krilin"), SuperHero("Super Mario"), SuperHero("Wolverine"),
       SuperHero("Massacre"), SuperHero("Jake Wharton"), SuperHero("Jesus Christ"),
       SuperHero("Donald Trump (villain)"))
 }
-

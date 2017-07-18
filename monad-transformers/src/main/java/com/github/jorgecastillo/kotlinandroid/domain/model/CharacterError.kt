@@ -1,5 +1,7 @@
 package com.github.jorgecastillo.kotlinandroid.domain.model
 
+import kategory.*
+
 /**
  * This sealed class represents all the possible errors that the app is going to model inside its
  * domain. All the exceptions / errors provoked by third party libraries or APIs are mapped to any
@@ -13,7 +15,7 @@ package com.github.jorgecastillo.kotlinandroid.domain.model
  * bring not required complexity to the architecture introducing asynchronous semantics.
  */
 sealed class CharacterError {
-  class AuthenticationError : CharacterError()
-  class NotFoundError : CharacterError()
-  class UnknownServerError : CharacterError()
+  object AuthenticationError : CharacterError()
+  object NotFoundError : CharacterError()
+  data class UnknownServerError(val e: Option<Throwable> = Option.None) : CharacterError()
 }
