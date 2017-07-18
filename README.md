@@ -44,7 +44,7 @@ which concrete types to use to the moment when we want to run the code.
 ## Free Monads 
 TBA. This is going to be another cool approach using FP, but still not ready.
 
-# Some goals to achieve
+# Goals and rationales
 
 ## Modeling success and error cases
 **Referential transparency** from a function perspective means that it should be clearly defining 
