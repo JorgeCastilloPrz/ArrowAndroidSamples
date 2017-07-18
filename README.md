@@ -23,7 +23,7 @@ community, along with really good devs from Spain working on it. [Here is the li
 This project showcases a different functional architecture approach per module. These are the 
 strategies / gradle modules available.
 
-* **Nested monads:**
+## Nested Monads
 On this module, you will find a not very common approach using nested Monads like `Reader`, 
 `Future`, or `Either` to construct the asynchronous result I want to get. This module showcases 
 the first natural step that any OOP Android developer would probably implement on his first attempt 
@@ -31,16 +31,18 @@ to use Monads. You need some nested behaviors, so you move on and nest them. But
 not a quite common approach on FP, since we usually would end up combining all the properties from 
 all those Monads into a single one much more powerful representing the result, just to simplify 
 things.
-* **Monad Transformers:** This would be like nested monads 2.0. The module is still not available 
+## Monad Transformers
+This would be like nested monads 2.0. The module is still not available 
 and will present a second iteration over the **nested-monads** module, where we will be applying 
 transformers to achieve the same behavior with less code. That one will be a valid final approach, 
 more common in Functional Programming.
-* **Tagless-Final:** 
+## Tagless-Final
 Tagless-Final style is focused on never depending on concrete types like Option or Try, but use 
 Higher Kinds to make our code depend on typeclass constrained behaviors, leaving the decision about 
 which concrete types to use to the moment when we want to run the code.
 [You will really want to look at this PR to have a very good and detailed description of what tagless-final is](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/2).
-* **Free:** TBA. This is going to be another cool approach using FP, but still not ready.
+## Free Monads 
+TBA. This is going to be another cool approach using FP, but still not ready.
 
 # Some goals to achieve
 
