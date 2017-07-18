@@ -58,7 +58,7 @@ kapt {
 detekt {
   version = "1.0.0.M11"
   input = "$project.projectDir.absolutePath"
-  config = "$project.projectDir/detekt.yml"
+  config = "$project.rootDir/detekt.yml"
   filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
   output = "$project.projectDir.absolutePath/reports/"
   report = "$project.projectDir.absolutePath/reports/"
