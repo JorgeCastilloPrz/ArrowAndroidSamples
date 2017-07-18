@@ -22,17 +22,6 @@ allprojects {
     maven { url 'https://kotlin.bintray.com/kotlinx' }
     maven { url "http://dl.bintray.com/kotlin/kotlin-dev" }
   }
-
-  apply plugin: 'checkstyle'
-
-  task checkstyle(type: Checkstyle) {
-    configFile file("${project.rootDir}/config/checkstyle.xml")
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**'
-
-    classpath = files()
-  }
 }
 
 task clean(type: Delete) {
