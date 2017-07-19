@@ -23,30 +23,30 @@ import java.net.HttpURLConnection
  * sometimes.
  */
 fun exceptionAsCharacterError(e: Throwable): CharacterError =
-    when (e) {
-      is MarvelAuthApiException -> AuthenticationError
-      is MarvelApiException ->
-        if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) NotFoundError
-        else UnknownServerError(Option.Some(e))
-      else -> UnknownServerError((Option.Some(e)))
-    }
+        when (e) {
+            is MarvelAuthApiException -> AuthenticationError
+            is MarvelApiException ->
+                if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) NotFoundError
+                else UnknownServerError(Option.Some(e))
+            else -> UnknownServerError((Option.Some(e)))
+        }
 
 
-inline fun <reified F> fetchAllHeroes(C : Control<F> = control()): HK<F, List<CharacterDto>> =
-    C.binding {
-      val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
-      val ctx = !C.ask()
-      C.catch(
-          { ctx.apiClient.getAll(query).response.characters },
-          { exceptionAsCharacterError(it) }
-      )
-    }
+fun fetchAllHeroes(): AsyncResult<List<CharacterDto>> =
+        AsyncResult.bind {
+            val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
+            val ctx = !AsyncResult.ask()
+            AsyncResult.catch(
+                    { ctx.apiClient.getAll(query).response.characters },
+                    { exceptionAsCharacterError(it) }
+            ).ev()
+        }
 
-inline fun <reified F> fetchHeroesFromAvengerComics(C : Control<F> = control()): HK<F, List<CharacterDto>> =
-    C.map(fetchAllHeroes(), {
-      it.filter {
-        it.comics.items.map { it.name }.filter {
-          it.contains("Avenger", true)
-        }.count() > 0
-      }
-    })
+fun fetchHeroesFromAvengerComics(): AsyncResult<List<CharacterDto>> =
+        fetchAllHeroes().map {
+            it.filter {
+                it.comics.items.map { it.name }.filter {
+                    it.contains("Avenger", true)
+                }.count() > 0
+            }
+        }
