@@ -32,10 +32,12 @@ not a quite common approach on FP, since we usually would end up combining all t
 all those Monads into a single one much more powerful representing the result, just to simplify 
 things.
 ## Monad Transformers
-This would be like nested monads 2.0. The module is still not available 
-and will present a second iteration over the **nested-monads** module, where we will be applying 
-transformers to achieve the same behavior with less code. That one will be a valid final approach, 
-more common in Functional Programming.
+This module would be like **nested monads 2.0**. It presents a second iteration over the 
+**nested-monads** module, where we are simplifying things a lot by applying transformers on top of 
+Monads to bind additional behaviors to them, so we can achieve the same behaviors with less code. 
+That indeed is a very common approach in Functional Programming. We are adding `AsyncResult` Monad 
+which is going to cover all the needs we have: DI + Error Handling + Async.
+[You probably want to look at this PR for more description details](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/3).
 ## Tagless-Final
 Tagless-Final style is focused on never depending on concrete types like Option or Try, but use 
 Higher Kinds to make our code depend on typeclass constrained behaviors, leaving the decision about 
