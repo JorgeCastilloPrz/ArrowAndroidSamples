@@ -36,20 +36,20 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
     getSuperHeroes(AsyncResult).ev().run(GetHeroesContext(this))
   }
 
-  override fun drawHeroes(heroes: List<SuperHeroViewModel>) {
+  override fun drawHeroes(heroes: List<SuperHeroViewModel>) = runOnUiThread {
     adapter.characters = heroes
     adapter.notifyDataSetChanged()
   }
 
-  override fun showHeroesNotFoundError() {
+  override fun showHeroesNotFoundError() = runOnUiThread {
     Snackbar.make(heroesList, R.string.not_found, Snackbar.LENGTH_SHORT).show()
   }
 
-  override fun showGenericError() {
+  override fun showGenericError() = runOnUiThread {
     Snackbar.make(heroesList, R.string.generic, Snackbar.LENGTH_SHORT).show()
   }
 
-  override fun showAuthenticationError() {
+  override fun showAuthenticationError() = runOnUiThread {
     Snackbar.make(heroesList, R.string.authentication, Snackbar.LENGTH_SHORT).show()
   }
 }

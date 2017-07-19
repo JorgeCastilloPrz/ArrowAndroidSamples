@@ -35,7 +35,7 @@ things.
 This module would be like **nested monads 2.0**. It presents a second iteration over the 
 **nested-monads** module, where we are simplifying things a lot by applying transformers on top of 
 Monads to bind additional behaviors to them, so we can achieve the same behaviors with less code. 
-That indeed is a very common approach in Functional Programming. We are adding `AsyncResult` Monad 
+That is indeed a very common approach in Functional Programming. We are adding `AsyncResult` Monad 
 which is going to cover all the needs we have: DI + Error Handling + Async.
 [You probably want to look at this PR for more description details](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/3).
 ## Tagless-Final

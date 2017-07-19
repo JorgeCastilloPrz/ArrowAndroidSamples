@@ -7,5 +7,4 @@ class KotlinArchitectureApp : Application() {
   override fun onCreate() {
     super.onCreate()
   }
-
 }
