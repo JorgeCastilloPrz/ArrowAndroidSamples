@@ -35,7 +35,7 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
 fun fetchAllHeroes(): AsyncResult<List<CharacterDto>> =
         AsyncResult.bind {
             val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
-            val ctx = !AsyncResult.ask()
+            val ctx = AsyncResult.ask().bind()
             AsyncResult.catch(
                     { ctx.apiClient.getAll(query).response.characters },
                     { exceptionAsCharacterError(it) }

@@ -5,7 +5,10 @@ import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.usecase.getHeroesUseCase
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.MarvelImage
+import kategory.Id
 import kategory.Reader
+import kategory.functor
+import kategory.monad
 
 interface SuperHeroesView {
 
@@ -18,8 +21,8 @@ interface SuperHeroesView {
   fun showAuthenticationError()
 }
 
-fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap { (view) ->
-  getHeroesUseCase().map { future ->
+fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap({ (view) ->
+  getHeroesUseCase().map({ future ->
     future.onComplete { res ->
       res.fold({
         error ->
@@ -37,5 +40,5 @@ fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap { (view) ->
         })
       })
     }
-  }
-}
+  }, Id.functor())
+}, Id.monad())

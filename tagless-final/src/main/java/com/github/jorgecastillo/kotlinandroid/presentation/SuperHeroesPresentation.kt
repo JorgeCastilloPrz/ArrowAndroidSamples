@@ -32,8 +32,8 @@ fun displayErrors(ctx: GetHeroesContext, c: CharacterError) : Unit {
 
 inline fun <reified F> getSuperHeroes(C: Control<F> = monadControl()): HK<F, Unit> =
     C.binding {
-      val ctx = !C.ask()
-      val result = !C.handleError(getHeroesUseCase(), { displayErrors(ctx, it); emptyList()})
+      val ctx = C.ask().bind()
+      val result = C.handleError(getHeroesUseCase(), { displayErrors(ctx, it); emptyList()}).bind()
       ctx.view.drawHeroes(result.map {
         SuperHeroViewModel(
             it.name,

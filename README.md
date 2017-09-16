@@ -11,12 +11,10 @@ Kotlin playground to investigate some functional progamming approaches for archi
 # Main framework being used
 
 To achieve **functional programing** over Kotlin I am using a library that we have been working on 
-in the spanish dev community. It's called [kategory](https://github.com/kategory/kategory) and it's 
-still in alpha stages, but the typeclasses and constructs available are working quite ok. The first 
-release is around the corner!
+in the spanish dev community. It's called [kategory](https://github.com/kategory/kategory) and its first 
+official release is around the corner!
 
-Big thanks to @raulraja for his interest on making functional style feelings grow on the Android dev 
-community, along with really good devs from Spain working on it. [Here is the list of contributors](https://github.com/kategory/kategory/graphs/contributors). 
+Big thanks to all the lib contributors which I am part of. [Here they are](https://github.com/kategory/kategory/graphs/contributors). 
 
 # Strategies showcased on this repo
 
@@ -30,7 +28,7 @@ the first natural step that any OOP Android developer would probably implement o
 to use Monads. You need some nested behaviors, so you move on and nest them. But in the end, It's 
 not a quite common approach on FP, since we usually would end up combining all the properties from 
 all those Monads into a single one much more powerful representing the result, just to simplify 
-things.
+things. We can find that improvement under **Monad Transformers** module. 
 ## Monad Transformers
 This module would be like **nested monads 2.0**. It presents a second iteration over the 
 **nested-monads** module, where we are simplifying things a lot by applying transformers on top of 

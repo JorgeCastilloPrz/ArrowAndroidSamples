@@ -35,7 +35,7 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
 inline fun <reified F> fetchAllHeroes(C : Control<F> = control()): HK<F, List<CharacterDto>> =
     C.binding {
       val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
-      val ctx = !C.ask()
+      val ctx = C.ask().bind()
       C.catch(
           { ctx.apiClient.getAll(query).response.characters },
           { exceptionAsCharacterError(it) }
