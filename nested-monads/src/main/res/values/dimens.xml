@@ -1,4 +1,5 @@
 <resources>
+    <!-- Spacings -->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="spacing_xbig">32dp</dimen>
     <dimen name="spacing_big">24dp</dimen>
@@ -9,4 +10,11 @@
 
     <dimen name="tab_layout_height">48dp</dimen>
     <dimen name="card_height">200dp</dimen>
+
+    <!-- Text sizes -->
+    <dimen name="body">16sp</dimen>
+    <dimen name="subheading">16sp</dimen>
+    <dimen name="button">14sp</dimen>
+    <dimen name="big_title">20sp</dimen>
+    <dimen name="title">18sp</dimen>
 </resources>

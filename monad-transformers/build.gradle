@@ -17,15 +17,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.3"
+  compileSdkVersion compileVersion
+  buildToolsVersion buildToolsVersion
   defaultConfig {
-    applicationId "com.github.jorgecastillo.kotlinandroid"
-    minSdkVersion 16
-    targetSdkVersion 25
-    versionCode 1
-    versionName "1.0"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    applicationId appId
+    minSdkVersion minSdk
+    targetSdkVersion targetSdk
+    versionCode version_code
+    versionName version_name
+    testInstrumentationRunner testInstrumentationRunner
 
     buildConfigField "String", "MARVEL_PUBLIC_KEY", marvelPublicKey
     buildConfigField "String", "MARVEL_PRIVATE_KEY", marvelPrivateKey
@@ -64,11 +64,6 @@ detekt {
 }
 
 dependencies {
-
-  def kotlinTestVersion = '2.0.0'
-  def supportLibrary = '25.4.0'
-  def coroutinesVersion = '0.16'
-
   compile "com.android.support:appcompat-v7:$supportLibrary"
   compile "com.android.support:design:$supportLibrary"
   compile "com.android.support:cardview-v7:$supportLibrary"

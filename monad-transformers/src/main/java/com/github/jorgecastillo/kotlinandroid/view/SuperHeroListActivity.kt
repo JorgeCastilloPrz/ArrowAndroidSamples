@@ -24,7 +24,7 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
     setupList()
   }
 
-  fun setupList() {
+  private fun setupList() {
     heroesList.setHasFixedSize(true)
     heroesList.layoutManager = LinearLayoutManager(this)
     adapter = HeroesCardAdapter(itemClick = {})

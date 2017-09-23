@@ -12,7 +12,7 @@ import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
 import com.github.jorgecastillo.kotlinandroid.view.adapter.HeroesCardAdapter
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.heroesList
 
 class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
 
@@ -24,7 +24,7 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesView {
     setupList()
   }
 
-  fun setupList() {
+  private fun setupList() {
     heroesList.setHasFixedSize(true)
     heroesList.layoutManager = LinearLayoutManager(this)
     adapter = HeroesCardAdapter(itemClick = {})

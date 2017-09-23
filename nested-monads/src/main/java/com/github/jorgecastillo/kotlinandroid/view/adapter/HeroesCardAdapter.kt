@@ -24,10 +24,7 @@ class HeroesCardAdapter(
 
   override fun getItemCount() = characters.size
 
-  class ViewHolder(view: View,
-      val itemClick: (SuperHeroViewModel) -> Unit) : RecyclerView.ViewHolder(
-      view) {
-
+  class ViewHolder(view: View, private val itemClick: (SuperHeroViewModel) -> Unit) : RecyclerView.ViewHolder(view) {
     fun bind(hero: SuperHeroViewModel) {
       with(hero) {
         Picasso.with(itemView.context).load(photoUrl).into(itemView.picture)

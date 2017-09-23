@@ -1,7 +1,10 @@
 package com.github.jorgecastillo.kotlinandroid.data.datasource.remote
 
-import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.*
-import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
+import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.AuthenticationError
+import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.NotFoundError
+import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.UnknownServerError
 import com.github.jorgecastillo.kotlinandroid.functional.Future
 import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
@@ -32,6 +35,22 @@ fun fetchAllHeroes() = Reader.ask<GetHeroesContext>().map({ ctx ->
     try {
       val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
       Right<List<CharacterDto>>(ctx.apiClient.getAll(query).response.characters)
+    } catch (e: MarvelAuthApiException) {
+      Left(AuthenticationError())
+    } catch (e: MarvelApiException) {
+      if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) {
+        Left(NotFoundError())
+      } else {
+        Left(UnknownServerError())
+      }
+    }
+  }
+}, Id.functor())
+
+fun fetchHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>().map({ ctx ->
+  Future {
+    try {
+      Right<List<CharacterDto>>(listOf(ctx.apiClient.getCharacter(heroId).response))
     } catch (e: MarvelAuthApiException) {
       Left(AuthenticationError())
     } catch (e: MarvelApiException) {
