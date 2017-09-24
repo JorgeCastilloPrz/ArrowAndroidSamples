@@ -64,6 +64,8 @@ detekt {
 }
 
 dependencies {
+  compile project(':shared')
+
   compile "com.android.support:appcompat-v7:$supportLibrary"
   compile "com.android.support:design:$supportLibrary"
   compile "com.android.support:cardview-v7:$supportLibrary"

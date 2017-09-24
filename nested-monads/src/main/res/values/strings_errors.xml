@@ -1,6 +1,0 @@
-<resources>
-    <string name="authentication">Your authentication is wrong. Oops! ¯\\_(ツ)_/¯</string>
-    <string name="generic">Something went wrong. Oops! ¯\\_(ツ)_/¯</string>
-    <string name="not_found">Heroes not found. You will have to live with that ¯\\_(ツ)_/¯</string>
-    <string name="hero_id_needed">You shouldn\'t open this activity without passing a valid heroId</string>
-</resources>
