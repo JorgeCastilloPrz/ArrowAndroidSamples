@@ -8,7 +8,7 @@ Kotlin Android Functional Architecture
 
 Kotlin playground to investigate some functional progamming approaches for architecture of Android apps.
 
-# How to import it to Android Studio / IntellIJ
+# How to import it
 
 The library being used here to fetch super heroes is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid) 
 from [Karumi](https://github.com/Karumi). Since it's targeting the real [Marvel API](https://developer.marvel.com/), 
