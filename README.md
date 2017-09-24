@@ -8,6 +8,15 @@ Kotlin Android Functional Architecture
 
 Kotlin playground to investigate some functional progamming approaches for architecture of Android apps.
 
+# How to import it to Android Studio / IntellIJ
+
+The library being used here to fetch super heroes is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid) 
+from [Karumi](https://github.com/Karumi). Since it's targeting the real [Marvel API](https://developer.marvel.com/), 
+you will need to add `marvelPublicKey=your_public_key` and `marvelPrivateKey=your_private_key` to 
+your home `gradle.properties` to be able to compile or run it. You can also add them by command line: 
+
+`./gradlew detektCheck build -PmarvelPublicKey="\"whatever\"" -PmarvelPrivateKey="\"whatever\""`
+
 # Main framework being used
 
 To achieve **functional programing** over Kotlin I am using a library that we have been working on 
@@ -123,11 +132,7 @@ in production.
 Attributions
 ------------
 The library being used here to fetch super heroes is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid) 
-from [Karumi](https://github.com/Karumi). Of course it's targeting the real [Marvel API](https://developer.marvel.com/), 
-so you will need to add `marvelPublicKey=your_public_key` and `marvelPrivateKey=your_private_key` to 
-your home `gradle.properties` to be able to compile or run it. You can also add them by command line: 
-
-`./gradlew detektCheck build -PmarvelPublicKey="\"whatever\"" -PmarvelPrivateKey="\"whatever\""`
+from [Karumi](https://github.com/Karumi).
 
 Developed By
 ------------
