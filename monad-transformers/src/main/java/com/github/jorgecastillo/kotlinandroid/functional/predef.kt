@@ -1,6 +1,6 @@
 package com.github.jorgecastillo.kotlinandroid.functional
 
-import com.github.jorgecastillo.kotlinandroid.di.context.GetHeroesContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import kategory.*
 
