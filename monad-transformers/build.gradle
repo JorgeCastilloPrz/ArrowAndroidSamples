@@ -18,7 +18,8 @@ apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
   compileSdkVersion compileVersion
-  buildToolsVersion buildToolsVersion
+  buildToolsVersion build_tools_version
+
   defaultConfig {
     applicationId appId
     minSdkVersion minSdk
@@ -76,6 +77,4 @@ dependencies {
   compile "com.squareup.picasso:picasso:2.5.2"
   compile "io.kategory:kategory:$kategory_version"
   compile 'com.karumi:marvelapiclient:1.0.1'
-
-  testCompile "io.kotlintest:kotlintest:$kotlinTestVersion"
 }

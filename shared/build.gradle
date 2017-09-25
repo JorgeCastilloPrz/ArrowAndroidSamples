@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion compileVersion
-  buildToolsVersion buildToolsVersion
+  buildToolsVersion build_tools_version
 
 
   defaultConfig {
