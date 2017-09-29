@@ -1,6 +1,6 @@
 buildscript {
   ext.kotlin_version = '1.1.4-3'
-  ext.kategory_version = '0.3.8'
+  ext.kategory_version = '0.3.9'
   ext.supportLibrary = '26.1.0'
   ext.coroutinesVersion = '0.16'
   ext.build_tools_version = '26.0.1'
@@ -13,6 +13,7 @@ buildscript {
   ext.testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
 
   repositories {
+    maven { url "http://dl.bintray.com/kategory/maven" }
     jcenter()
     google()
   }
@@ -28,6 +29,7 @@ allprojects {
   repositories {
     jcenter()
     mavenCentral()
+    maven { url "http://dl.bintray.com/kategory/maven" }
     maven { url 'https://maven.google.com' }
     maven { url 'https://kotlin.bintray.com/kotlinx' }
     maven { url "http://dl.bintray.com/kotlin/kotlin-dev" }
