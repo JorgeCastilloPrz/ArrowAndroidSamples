@@ -33,7 +33,7 @@ interface SuperHeroDetailView : HeroesView {
 
 fun onHeroListItemClick(heroId: String) = Reader.ask<GetHeroesContext>().flatMap({
     it.heroDetailsPage.go(heroId)
-}, Id.monad())
+})
 
 fun <D: SuperHeroesContext> displayErrors(c: CharacterError): AsyncResult<D, Unit> =
         AsyncResult.monad<D>().binding {

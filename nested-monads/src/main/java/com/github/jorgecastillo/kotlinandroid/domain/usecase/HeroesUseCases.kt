@@ -10,12 +10,11 @@ import com.karumi.marvelapiclient.model.MarvelImage
 import kategory.Either
 import kategory.Either.Left
 import kategory.Either.Right
-import kategory.Id
-import kategory.functor
+import kategory.*
 
 fun getHeroesUseCase() = getHeroes(NetworkOnly).map({ future ->
   future.map { discardNonValidHeroes(it) }
-}, Id.functor())
+})
 
 private fun discardNonValidHeroes(maybeHeroes: Either<CharacterError, List<CharacterDto>>) =
     when (maybeHeroes) {
@@ -32,4 +31,4 @@ fun getHeroDetailsUseCase(heroId: String) = getHeroDetails(NetworkOnly, heroId)
 
 fun getHeroesFromAvengerComicsUseCase() = getHeroesFromAvengerComics(NetworkOnly).map({ future ->
   future.map { discardNonValidHeroes(it) }
-}, Id.functor())
+})

@@ -12,9 +12,8 @@ import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery
 import kategory.Either.Left
 import kategory.Either.Right
-import kategory.Id
+import kategory.*
 import kategory.Reader
-import kategory.functor
 import java.net.HttpURLConnection
 
 /*
@@ -45,7 +44,7 @@ fun fetchAllHeroes() = Reader.ask<GetHeroesContext>().map({ ctx ->
       }
     }
   }
-}, Id.functor())
+})
 
 fun fetchHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>().map({ ctx ->
   Future {
@@ -61,7 +60,7 @@ fun fetchHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>().map({
       }
     }
   }
-}, Id.functor())
+})
 
 fun fetchHeroesFromAvengerComics() = fetchAllHeroes().map({ future ->
   future.map {
@@ -76,4 +75,4 @@ fun fetchHeroesFromAvengerComics() = fetchAllHeroes().map({ future ->
       is Left -> it
     }
   }
-}, Id.functor())
+})

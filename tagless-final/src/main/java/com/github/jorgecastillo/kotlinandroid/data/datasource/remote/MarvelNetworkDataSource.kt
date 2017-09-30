@@ -22,7 +22,7 @@ import java.net.HttpURLConnection
  * word in the title. Yep, I wanted to retrieve Avengers but the Marvel API is a bit weird
  * sometimes.
  */
-fun exceptionAsCharacterError(e: Throwable): CharacterError =
+fun ƒexceptionAsCharacterError(e: Throwable): CharacterError =
     when (e) {
       is MarvelAuthApiException -> AuthenticationError
       is MarvelApiException ->

@@ -9,10 +9,7 @@ import com.github.jorgecastillo.kotlinandroid.domain.usecase.getHeroDetailsUseCa
 import com.github.jorgecastillo.kotlinandroid.domain.usecase.getHeroesUseCase
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.MarvelImage
-import kategory.Id
-import kategory.Reader
-import kategory.functor
-import kategory.monad
+import kategory.*
 
 interface HeroesView {
   fun showNotFoundError()
@@ -30,7 +27,7 @@ interface SuperHeroDetailView : HeroesView {
 
 fun onHeroListItemClick(heroId: String) = Reader.ask<GetHeroesContext>().flatMap({
   it.heroDetailsPage.go(heroId)
-}, Id.monad())
+})
 
 fun getSuperHeroes() = Reader.ask<GetHeroesContext>()
     .flatMap({ (_, view: SuperHeroesListView) ->
@@ -52,8 +49,8 @@ fun getSuperHeroes() = Reader.ask<GetHeroesContext>()
             })
           })
         }
-      }, Id.functor())
-    }, Id.monad())
+      })
+    })
 
 fun getSuperHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>()
     .flatMap({ (_, view: SuperHeroDetailView) ->
@@ -75,5 +72,5 @@ fun getSuperHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>()
             }.first())
           })
         }
-      }, Id.functor())
-    }, Id.monad())
+      })
+    })
