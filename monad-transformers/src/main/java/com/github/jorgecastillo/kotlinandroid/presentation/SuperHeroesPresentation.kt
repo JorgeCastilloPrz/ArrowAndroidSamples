@@ -61,9 +61,9 @@ fun drawHero(hero: SuperHeroViewModel): AsyncResult<GetHeroDetailsContext, Unit>
         }.ev()
 
 fun charactersToHeroes(characters: List<CharacterDto>): List<SuperHeroViewModel> =
-        characters.map(::characterToHeroe)
+        characters.map(::characterToHero)
 
-fun characterToHeroe(character: CharacterDto): SuperHeroViewModel =
+fun characterToHero(character: CharacterDto): SuperHeroViewModel =
         SuperHeroViewModel(
                 character.id,
                 character.name,
@@ -78,6 +78,6 @@ fun getSuperHeroes(): AsyncResult<GetHeroesContext, Unit> =
 
 fun getSuperHeroDetails(heroId: String): AsyncResult<GetHeroDetailsContext, Unit> =
         getHeroDetailsUseCase<GetHeroDetailsContext>(heroId)
-                .map(::characterToHeroe)
+                .map(::characterToHero)
                 .flatMap(::drawHero)
                 .handleErrorWith(::displayErrors)
