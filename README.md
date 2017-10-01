@@ -1,7 +1,7 @@
 Kotlin Android Functional Architecture
 ======================================
 [![Build Status](https://travis-ci.org/JorgeCastilloPrz/KotlinAndroidFunctional.svg?branch=master)](https://travis-ci.org/JorgeCastilloPrz/KotlinAndroidFunctional)
-[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.1.4.3-blue.svg)](http://kotlinlang.org/)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.1.51-blue.svg)](http://kotlinlang.org/)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 
 ![Kotlin logo](assets/ic_launcher.png)
