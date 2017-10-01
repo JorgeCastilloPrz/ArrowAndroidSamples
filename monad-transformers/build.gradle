@@ -40,6 +40,12 @@ android {
     }
   }
 
+  sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+    debug.java.srcDirs += 'build/generated/source/kaptKotlin/debug'
+    release.java.srcDirs += 'build/generated/source/kaptKotlin/release'
+  }
+
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_7
     targetCompatibility JavaVersion.VERSION_1_7
