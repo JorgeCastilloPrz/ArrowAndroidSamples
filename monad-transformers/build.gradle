@@ -39,11 +39,6 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
-  sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
-    main.java.srcDirs += 'build/generated/source/kaptKotlin/debug'
-    main.java.srcDirs += 'build/generated/source/kaptKotlin/release'
-  }
 
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_7
