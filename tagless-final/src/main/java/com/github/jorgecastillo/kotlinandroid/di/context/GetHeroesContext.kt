@@ -1,12 +1,28 @@
 package com.github.jorgecastillo.kotlinandroid.di.context
 
+import android.content.Context
+import com.github.jorgecastillo.kotlinandroid.BuildConfig
+import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroDetailView
+import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesView
+import com.github.jorgecastillo.kotlinandroid.presentation.navigation.HeroDetailsPage
 import com.karumi.marvelapiclient.CharacterApiClient
+import com.karumi.marvelapiclient.MarvelApiConfig.Builder
 
-data class GetHeroesContext(val view: SuperHeroesView) {
+sealed class SuperHeroesContext() {
 
+  abstract val ctx: Context
+  abstract val view: SuperHeroesView
+
+  val heroDetailsPage = HeroDetailsPage()
   val apiClient
-    get() = CharacterApiClient(com.karumi.marvelapiclient.MarvelApiConfig.Builder(
-        com.github.jorgecastillo.kotlinandroid.BuildConfig.MARVEL_PUBLIC_KEY,
-        com.github.jorgecastillo.kotlinandroid.BuildConfig.MARVEL_PRIVATE_KEY).debug().build())
+    get() = CharacterApiClient(Builder(
+        BuildConfig.MARVEL_PUBLIC_KEY,
+        BuildConfig.MARVEL_PRIVATE_KEY).debug().build())
+
+  data class GetHeroesContext(override val ctx: Context, override val view: SuperHeroesListView) : SuperHeroesContext()
+  data class GetHeroDetailsContext(override val ctx: Context,
+      override val view: SuperHeroDetailView) : SuperHeroesContext()
 }
+
+
