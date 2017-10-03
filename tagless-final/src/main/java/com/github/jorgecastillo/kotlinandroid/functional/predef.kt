@@ -1,8 +1,6 @@
 package com.github.jorgecastillo.kotlinandroid.functional
 
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
-import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
-import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import kategory.Either
 import kategory.EitherT
@@ -34,8 +32,9 @@ class AsyncResult<D : SuperHeroesContext, A>(
 
   fun run(ctx: D): HK<EitherTKindPartial<FutureHK, CharacterError>, A> = value.run(ctx)
 
-  object GetHeroesControl: AsyncResultMonadControl<GetHeroesContext>
-  object GetHeroDetailsControl: AsyncResultMonadControl<GetHeroDetailsContext>
+  companion object {
+    operator fun <D : SuperHeroesContext> invoke() = object : AsyncResultMonadControl<D> {}
+  }
 }
 
 interface MonadControl<F, D, E> :
