@@ -1,6 +1,8 @@
 package com.github.jorgecastillo.kotlinandroid.functional
 
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import kategory.Either
 import kategory.EitherT
@@ -16,6 +18,7 @@ import kategory.MonadReader
 import kategory.Tuple2
 import kategory.Typeclass
 import kategory.andThen
+import kategory.instance
 
 class AsyncResultHK private constructor()
 typealias AsyncResultKind<D, A> = kategory.HK2<AsyncResultHK, D, A>
@@ -33,7 +36,12 @@ class AsyncResult<D : SuperHeroesContext, A>(
   fun run(ctx: D): HK<EitherTKindPartial<FutureHK, CharacterError>, A> = value.run(ctx)
 
   companion object {
-    operator fun <D : SuperHeroesContext> invoke() = object : AsyncResultMonadControl<D> {}
+    inline operator fun <reified D : SuperHeroesContext> invoke(): AsyncResultMonadControl<D> =
+        if (D::class == GetHeroesContext::class) {
+          AsyncResultMonadControl.Companion.getHeroesControl()
+        } else {
+          AsyncResultMonadControl.Companion.getHeroDetailsControl()
+        }
   }
 }
 
@@ -43,6 +51,9 @@ interface MonadControl<F, D, E> :
     Typeclass
 
 interface AsyncResultMonadControl<D : SuperHeroesContext> : MonadControl<AsyncResultKindPartial<D>, D, CharacterError> {
+
+  companion object {
+  }
 
   fun ETME(): MonadError<EitherTKindPartial<FutureHK, CharacterError>, CharacterError> =
       EitherT.monadError()
@@ -90,3 +101,9 @@ interface AsyncResultMonadControl<D : SuperHeroesContext> : MonadControl<AsyncRe
     return AsyncResult(KMR<D>().local(f, fa.ev().value))
   }
 }
+
+@instance(AsyncResultMonadControl::class)
+interface GetHeroesControlAsyncResultMonadControlInstance : AsyncResultMonadControl<GetHeroesContext>
+
+@instance(AsyncResultMonadControl::class)
+interface GetHeroDetailsControlAsyncResultMonadControlInstance : AsyncResultMonadControl<GetHeroDetailsContext>
