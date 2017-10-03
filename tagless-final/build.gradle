@@ -4,7 +4,6 @@ buildscript {
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
     maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://jitpack.io" }
   }
 
   dependencies {
@@ -12,6 +11,8 @@ buildscript {
   }
 }
 
+apply plugin: 'kotlin-kapt'
+apply from: rootProject.file('gradle/generated-kotlin-sources.gradle')
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -20,6 +21,7 @@ apply plugin: 'io.gitlab.arturbosch.detekt'
 android {
   compileSdkVersion compileVersion
   buildToolsVersion build_tools_version
+
   defaultConfig {
     applicationId appId
     minSdkVersion minSdk
@@ -37,8 +39,11 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+
   sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
+    debug.java.srcDirs += 'build/generated/source/kaptKotlin/debug'
+    release.java.srcDirs += 'build/generated/source/kaptKotlin/release'
   }
 
   compileOptions {
@@ -49,10 +54,6 @@ android {
   lintOptions {
     abortOnError false
   }
-}
-
-kapt {
-  generateStubs = true
 }
 
 detekt {
@@ -67,6 +68,7 @@ detekt {
 dependencies {
   compile project(':shared')
 
+  kapt "io.kategory:kategory-annotations-processor:$kategory_version"
   compile "com.android.support:appcompat-v7:$supportLibrary"
   compile "com.android.support:design:$supportLibrary"
   compile "com.android.support:cardview-v7:$supportLibrary"
@@ -75,6 +77,7 @@ dependencies {
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
   compile "com.squareup.picasso:picasso:2.5.2"
+  compile "io.kategory:kategory-annotations:$kategory_version"
   compile "io.kategory:kategory:$kategory_version"
   compile 'com.karumi:marvelapiclient:1.0.1'
 }

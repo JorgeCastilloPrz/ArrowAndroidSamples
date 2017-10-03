@@ -1,27 +1,41 @@
 package com.github.jorgecastillo.kotlinandroid.functional
 
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
-import kategory.*
+import kategory.Either
+import kategory.EitherT
+import kategory.EitherTKindPartial
+import kategory.HK
+import kategory.Kleisli
+import kategory.KleisliMonadErrorInstance
+import kategory.KleisliMonadErrorInstanceImplicits
+import kategory.KleisliMonadReaderInstance
+import kategory.KleisliMonadReaderInstanceImplicits
+import kategory.MonadError
+import kategory.MonadReader
+import kategory.Tuple2
+import kategory.Typeclass
+import kategory.andThen
 
-typealias Control<F> = MonadControl<F, SuperHeroesContext, CharacterError>
+class AsyncResultHK private constructor()
+typealias AsyncResultKind<D, A> = kategory.HK2<AsyncResultHK, D, A>
+typealias AsyncResultKindPartial<D> = kategory.HK<AsyncResultHK, D>
 
-inline fun <reified F> control(): Control<F> = monadControl()
+@Suppress("UNCHECKED_CAST")
+inline fun <D : SuperHeroesContext, A> AsyncResultKind<D, A>.ev(): AsyncResult<D, A> =
+    this as AsyncResult<D, A>
 
-typealias AsyncResultKind<A> = HK<AsyncResult.F, A>
+typealias Result<D, A> = Kleisli<EitherTKindPartial<FutureHK, CharacterError>, D, A>
 
-fun <A> AsyncResultKind<A>.ev(): AsyncResult<A> =
-    this as AsyncResult<A>
+class AsyncResult<D : SuperHeroesContext, A>(
+    val value: Result<D, A>) : AsyncResultKind<D, A> {
 
-typealias Result<A> = Kleisli<EitherTKindPartial<Future.F, CharacterError>, SuperHeroesContext, A>
+  fun run(ctx: D): HK<EitherTKindPartial<FutureHK, CharacterError>, A> = value.run(ctx)
 
-//There should be a monad error instance for EitherT in kategory
-class AsyncResult<A>(val value: Result<A>) : AsyncResultKind<A> {
-  class F private constructor()
-
-  companion object : AsyncResultMonadControl
-
-  fun run(ctx: SuperHeroesContext): HK<EitherTKindPartial<Future.F, CharacterError>, A> = value.run(ctx)
+  object GetHeroesControl: AsyncResultMonadControl<GetHeroesContext>
+  object GetHeroDetailsControl: AsyncResultMonadControl<GetHeroDetailsContext>
 }
 
 interface MonadControl<F, D, E> :
@@ -29,49 +43,51 @@ interface MonadControl<F, D, E> :
     MonadReader<F, D>,
     Typeclass
 
-inline fun <reified F, reified D, reified E> monadControl(): MonadControl<F, D, E> =
-    instance(InstanceParametrizedType(MonadControl::class.java,
-        listOf(F::class.java, D::class.java, E::class.java)))
+interface AsyncResultMonadControl<D : SuperHeroesContext> : MonadControl<AsyncResultKindPartial<D>, D, CharacterError> {
 
-interface AsyncResultMonadControl : MonadControl<AsyncResult.F, SuperHeroesContext, CharacterError> {
+  fun ETME(): MonadError<EitherTKindPartial<FutureHK, CharacterError>, CharacterError> =
+      EitherT.monadError()
 
-  fun ETME(): MonadError<EitherTKindPartial<Future.F, CharacterError>, CharacterError> =
-      EitherT.monadError(Future)
+  fun <D : SuperHeroesContext> KME(): KleisliMonadErrorInstance<EitherTKindPartial<FutureHK, CharacterError>, D, CharacterError> =
+      KleisliMonadErrorInstanceImplicits.instance(ETME())
 
-  fun KME(): KleisliMonadErrorInstance<EitherTKindPartial<Future.F, CharacterError>, SuperHeroesContext, CharacterError> =
-      Kleisli.monadError(ETME())
+  fun <D : SuperHeroesContext> KMR(): KleisliMonadReaderInstance<EitherTKindPartial<FutureHK, CharacterError>, D> =
+      KleisliMonadReaderInstanceImplicits.instance(ETME())
 
-  fun KMR(): KleisliMonadReaderInstance<EitherTKindPartial<Future.F, CharacterError>, SuperHeroesContext> =
-      Kleisli.monadReader(ETME())
+  override fun <A, B> map(fa: HK<AsyncResultKindPartial<D>, A>, f: (A) -> B): HK<AsyncResultKindPartial<D>, B> {
+    return AsyncResult(KME<D>().map(fa.ev().value, f))
+  }
 
-  override fun <A, B> map(fa: HK<AsyncResult.F, A>, f: (A) -> B): AsyncResult<B> =
-      AsyncResult(KME().map(fa.ev().value, f))
+  override fun <A, B> product(fa: HK<AsyncResultKindPartial<D>, A>,
+      fb: HK<AsyncResultKindPartial<D>, B>): HK<AsyncResultKindPartial<D>, Tuple2<A, B>> {
+    return AsyncResult(KME<D>().product(fa.ev().value, fb.ev().value))
+  }
 
-  override fun <A, B> product(fa: HK<AsyncResult.F, A>,
-      fb: HK<AsyncResult.F, B>): AsyncResult<Tuple2<A, B>> =
-      AsyncResult(KME().product(fa.ev().value, fb.ev().value))
+  override fun <A, B> flatMap(fa: HK<AsyncResultKindPartial<D>, A>,
+      f: (A) -> HK<AsyncResultKindPartial<D>, B>): HK<AsyncResultKindPartial<D>, B> {
+    return AsyncResult(KME<D>().flatMap(fa.ev().value, f.andThen { it.ev().value }))
+  }
 
-  override fun <A, B> flatMap(fa: HK<AsyncResult.F, A>,
-      f: (A) -> HK<AsyncResult.F, B>): AsyncResult<B> =
-      AsyncResult(KME().flatMap(fa.ev().value, f.andThen { it.ev().value }))
+  override fun <A> handleErrorWith(fa: HK<AsyncResultKindPartial<D>, A>,
+      f: (CharacterError) -> HK<AsyncResultKindPartial<D>, A>): HK<AsyncResultKindPartial<D>, A> {
+    return AsyncResult(KME<D>().handleErrorWith(fa.ev().value, f.andThen { it.ev().value }))
+  }
 
-  override fun <A> handleErrorWith(fa: HK<AsyncResult.F, A>,
-      f: (CharacterError) -> HK<AsyncResult.F, A>): AsyncResult<A> =
-      AsyncResult(KME().handleErrorWith(fa.ev().value, f.andThen { it.ev().value }))
+  override fun <A, B> tailRecM(a: A,
+      f: (A) -> HK<AsyncResultKindPartial<D>, Either<A, B>>): HK<AsyncResultKindPartial<D>, B> {
+    return AsyncResult(KME<D>().tailRecM(a, f.andThen { it.ev().value }))
+  }
 
-  override fun <A, B> tailRecM(a: A, f: (A) -> HK<AsyncResult.F, Either<A, B>>): AsyncResult<B> =
-      AsyncResult(KME().tailRecM(a, f.andThen { it.ev().value }))
+  override fun <A> raiseError(e: CharacterError): HK<AsyncResultKindPartial<D>, A> =
+      AsyncResult(KME<D>().raiseError(e))
 
-  override fun <A> raiseError(e: CharacterError): AsyncResult<A> =
-      AsyncResult(KME().raiseError(e))
+  override fun <A> pure(a: A): HK<AsyncResultKindPartial<D>, A> =
+      AsyncResult(KME<D>().pure(a))
 
-  override fun <A> pure(a: A): AsyncResult<A> =
-      AsyncResult(KME().pure(a))
+  override fun ask(): HK<AsyncResultKindPartial<D>, D> =
+      AsyncResult(KMR<D>().ask())
 
-  override fun ask(): AsyncResult<SuperHeroesContext> =
-      AsyncResult(KMR().ask())
-
-  override fun <A> local(f: (SuperHeroesContext) -> SuperHeroesContext,
-      fa: HK<AsyncResult.F, A>): AsyncResult<A> =
-      AsyncResult(KMR().local(f, fa.ev().value))
+  override fun <A> local(f: (D) -> D, fa: HK<AsyncResultKindPartial<D>, A>): HK<AsyncResultKindPartial<D>, A> {
+    return AsyncResult(KMR<D>().local(f, fa.ev().value))
+  }
 }

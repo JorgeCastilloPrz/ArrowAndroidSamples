@@ -1,11 +1,12 @@
 package com.github.jorgecastillo.kotlinandroid.data.datasource.remote
 
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.AuthenticationError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.NotFoundError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.UnknownServerError
-import com.github.jorgecastillo.kotlinandroid.functional.Control
-import com.github.jorgecastillo.kotlinandroid.functional.control
+import com.github.jorgecastillo.kotlinandroid.functional.MonadControl
 import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
@@ -37,7 +38,7 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
     }
 
 
-inline fun <reified F> fetchAllHeroes(C: Control<F> = control()): HK<F, List<CharacterDto>> =
+inline fun <reified F> fetchAllHeroes(C: MonadControl<F, GetHeroesContext, CharacterError>): HK<F, List<CharacterDto>> =
     C.binding {
       val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
       val ctx = C.ask().bind()
@@ -47,17 +48,19 @@ inline fun <reified F> fetchAllHeroes(C: Control<F> = control()): HK<F, List<Cha
       )
     }
 
-inline fun <reified F> fetchHeroDetails(heroId: String, C: Control<F> = control()): HK<F, CharacterDto> =
+inline fun <reified F> fetchHeroDetails(heroId: String,
+    C: MonadControl<F, GetHeroDetailsContext, CharacterError>): HK<F, CharacterDto> =
     C.binding {
       val ctx = C.ask().bind()
       C.catch(
-          { ctx.apiClient.getCharacter(heroId).response.characters },
+          { ctx.apiClient.getCharacter(heroId).response },
           { exceptionAsCharacterError(it) }
       )
     }
 
-inline fun <reified F> fetchHeroesFromAvengerComics(C: Control<F> = control()): HK<F, List<CharacterDto>> =
-    C.map(fetchAllHeroes(), {
+inline fun <reified F> fetchHeroesFromAvengerComics(
+    C: MonadControl<F, GetHeroesContext, CharacterError>): HK<F, List<CharacterDto>> =
+    C.map(fetchAllHeroes(C), {
       it.filter {
         it.comics.items.map { it.name }.filter {
           it.contains("Avenger", true)

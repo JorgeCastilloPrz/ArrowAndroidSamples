@@ -40,7 +40,7 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
     super.onResume()
     intent.extras?.let {
       val heroId = it.getString(EXTRA_HERO_ID)
-      getSuperHeroDetails(heroId, AsyncResult).ev().run(GetHeroDetailsContext(this, this))
+      getSuperHeroDetails(heroId, AsyncResult.GetHeroDetailsControl).ev().run(GetHeroDetailsContext(this, this))
     } ?: closeWithError()
   }
 
