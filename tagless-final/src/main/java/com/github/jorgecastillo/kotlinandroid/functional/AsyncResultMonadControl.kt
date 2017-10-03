@@ -53,40 +53,40 @@ interface AsyncResultMonadControl<D : SuperHeroesContext> : MonadControl<AsyncRe
   fun <D : SuperHeroesContext> KMR(): KleisliMonadReaderInstance<EitherTKindPartial<FutureHK, CharacterError>, D> =
       KleisliMonadReaderInstanceImplicits.instance(ETME())
 
-  override fun <A, B> map(fa: HK<AsyncResultKindPartial<D>, A>, f: (A) -> B): HK<AsyncResultKindPartial<D>, B> {
+  override fun <A, B> map(fa: HK<AsyncResultKindPartial<D>, A>, f: (A) -> B): AsyncResult<D, B> {
     return AsyncResult(KME<D>().map(fa.ev().value, f))
   }
 
   override fun <A, B> product(fa: HK<AsyncResultKindPartial<D>, A>,
-      fb: HK<AsyncResultKindPartial<D>, B>): HK<AsyncResultKindPartial<D>, Tuple2<A, B>> {
+      fb: HK<AsyncResultKindPartial<D>, B>): AsyncResult<D, Tuple2<A, B>> {
     return AsyncResult(KME<D>().product(fa.ev().value, fb.ev().value))
   }
 
   override fun <A, B> flatMap(fa: HK<AsyncResultKindPartial<D>, A>,
-      f: (A) -> HK<AsyncResultKindPartial<D>, B>): HK<AsyncResultKindPartial<D>, B> {
+      f: (A) -> HK<AsyncResultKindPartial<D>, B>): AsyncResult<D, B> {
     return AsyncResult(KME<D>().flatMap(fa.ev().value, f.andThen { it.ev().value }))
   }
 
   override fun <A> handleErrorWith(fa: HK<AsyncResultKindPartial<D>, A>,
-      f: (CharacterError) -> HK<AsyncResultKindPartial<D>, A>): HK<AsyncResultKindPartial<D>, A> {
+      f: (CharacterError) -> HK<AsyncResultKindPartial<D>, A>): AsyncResult<D, A> {
     return AsyncResult(KME<D>().handleErrorWith(fa.ev().value, f.andThen { it.ev().value }))
   }
 
   override fun <A, B> tailRecM(a: A,
-      f: (A) -> HK<AsyncResultKindPartial<D>, Either<A, B>>): HK<AsyncResultKindPartial<D>, B> {
+      f: (A) -> HK<AsyncResultKindPartial<D>, Either<A, B>>): AsyncResult<D, B> {
     return AsyncResult(KME<D>().tailRecM(a, f.andThen { it.ev().value }))
   }
 
-  override fun <A> raiseError(e: CharacterError): HK<AsyncResultKindPartial<D>, A> =
+  override fun <A> raiseError(e: CharacterError): AsyncResult<D, A> =
       AsyncResult(KME<D>().raiseError(e))
 
-  override fun <A> pure(a: A): HK<AsyncResultKindPartial<D>, A> =
+  override fun <A> pure(a: A): AsyncResult<D, A> =
       AsyncResult(KME<D>().pure(a))
 
-  override fun ask(): HK<AsyncResultKindPartial<D>, D> =
+  override fun ask(): AsyncResult<D, D> =
       AsyncResult(KMR<D>().ask())
 
-  override fun <A> local(f: (D) -> D, fa: HK<AsyncResultKindPartial<D>, A>): HK<AsyncResultKindPartial<D>, A> {
+  override fun <A> local(f: (D) -> D, fa: HK<AsyncResultKindPartial<D>, A>): AsyncResult<D, A> {
     return AsyncResult(KMR<D>().local(f, fa.ev().value))
   }
 }
