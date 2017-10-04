@@ -7,6 +7,7 @@ import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.Authen
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.NotFoundError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.UnknownServerError
 import com.github.jorgecastillo.kotlinandroid.functional.MonadControl
+import com.github.jorgecastillo.kotlinandroid.functional.monadControl
 import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
@@ -38,7 +39,8 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
     }
 
 
-inline fun <reified F> fetchAllHeroes(C: MonadControl<F, GetHeroesContext, CharacterError>): HK<F, List<CharacterDto>> =
+inline fun <reified F> fetchAllHeroes(
+    C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): HK<F, List<CharacterDto>> =
     C.binding {
       val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
       val ctx = C.ask().bind()
@@ -49,7 +51,7 @@ inline fun <reified F> fetchAllHeroes(C: MonadControl<F, GetHeroesContext, Chara
     }
 
 inline fun <reified F> fetchHeroDetails(heroId: String,
-    C: MonadControl<F, GetHeroDetailsContext, CharacterError>): HK<F, CharacterDto> =
+    C: MonadControl<F, GetHeroDetailsContext, CharacterError> = monadControl()): HK<F, CharacterDto> =
     C.binding {
       val ctx = C.ask().bind()
       C.catch(
@@ -59,7 +61,7 @@ inline fun <reified F> fetchHeroDetails(heroId: String,
     }
 
 inline fun <reified F> fetchHeroesFromAvengerComics(
-    C: MonadControl<F, GetHeroesContext, CharacterError>): HK<F, List<CharacterDto>> =
+    C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): HK<F, List<CharacterDto>> =
     C.map(fetchAllHeroes(C), {
       it.filter {
         it.comics.items.map { it.name }.filter {

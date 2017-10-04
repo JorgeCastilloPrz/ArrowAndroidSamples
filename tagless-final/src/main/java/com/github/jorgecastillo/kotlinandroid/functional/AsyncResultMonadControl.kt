@@ -36,14 +36,16 @@ class AsyncResult<D : SuperHeroesContext, A>(
   fun run(ctx: D): HK<EitherTKindPartial<FutureHK, CharacterError>, A> = value.run(ctx)
 
   companion object {
-    inline operator fun <reified D : SuperHeroesContext> invoke(): AsyncResultMonadControl<D> =
-        if (D::class == GetHeroesContext::class) {
-          AsyncResultMonadControl.Companion.getHeroesControl()
-        } else {
-          AsyncResultMonadControl.Companion.getHeroDetailsControl()
-        }
+    inline operator fun <reified D : SuperHeroesContext> invoke(): MonadControl<AsyncResultKindPartial<D>, D, CharacterError> = monadControl()
   }
 }
+
+inline fun <reified F, reified D : SuperHeroesContext> monadControl(): MonadControl<F, D, CharacterError> =
+    if (D::class == GetHeroesContext::class) {
+      AsyncResultMonadControl.Companion.getHeroesControl() as MonadControl<F, D, CharacterError>
+    } else {
+      AsyncResultMonadControl.Companion.getHeroDetailsControl() as MonadControl<F, D, CharacterError>
+    }
 
 interface MonadControl<F, D, E> :
     MonadError<F, E>,

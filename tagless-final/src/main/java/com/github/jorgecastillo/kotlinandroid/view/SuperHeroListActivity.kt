@@ -8,6 +8,7 @@ import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
 import com.github.jorgecastillo.kotlinandroid.functional.ev
+import com.github.jorgecastillo.kotlinandroid.functional.monadControl
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
 import com.github.jorgecastillo.kotlinandroid.presentation.onHeroListItemClick
