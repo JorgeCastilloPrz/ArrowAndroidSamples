@@ -40,11 +40,11 @@ class AsyncResult<D : SuperHeroesContext, A>(
   }
 }
 
-inline fun <reified F, reified D : SuperHeroesContext> monadControl(): MonadControl<F, D, CharacterError> =
+inline fun <reified F, reified D : SuperHeroesContext, E> monadControl(): MonadControl<F, D, E> =
     if (D::class == GetHeroesContext::class) {
-      AsyncResultMonadControl.Companion.getHeroesControl() as MonadControl<F, D, CharacterError>
+      AsyncResultMonadControl.Companion.getHeroesControl() as MonadControl<F, D, E>
     } else {
-      AsyncResultMonadControl.Companion.getHeroDetailsControl() as MonadControl<F, D, CharacterError>
+      AsyncResultMonadControl.Companion.getHeroDetailsControl() as MonadControl<F, D, E>
     }
 
 interface MonadControl<F, D, E> :
