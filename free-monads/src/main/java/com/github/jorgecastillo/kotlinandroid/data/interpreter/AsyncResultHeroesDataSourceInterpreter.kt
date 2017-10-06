@@ -11,8 +11,6 @@ import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.Authen
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.NotFoundError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.UnknownServerError
 import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
-import com.github.jorgecastillo.kotlinandroid.functional.AsyncResultHK
-import com.github.jorgecastillo.kotlinandroid.functional.AsyncResultKind
 import com.github.jorgecastillo.kotlinandroid.functional.AsyncResultMonadReaderInstance
 import com.github.jorgecastillo.kotlinandroid.functional.ev
 import com.github.jorgecastillo.kotlinandroid.functional.monadReader
