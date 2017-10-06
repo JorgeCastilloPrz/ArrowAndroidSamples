@@ -14,42 +14,35 @@ import kategory.monad
 /**
  * Algebra for Hero data sources. Algebras are defined by a sealed class (ADT) with a limited amount of implementations reflecting the operations available.
  */
-@higherkind sealed class HeroesDataSourceAlgebra<A> : HeroesDataSourceAlgebraKind<A> {
+@higherkind sealed class HeroesAlgebra<A> : HeroesAlgebraKind<A> {
 
-  class GetAll : HeroesDataSourceAlgebra<List<CharacterDto>>()
-  class GetSingle(val heroId: String) : HeroesDataSourceAlgebra<List<CharacterDto>>()
-  companion object : FreeMonadInstance<HeroesDataSourceAlgebraHK>
+  class GetAll : HeroesAlgebra<List<CharacterDto>>()
+  class GetSingle(val heroId: String) : HeroesAlgebra<List<CharacterDto>>()
+  companion object : FreeMonadInstance<HeroesAlgebraHK>
 }
 
-typealias FreeHeroesDataSource<A> = Free<HeroesDataSourceAlgebraHK, A>
+typealias FreeHeroesAlgebra<A> = Free<HeroesAlgebraHK, A>
 
-inline fun <reified F> Free<HeroesDataSourceAlgebraHK, List<CharacterDto>>.runList(
-    interpreter: FunctionK<HeroesDataSourceAlgebraHK, F>, MF: Monad<F> = monad()): HK<F, List<CharacterDto>> =
-    this.foldMap(interpreter, MF)
-
-inline fun <reified F> Free<HeroesDataSourceAlgebraHK, CharacterDto>.runSingle(
-    interpreter: FunctionK<HeroesDataSourceAlgebraHK, F>, MF: Monad<F> = monad()): HK<F, CharacterDto> =
+inline fun <reified F> Free<HeroesAlgebraHK, List<CharacterDto>>.run(
+    interpreter: FunctionK<HeroesAlgebraHK, F>, MF: Monad<F> = monad()): HK<F, List<CharacterDto>> =
     this.foldMap(interpreter, MF)
 
 /**
- * Module definition. Here we lift to the Free context all the operation blocks defined on the algebra.
+ * Module definition (Data Source methods). Here we lift to the Free context all the operation blocks defined on the algebra.
  */
-interface HeroesDataSource {
+fun getAllHeroes(): FreeHeroesAlgebra<List<CharacterDto>> =
+    Free.liftF(HeroesAlgebra.GetAll())
 
-  fun getAll(): FreeHeroesDataSource<List<CharacterDto>> =
-      Free.liftF(HeroesDataSourceAlgebra.GetAll())
+fun getSingleHero(heroId: String): FreeHeroesAlgebra<List<CharacterDto>> =
+    Free.liftF(HeroesAlgebra.GetSingle(heroId))
 
-  fun getSingle(heroId: String): FreeHeroesDataSource<List<CharacterDto>> =
-      Free.liftF(HeroesDataSourceAlgebra.GetSingle(heroId))
-
-  /**
-   * More complex operation using the resting operation blocks already lifted to Free.
-   */
-  fun getAllFromAvengerComics(): FreeHeroesDataSource<List<CharacterDto>> = getAll().map {
-    it.filter {
-      it.comics.items.map { it.name }.filter {
-        it.contains("Avenger", true)
-      }.count() > 0
-    }
+/**
+ * More complex operation using the resting operation blocks already lifted to Free.
+ */
+fun getAllFromAvengerComics(): FreeHeroesAlgebra<List<CharacterDto>> = getAllHeroes().map {
+  it.filter {
+    it.comics.items.map { it.name }.filter {
+      it.contains("Avenger", true)
+    }.count() > 0
   }
 }

@@ -1,7 +1,7 @@
 package com.github.jorgecastillo.kotlinandroid.data.interpreter
 
 import com.github.jorgecastillo.kotlinandroid.data.algebra.HeroesDataSource
-import com.github.jorgecastillo.kotlinandroid.data.algebra.HeroesDataSourceAlgebra
+import com.github.jorgecastillo.kotlinandroid.data.algebra.HeroesAlgebra
 import com.github.jorgecastillo.kotlinandroid.data.algebra.HeroesDataSourceAlgebraHK
 import com.github.jorgecastillo.kotlinandroid.data.algebra.ev
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
@@ -22,7 +22,6 @@ import kategory.FunctionK
 import kategory.HK
 import kategory.Option
 import kategory.binding
-import kategory.foldMap
 import java.net.HttpURLConnection
 
 fun test(): Unit {
@@ -39,8 +38,8 @@ inline fun <reified F, D : SuperHeroesContext> asyncResultDataSourceInterpreter(
       override fun <A> invoke(fa: HK<HeroesDataSourceAlgebraHK, A>): HK<F, A> {
         val op = fa.ev()
         return when (op) {
-          is HeroesDataSourceAlgebra.GetAll -> getAllHeroesAsyncResult(ARM) as HK<F, A>
-          is HeroesDataSourceAlgebra.GetSingle -> getHeroDetails(ARM, op.heroId) as HK<F, A>
+          is HeroesAlgebra.GetAll -> getAllHeroesAsyncResult(ARM) as HK<F, A>
+          is HeroesAlgebra.GetSingle -> getHeroDetails(ARM, op.heroId) as HK<F, A>
         }
       }
     }
