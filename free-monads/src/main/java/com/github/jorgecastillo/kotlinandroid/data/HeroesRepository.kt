@@ -4,9 +4,9 @@ import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.LocalFirst
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.LocalOnly
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.NetworkFirst
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.NetworkOnly
-import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.fetchAllHeroes
-import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.fetchHeroDetails
-import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.fetchHeroesFromAvengerComics
+import com.github.jorgecastillo.kotlinandroid.data.interpreter.fetchAllHeroes
+import com.github.jorgecastillo.kotlinandroid.data.interpreter.getHeroDetails
+import com.github.jorgecastillo.kotlinandroid.data.interpreter.fetchHeroesFromAvengerComics
 import com.karumi.marvelapiclient.model.CharacterDto
 import kategory.HK
 
@@ -25,10 +25,13 @@ inline fun <reified F> getHeroesWithCachePolicy(policy: CachePolicy): HK<F, List
 }
 
 inline fun <reified F> getHeroDetails(policy: CachePolicy, heroId: String): HK<F, CharacterDto> = when (policy) {
-  is NetworkOnly -> fetchHeroDetails(heroId)
-  is NetworkFirst -> fetchHeroDetails(heroId) // TODO change to conditional call
-  is LocalOnly -> fetchHeroDetails(heroId) // TODO change to local only cache call
-  is LocalFirst -> fetchHeroDetails(heroId) // TODO change to conditional call
+  is NetworkOnly -> getHeroDetails(heroId)
+  is NetworkFirst -> getHeroDetails(
+      heroId) // TODO change to conditional call
+  is LocalOnly -> getHeroDetails(
+      heroId) // TODO change to local only cache call
+  is LocalFirst -> getHeroDetails(
+      heroId) // TODO change to conditional call
 }
 
 inline fun <reified F> getHeroesFromAvengerComicsWithCachePolicy(policy: CachePolicy): HK<F, List<CharacterDto>> =
