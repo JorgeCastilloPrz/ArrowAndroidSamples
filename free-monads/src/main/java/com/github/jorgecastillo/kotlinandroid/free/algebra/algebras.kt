@@ -18,6 +18,8 @@ import kategory.monad
 
   class GetAll : HeroesAlgebra<List<CharacterDto>>()
   class GetSingle(val heroId: String) : HeroesAlgebra<List<CharacterDto>>()
+  class HandlePresentationErrors : HeroesAlgebra<Unit>()
+  class DrawHeroes : HeroesAlgebra<Unit>()
   companion object : FreeMonadInstance<HeroesAlgebraHK>
 }
 
@@ -35,6 +37,12 @@ fun getAllHeroes(): FreeHeroesAlgebra<List<CharacterDto>> =
 
 fun getSingleHero(heroId: String): FreeHeroesAlgebra<List<CharacterDto>> =
     Free.liftF(HeroesAlgebra.GetSingle(heroId))
+
+fun handlePresentationErrors(): FreeHeroesAlgebra<Unit> =
+    Free.liftF(HeroesAlgebra.HandlePresentationErrors())
+
+fun drawHeroes(): FreeHeroesAlgebra<Unit> =
+    Free.liftF(HeroesAlgebra.DrawHeroes())
 
 /**
  * More complex operation using the resting operation blocks already lifted to Free.

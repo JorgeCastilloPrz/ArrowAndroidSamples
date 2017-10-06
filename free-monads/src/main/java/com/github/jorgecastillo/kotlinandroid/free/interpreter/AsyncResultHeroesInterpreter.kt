@@ -37,6 +37,8 @@ inline fun <reified F, D : SuperHeroesContext> asyncResultDataSourceInterpreter(
         return when (op) {
           is HeroesAlgebra.GetAll -> getAllHeroesAsyncResult(ARM) as HK<F, A>
           is HeroesAlgebra.GetSingle -> getHeroDetails(ARM, op.heroId) as HK<F, A>
+          is HeroesAlgebra.HandlePresentationErrors -> TODO()
+          is HeroesAlgebra.DrawHeroes -> TODO()
         }
       }
     }
