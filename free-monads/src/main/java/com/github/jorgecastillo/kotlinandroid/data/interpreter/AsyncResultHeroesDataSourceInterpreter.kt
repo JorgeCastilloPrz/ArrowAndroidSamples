@@ -35,14 +35,14 @@ fun test(): Unit {
   heroesDS.getAll().foldMap(asyncResultDataSourceInterpreter(MR), MR)
 }
 
-inline fun <D : SuperHeroesContext> asyncResultDataSourceInterpreter(
-    ARM: AsyncResultMonadReaderInstance<D>): FunctionK<HeroesDataSourceAlgebraHK, AsyncResultHK> =
-    object : FunctionK<HeroesDataSourceAlgebraHK, AsyncResultHK> {
-      override fun <A> invoke(fa: HK<HeroesDataSourceAlgebraHK, A>): AsyncResult<D, A> {
+inline fun <reified F, D : SuperHeroesContext> asyncResultDataSourceInterpreter(
+    ARM: AsyncResultMonadReaderInstance<D>): FunctionK<HeroesDataSourceAlgebraHK, F> =
+    object : FunctionK<HeroesDataSourceAlgebraHK, F> {
+      override fun <A> invoke(fa: HK<HeroesDataSourceAlgebraHK, A>): HK<F, A> {
         val op = fa.ev()
         return when (op) {
-          is HeroesDataSourceAlgebra.GetAll -> getAllHeroesAsyncResult(ARM) as HK<AsyncResultHK, A>
-          is HeroesDataSourceAlgebra.GetSingle -> getHeroDetails(ARM, op.heroId) as HK<AsyncResultHK, A>
+          is HeroesDataSourceAlgebra.GetAll -> getAllHeroesAsyncResult(ARM) as HK<F, A>
+          is HeroesDataSourceAlgebra.GetSingle -> getHeroDetails(ARM, op.heroId) as HK<F, A>
         }
       }
     }
