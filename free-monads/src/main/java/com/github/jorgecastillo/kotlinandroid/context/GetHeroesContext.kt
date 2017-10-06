@@ -9,7 +9,7 @@ import com.github.jorgecastillo.kotlinandroid.presentation.navigation.HeroDetail
 import com.karumi.marvelapiclient.CharacterApiClient
 import com.karumi.marvelapiclient.MarvelApiConfig.Builder
 
-sealed class SuperHeroesContext() {
+sealed class SuperHeroesContext {
 
   abstract val ctx: Context
   abstract val view: SuperHeroesView

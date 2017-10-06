@@ -8,9 +8,9 @@ import kategory.FreeMonadInstance
 import kategory.FunctionK
 import kategory.HK
 import kategory.Monad
+import kategory.flatMap
 import kategory.foldMap
 import kategory.higherkind
-import kategory.map
 import kategory.monad
 
 /**
@@ -18,8 +18,8 @@ import kategory.monad
  */
 @higherkind sealed class HeroesAlgebra<A> : HeroesAlgebraKind<A> {
 
-  class GetAll : HeroesAlgebra<List<CharacterDto>>()
-  class GetSingle(val heroId: String) : HeroesAlgebra<List<CharacterDto>>()
+  class GetAll : HeroesAlgebra<Either<CharacterError, List<CharacterDto>>>()
+  class GetSingle(val heroId: String) : HeroesAlgebra<Either<CharacterError, List<CharacterDto>>>()
   class HandlePresentationEffects(val result: Either<CharacterError, List<CharacterDto>>) : HeroesAlgebra<Unit>()
   companion object : FreeMonadInstance<HeroesAlgebraHK>
 }
@@ -33,22 +33,11 @@ inline fun <reified F> Free<HeroesAlgebraHK, List<CharacterDto>>.run(
 /**
  * Module definition (Data Source methods). Here we lift to the Free context all the operation blocks defined on the algebra.
  */
-fun getAllHeroes(): FreeHeroesAlgebra<List<CharacterDto>> =
+fun getAllHeroes(): FreeHeroesAlgebra<Either<CharacterError, List<CharacterDto>>> =
     Free.liftF(HeroesAlgebra.GetAll())
 
-fun getSingleHero(heroId: String): FreeHeroesAlgebra<List<CharacterDto>> =
+fun getSingleHero(heroId: String): FreeHeroesAlgebra<Either<CharacterError, List<CharacterDto>>> =
     Free.liftF(HeroesAlgebra.GetSingle(heroId))
 
-fun handlePresentationEffects(result: Either<CharacterError, List<CharacterDto>>): FreeHeroesAlgebra<Unit> =
-    Free.liftF(HeroesAlgebra.HandlePresentationEffects(result))
-
-/**
- * More complex operation using the resting operation blocks already lifted to Free.
- */
-fun getAllFromAvengerComics(): FreeHeroesAlgebra<List<CharacterDto>> = getAllHeroes().map {
-  it.filter {
-    it.comics.items.map { it.name }.filter {
-      it.contains("Avenger", true)
-    }.count() > 0
-  }
-}
+fun fetchAndDrawHeroes(result: Either<CharacterError, List<CharacterDto>>): FreeHeroesAlgebra<Unit> =
+    getAllHeroes().flatMap { Free.liftF(HeroesAlgebra.HandlePresentationEffects(result)) }

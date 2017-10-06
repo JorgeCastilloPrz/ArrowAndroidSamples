@@ -38,17 +38,16 @@ inline fun <reified F> onHeroListItemClick(heroId: String, C: MonadControl<F, Ge
       it.heroDetailsPage.go(heroId, C)
     })
 
-fun getSuperHeroes(): Free<HeroesAlgebraHK, Unit> =
-    getHeroesUseCase().flatMap {
-      ctx.view.drawHeroes(result.map {
-        SuperHeroViewModel(
-            it.id,
-            it.name,
-            it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
-            it.description)
-      })
-    }
-    /*C.binding {
+fun displayErrors(ctx: SuperHeroesContext, c: CharacterError): Unit {
+  when (c) {
+    is NotFoundError -> ctx.view.showNotFoundError()
+    is UnknownServerError -> ctx.view.showGenericError()
+    is AuthenticationError -> ctx.view.showAuthenticationError()
+  }
+}
+
+inline fun <reified F> getSuperHeroes(C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): Free<HeroesAlgebraHK, Unit> =
+    C.binding {
       val ctx = C.ask().bind()
       val result = C.handleError(getHeroesUseCase(), { displayErrors(ctx, it); emptyList() }).bind()
       ctx.view.drawHeroes(result.map {
@@ -59,7 +58,7 @@ fun getSuperHeroes(): Free<HeroesAlgebraHK, Unit> =
             it.description)
       })
       C.pure(Unit)
-    }*/
+    }
 
 inline fun <reified F> getSuperHeroDetails(heroId: String,
     C: MonadControl<F, GetHeroDetailsContext, CharacterError> = monadControl()): HK<F, Unit> =

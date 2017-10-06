@@ -1,11 +1,12 @@
 package com.github.jorgecastillo.kotlinandroid.free.interpreter
 
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.AuthenticationError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.NotFoundError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.UnknownServerError
-import com.github.jorgecastillo.kotlinandroid.domain.usecase.getHeroesUseCase
 import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesAlgebra
 import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesDataSourceAlgebraHK
 import com.github.jorgecastillo.kotlinandroid.free.algebra.ev
@@ -17,13 +18,14 @@ import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery.Builder
-import com.karumi.marvelapiclient.model.MarvelImage.Size.PORTRAIT_UNCANNY
+import com.karumi.marvelapiclient.model.MarvelImage
 import kategory.Either
+import kategory.Either.Left
+import kategory.Either.Right
 import kategory.FunctionK
 import kategory.HK
 import kategory.Option
 import kategory.binding
-import kategory.flatMap
 import java.net.HttpURLConnection
 
 /*fun test(): Unit {
@@ -48,23 +50,23 @@ inline fun <reified F, D : SuperHeroesContext> asyncResultDataSourceInterpreter(
     }
 
 fun <D : SuperHeroesContext> getAllHeroesAsyncResult(
-    AR: AsyncResultMonadReaderInstance<D>): AsyncResult<D, List<CharacterDto>> {
+    AR: AsyncResultMonadReaderInstance<D>): AsyncResult<D, Either<CharacterError, List<CharacterDto>>> {
   return AR.binding {
     val query = Builder.create().withOffset(0).withLimit(50).build()
     val ctx = AR.ask().bind()
     AR.catch(
-        { ctx.apiClient.getAll(query).response.characters.toList() },
+        { Right(ctx.apiClient.getAll(query).response.characters.toList()) },
         { exceptionAsCharacterError(it) }
     )
   }.ev()
 }
 
 fun <D : SuperHeroesContext> getHeroDetails(AR: AsyncResultMonadReaderInstance<D>,
-    heroId: String): AsyncResult<D, List<CharacterDto>> =
+    heroId: String): AsyncResult<D, Either<CharacterError, List<CharacterDto>>> =
     AR.binding {
       val ctx = AR.ask().bind()
       AR.catch(
-          { listOf(ctx.apiClient.getCharacter(heroId).response) },
+          { Right(listOf(ctx.apiClient.getCharacter(heroId).response)) },
           { exceptionAsCharacterError(it) }
       ).ev()
     }.ev()
@@ -80,18 +82,31 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
 
 fun <D : SuperHeroesContext> handlePresentationEffects(AR: AsyncResultMonadReaderInstance<D>,
     result: Either<CharacterError, List<CharacterDto>>): AsyncResult<D, Unit> =
-    getHeroesUseCase().flatMap { it. }
     AR.binding {
       val ctx = AR.ask().bind()
-      val result = AR.handleError(getHeroesUseCase(), { displayErrors(ctx, it); emptyList() }).bind()
-      ctx.view.drawHeroes(result.map {
-        SuperHeroViewModel(
-            it.id,
-            it.name,
-            it.thumbnail.getImageUrl(PORTRAIT_UNCANNY),
-            it.description)
-      })
-      AR.pure(Unit)
+      val res = when (result) {
+        is Left -> {
+          displayErrors(ctx, result.a); }
+        is Right -> when (ctx) {
+          is GetHeroesContext -> ctx.view.drawHeroes(result.b.map {
+            SuperHeroViewModel(
+                it.id,
+                it.name,
+                it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
+                it.description)
+          })
+          is GetHeroDetailsContext -> ctx.view.drawHero(result.b.map {
+            SuperHeroViewModel(
+                it.id,
+                it.name,
+                it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
+                it.description)
+          }[0])
+          else -> {
+          }
+        }
+      }
+      yields(Unit)
     }.ev()
 
 fun displayErrors(ctx: SuperHeroesContext, c: CharacterError): Unit {
