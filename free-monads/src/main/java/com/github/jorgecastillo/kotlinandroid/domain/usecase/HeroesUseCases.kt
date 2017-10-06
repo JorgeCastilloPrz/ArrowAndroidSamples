@@ -10,7 +10,7 @@ import com.karumi.marvelapiclient.model.CharacterDto
 fun getHeroesUseCase(): FreeHeroesAlgebra<List<CharacterDto>> =
     getHeroesWithCachePolicy(NetworkOnly)
 
-fun getHeroDetailsUseCase(heroId: String): FreeHeroesAlgebra<List<CharacterDto>> =
+fun getHeroDetailsUseCase(heroId: String): FreeHeroesAlgebra<CharacterDto> =
     getHeroDetails(NetworkOnly, heroId)
 
 fun getHeroesFromAvengerComicsUseCase(): FreeHeroesAlgebra<List<CharacterDto>> =

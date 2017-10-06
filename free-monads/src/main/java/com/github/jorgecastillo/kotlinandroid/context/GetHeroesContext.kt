@@ -5,7 +5,6 @@ import com.github.jorgecastillo.kotlinandroid.BuildConfig
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroDetailView
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesView
-import com.github.jorgecastillo.kotlinandroid.presentation.navigation.HeroDetailsPage
 import com.karumi.marvelapiclient.CharacterApiClient
 import com.karumi.marvelapiclient.MarvelApiConfig.Builder
 
@@ -14,7 +13,6 @@ sealed class SuperHeroesContext {
   abstract val ctx: Context
   abstract val view: SuperHeroesView
 
-  val heroDetailsPage = HeroDetailsPage()
   val apiClient
     get() = CharacterApiClient(Builder(
         BuildConfig.MARVEL_PUBLIC_KEY,

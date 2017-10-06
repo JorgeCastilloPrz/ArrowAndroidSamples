@@ -9,15 +9,10 @@ import android.widget.Toast
 import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.R.string
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
-import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
-import com.github.jorgecastillo.kotlinandroid.functional.ev
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroDetailView
-import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroDetails
+import com.github.jorgecastillo.kotlinandroid.presentation.showSuperHeroDetail
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
-import kotlinx.android.synthetic.main.activity_detail.appBar
-import kotlinx.android.synthetic.main.activity_detail.collapsingToolbar
-import kotlinx.android.synthetic.main.activity_detail.description
-import kotlinx.android.synthetic.main.activity_detail.headerImage
+import kotlinx.android.synthetic.main.activity_detail.*
 
 class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
 
@@ -40,7 +35,7 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
     super.onResume()
     intent.extras?.let {
       val heroId = it.getString(EXTRA_HERO_ID)
-      getSuperHeroDetails(heroId, AsyncResult<GetHeroDetailsContext>()).ev().run(GetHeroDetailsContext(this, this))
+      showSuperHeroDetail(heroId).unsafePerformEffects(GetHeroDetailsContext(this, this))
     } ?: closeWithError()
   }
 
