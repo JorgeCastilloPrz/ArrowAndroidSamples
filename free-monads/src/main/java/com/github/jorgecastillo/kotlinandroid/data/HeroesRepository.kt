@@ -4,10 +4,10 @@ import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.LocalFirst
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.LocalOnly
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.NetworkFirst
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.NetworkOnly
-import com.github.jorgecastillo.kotlinandroid.data.algebra.FreeHeroesAlgebra
-import com.github.jorgecastillo.kotlinandroid.data.algebra.getAllFromAvengerComics
-import com.github.jorgecastillo.kotlinandroid.data.algebra.getAllHeroes
-import com.github.jorgecastillo.kotlinandroid.data.algebra.getSingleHero
+import com.github.jorgecastillo.kotlinandroid.free.algebra.FreeHeroesAlgebra
+import com.github.jorgecastillo.kotlinandroid.free.algebra.getAllFromAvengerComics
+import com.github.jorgecastillo.kotlinandroid.free.algebra.getAllHeroes
+import com.github.jorgecastillo.kotlinandroid.free.algebra.getSingleHero
 import com.karumi.marvelapiclient.model.CharacterDto
 
 sealed class CachePolicy {

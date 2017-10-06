@@ -1,4 +1,4 @@
-package com.github.jorgecastillo.kotlinandroid.data.algebra
+package com.github.jorgecastillo.kotlinandroid.free.algebra
 
 import com.karumi.marvelapiclient.model.CharacterDto
 import kategory.Free

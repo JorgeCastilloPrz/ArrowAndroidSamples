@@ -1,6 +1,6 @@
 package com.github.jorgecastillo.kotlinandroid.presentation
 
-import com.github.jorgecastillo.kotlinandroid.data.algebra.HeroesAlgebraHK
+import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesAlgebraHK
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
@@ -17,7 +17,6 @@ import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.MarvelImage
 import kategory.Free
 import kategory.HK
-import kategory.binding
 import kategory.flatMap
 
 interface SuperHeroesView {

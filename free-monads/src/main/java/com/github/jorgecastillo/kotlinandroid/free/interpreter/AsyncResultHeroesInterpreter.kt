@@ -1,8 +1,8 @@
-package com.github.jorgecastillo.kotlinandroid.data.interpreter
+package com.github.jorgecastillo.kotlinandroid.free.interpreter
 
-import com.github.jorgecastillo.kotlinandroid.data.algebra.HeroesAlgebra
-import com.github.jorgecastillo.kotlinandroid.data.algebra.HeroesDataSourceAlgebraHK
-import com.github.jorgecastillo.kotlinandroid.data.algebra.ev
+import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesAlgebra
+import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesDataSourceAlgebraHK
+import com.github.jorgecastillo.kotlinandroid.free.algebra.ev
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.AuthenticationError

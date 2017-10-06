@@ -1,7 +1,7 @@
 package com.github.jorgecastillo.kotlinandroid.domain.usecase
 
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.NetworkOnly
-import com.github.jorgecastillo.kotlinandroid.data.algebra.FreeHeroesAlgebra
+import com.github.jorgecastillo.kotlinandroid.free.algebra.FreeHeroesAlgebra
 import com.github.jorgecastillo.kotlinandroid.data.getHeroDetails
 import com.github.jorgecastillo.kotlinandroid.data.getHeroesFromAvengerComicsWithCachePolicy
 import com.github.jorgecastillo.kotlinandroid.data.getHeroesWithCachePolicy
