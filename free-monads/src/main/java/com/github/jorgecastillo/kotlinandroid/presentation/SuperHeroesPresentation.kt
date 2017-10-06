@@ -38,15 +38,7 @@ inline fun <reified F> onHeroListItemClick(heroId: String, C: MonadControl<F, Ge
       it.heroDetailsPage.go(heroId, C)
     })
 
-fun displayErrors(ctx: SuperHeroesContext, c: CharacterError): Unit {
-  when (c) {
-    is NotFoundError -> ctx.view.showNotFoundError()
-    is UnknownServerError -> ctx.view.showGenericError()
-    is AuthenticationError -> ctx.view.showAuthenticationError()
-  }
-}
-
-inline fun <reified F> getSuperHeroes(C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): Free<HeroesAlgebraHK, Unit> =
+fun getSuperHeroes(): Free<HeroesAlgebraHK, Unit> =
     getHeroesUseCase().flatMap {
       ctx.view.drawHeroes(result.map {
         SuperHeroViewModel(

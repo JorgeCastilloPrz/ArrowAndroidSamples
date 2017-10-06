@@ -1,6 +1,8 @@
 package com.github.jorgecastillo.kotlinandroid.free.algebra
 
+import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.karumi.marvelapiclient.model.CharacterDto
+import kategory.Either
 import kategory.Free
 import kategory.FreeMonadInstance
 import kategory.FunctionK
@@ -18,8 +20,7 @@ import kategory.monad
 
   class GetAll : HeroesAlgebra<List<CharacterDto>>()
   class GetSingle(val heroId: String) : HeroesAlgebra<List<CharacterDto>>()
-  class HandlePresentationErrors : HeroesAlgebra<Unit>()
-  class DrawHeroes : HeroesAlgebra<Unit>()
+  class HandlePresentationEffects(val result: Either<CharacterError, List<CharacterDto>>) : HeroesAlgebra<Unit>()
   companion object : FreeMonadInstance<HeroesAlgebraHK>
 }
 
@@ -38,11 +39,8 @@ fun getAllHeroes(): FreeHeroesAlgebra<List<CharacterDto>> =
 fun getSingleHero(heroId: String): FreeHeroesAlgebra<List<CharacterDto>> =
     Free.liftF(HeroesAlgebra.GetSingle(heroId))
 
-fun handlePresentationErrors(): FreeHeroesAlgebra<Unit> =
-    Free.liftF(HeroesAlgebra.HandlePresentationErrors())
-
-fun drawHeroes(): FreeHeroesAlgebra<Unit> =
-    Free.liftF(HeroesAlgebra.DrawHeroes())
+fun handlePresentationEffects(result: Either<CharacterError, List<CharacterDto>>): FreeHeroesAlgebra<Unit> =
+    Free.liftF(HeroesAlgebra.HandlePresentationEffects(result))
 
 /**
  * More complex operation using the resting operation blocks already lifted to Free.
