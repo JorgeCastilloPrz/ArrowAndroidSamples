@@ -1,5 +1,6 @@
 package com.github.jorgecastillo.kotlinandroid.presentation
 
+import com.github.jorgecastillo.kotlinandroid.data.algebra.HeroesAlgebraHK
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
@@ -14,6 +15,7 @@ import com.github.jorgecastillo.kotlinandroid.functional.monadControl
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.MarvelImage
+import kategory.Free
 import kategory.HK
 import kategory.binding
 import kategory.flatMap
@@ -45,8 +47,17 @@ fun displayErrors(ctx: SuperHeroesContext, c: CharacterError): Unit {
   }
 }
 
-inline fun <reified F> getSuperHeroes(C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): HK<F, Unit> =
-    C.binding {
+inline fun <reified F> getSuperHeroes(C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): Free<HeroesAlgebraHK, Unit> =
+    getHeroesUseCase().flatMap {
+      ctx.view.drawHeroes(result.map {
+        SuperHeroViewModel(
+            it.id,
+            it.name,
+            it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
+            it.description)
+      })
+    }
+    /*C.binding {
       val ctx = C.ask().bind()
       val result = C.handleError(getHeroesUseCase(), { displayErrors(ctx, it); emptyList() }).bind()
       ctx.view.drawHeroes(result.map {
@@ -57,7 +68,7 @@ inline fun <reified F> getSuperHeroes(C: MonadControl<F, GetHeroesContext, Chara
             it.description)
       })
       C.pure(Unit)
-    }
+    }*/
 
 inline fun <reified F> getSuperHeroDetails(heroId: String,
     C: MonadControl<F, GetHeroDetailsContext, CharacterError> = monadControl()): HK<F, Unit> =
