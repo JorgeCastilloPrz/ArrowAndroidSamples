@@ -89,50 +89,21 @@ If we define the different types of expected `Errors` with a `sealed class` we s
 close the hierarchy to limit the amount of expected errors inside our domain and do pattern matching 
 to it (`when` statement) to achieve different behaviors depending on that.
 
-## Testing Coroutines
-JetBrains [introduced the concept of *Coroutines*](https://blog.jetbrains.com/kotlin/2017/03/kotlin-1-1/) 
-on Kotlin 1.1 as an easy to use way to implement asynchronous tasks. JetBrains defines the concept 
-like this: *"Coroutines are just much better threads: almost free to start and keep around, 
-extremely cheap to suspend (suspension is for coroutines what blocking is for threads), very easy 
-to compose and customize."*. So wouldn't be nice to give it a try?
-
-Let's keep an eye on [the official coroutines guide](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md).
-
-On this project, I am using coroutines for a simple `Future` implementation based on them.
-
 ## Alternative roads to Dependency Injection
 From centuries ago, Android devs have been using complex frameworks like Dagger to achieve 
 dependency injection. But **DI is just a concept not bound to any library. It's is all about 
 passing collaborators to your classes from the outside world**. That means DI would also be to 
 just add some setters or a constructor with some collaborator arguments to your class. 
-The moment you do that, the class gets open to receive it's behaviors from the external world, 
-and you are free to use a framework or something just created by you to bind the instance.
 
-The `Reader` is just an alternative to achieve `DI` that is gonna play a good role in terms of 
-psinergy with all the resting `Monads` being used. That's why I am choosing it.  
-
-### Reader monad
-
-The initial approach is going to be based on the Reader monad, which is just a way to defer the 
-dependency resolution to the very moment when you want to run all the execution chain in the edge 
-of your system (i.e: Activity / Framgnet / CustomView for Android). The idea is to concatenate 
-`Reader` construction for the whole execution chain agnostically of how dependencies are going to 
-be resolved, and provide the dependency resolution strategy when you need to run it. 
-
-It's validated while you type, since the bindings are statically declared in the entity 
-responsible of creating the mentioned strategies. That means you are not going to be able to 
-compile if your dependency tree is not correctly prepared.
+The `Reader` or the `Kleisli` used on this project are just an alternative to achieve `DI` that 
+is gonna play a good role in terms of psynergy along with the resting `Monads` being used.  
 
 ### No state
 
-Trying to achieve purity on this repo, as much as I can. Purity means determinism, and functional 
-behaviors are abstracted to functions, not to classes. I found out that I don't really need to play 
-with instances most of the time since all the operations and transformations over the data can 
-always be pure and just wrapped in functions as first class citizens.
- 
-The only dependencies I am passing in on the `Reader` are the `ApiClient` and the `MVP view` 
-reference, so I can switch both at testing environments. Everything else can be exercised as it is 
-in production.
+Trying to achieve purity on this repo, as much as I can. Purity means determinism. Functional 
+behaviors are usually abstracted to functions, not to classes. I don't need to play with instances most 
+of the time since all the operations and transformations over the data can always be pure and just wrapped 
+in functions as first class citizens.
 
 Attributions
 ------------
