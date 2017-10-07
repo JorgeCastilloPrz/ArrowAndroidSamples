@@ -38,6 +38,7 @@ to use Monads. You need some nested behaviors, so you move on and nest them. But
 not a quite common approach on FP, since we usually would end up combining all the properties from 
 all those Monads into a single one much more powerful representing the result, just to simplify 
 things. We can find that improvement under **Monad Transformers** module. 
+
 ## Monad Transformers
 This module would be like **nested monads 2.0**. It presents a second iteration over the 
 **nested-monads** module, where we are simplifying things a lot by applying transformers on top of 
@@ -45,15 +46,20 @@ Monads to bind additional behaviors to them, so we can achieve the same behavior
 That is indeed a very common approach in Functional Programming. We are adding `AsyncResult` Monad 
 which is going to cover all the needs we have: DI + Error Handling + Async.
 [You probably want to look at this PR for more description details](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/3).
+
 ## Tagless-Final
 Tagless-Final style is focused on never depending on concrete types like Option or Try, but use 
 Higher Kinds to make our code depend on typeclass constrained behaviors, leaving the decision about 
 which concrete types to use to the moment when we want to run the code.
 [You will really want to look at this PR to have a very good and detailed description of what tagless-final is](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/2).
-## Free Monads 
-TBA. This is going to be another cool approach using FP, but still not ready.
 
-# Goals and rationales
+## Free Monads 
+This FP style is very trendy. We are applying it over Android thanks to Kategory here, on the `free-monads` project module. It's highly recommended to take a look at [this PR](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/6) in order to understand the approach.
+
+**Free Monads** is based on the idea of composing an **AST** (abstract syntax tree) of computations with  type `Free<S, A>`, where `S` is your algebra. Those computations which will never depend on implementation details but on abstractions defined by operations from the algebra lifted to the `Free` context. The algebra is an algebraic data type (ADT). 
+Those ops can be combined as blocks to create more complex ones. Then, we need an **interpreter** which will be in charge to provide implementation details for the moment when the user decides to run the whole AST providing semantics to it and a `Monad` instance to resolve all effects / perform execution of effects in a controlled context. The user has the power of chosing which interpreter to use and which monad instance he wants to solve the problem. That enables testing, since we can easily remove our real side effects in the app at our testing environment by switching the interpreter by a fake one.
+
+# Goals and rationale
 
 ## Modeling success and error cases
 **Referential transparency** from a function perspective means that it should be clearly defining 
@@ -83,17 +89,6 @@ A result of type `Reader<Future<Either<Error, Success>>` is clearly defining a d
 If we define the different types of expected `Errors` with a `sealed class` we should be able to 
 close the hierarchy to limit the amount of expected errors inside our domain and do pattern matching 
 to it (`when` statement) to achieve different behaviors depending on that.
-
-## Testing Coroutines
-JetBrains [introduced the concept of *Coroutines*](https://blog.jetbrains.com/kotlin/2017/03/kotlin-1-1/) 
-on Kotlin 1.1 as an easy to use way to implement asynchronous tasks. JetBrains defines the concept 
-like this: *"Coroutines are just much better threads: almost free to start and keep around, 
-extremely cheap to suspend (suspension is for coroutines what blocking is for threads), very easy 
-to compose and customize."*. So wouldn't be nice to give it a try?
-
-Let's keep an eye on [the official coroutines guide](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md).
-
-On this project, I am using coroutines for a simple `Future` implementation based on them.
 
 ## Alternative roads to Dependency Injection
 From centuries ago, Android devs have been using complex frameworks like Dagger to achieve 
