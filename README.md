@@ -55,8 +55,7 @@ which concrete types to use to the moment when we want to run the code.
 
 ## Free Monads 
 This FP style is very trendy. We are applying it over Android thanks to Kategory here, on the `free-monads` project module. It's highly recommended to take a look at [this PR](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/6) in order to understand the approach.
-
-**Free Monads** is based on the idea of composing an **AST** (abstract syntax tree) of computations with  type `Free<S, A>`, where `S` is your algebra. Those computations which will never depend on implementation details but on abstractions defined by operations from the algebra lifted to the `Free` context. The algebra is an algebraic data type (ADT). 
+**Free Monads** is based on the idea of composing an **AST** (abstract syntax tree) of computations with  type `Free<S, A>`, where `S` is your algebra, which will never depend on implementation details but on abstractions defined by an algebra, which is an algebraic data type (ADT). We are defining it through a `sealed` class on this sample. 
 Those ops can be combined as blocks to create more complex ones. Then, we need an **interpreter** which will be in charge to provide implementation details for the moment when the user decides to run the whole AST providing semantics to it and a `Monad` instance to resolve all effects / perform execution of effects in a controlled context. The user has the power of chosing which interpreter to use and which monad instance he wants to solve the problem. That enables testing, since we can easily remove our real side effects in the app at our testing environment by switching the interpreter by a fake one.
 
 # Goals and rationale
@@ -89,6 +88,17 @@ A result of type `Reader<Future<Either<Error, Success>>` is clearly defining a d
 If we define the different types of expected `Errors` with a `sealed class` we should be able to 
 close the hierarchy to limit the amount of expected errors inside our domain and do pattern matching 
 to it (`when` statement) to achieve different behaviors depending on that.
+
+## Testing Coroutines
+JetBrains [introduced the concept of *Coroutines*](https://blog.jetbrains.com/kotlin/2017/03/kotlin-1-1/) 
+on Kotlin 1.1 as an easy to use way to implement asynchronous tasks. JetBrains defines the concept 
+like this: *"Coroutines are just much better threads: almost free to start and keep around, 
+extremely cheap to suspend (suspension is for coroutines what blocking is for threads), very easy 
+to compose and customize."*. So wouldn't be nice to give it a try?
+
+Let's keep an eye on [the official coroutines guide](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md).
+
+On this project, I am using coroutines for a simple `Future` implementation based on them.
 
 ## Alternative roads to Dependency Injection
 From centuries ago, Android devs have been using complex frameworks like Dagger to achieve 
