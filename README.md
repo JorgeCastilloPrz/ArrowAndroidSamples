@@ -6,7 +6,7 @@ Kotlin Android Functional Architecture
 
 ![Kotlin logo](assets/ic_launcher.png)
 
-Kotlin playground to investigate some functional progamming approaches for architecture of Android apps.
+Functional Programing based architectures over Android using [kategory](http://kategory.io/)
 
 # How to import it
 
