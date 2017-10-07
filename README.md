@@ -51,7 +51,9 @@ Higher Kinds to make our code depend on typeclass constrained behaviors, leaving
 which concrete types to use to the moment when we want to run the code.
 [You will really want to look at this PR to have a very good and detailed description of what tagless-final is](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/2).
 ## Free Monads 
-TBA. This is going to be another cool approach using FP, but still not ready.
+This FP style is very trendy. We are applying it over Android thanks to Kategory here, on the `free-monads` project module. It's highly recommended to take a look at [this PR]() in order to understand the approach.
+**Free Monads** is based on the idea of composing an **AST** (abstract syntax tree) of computations with  type `Free<T>` which will never depend on implementation details but on abstractions defined by an algebra, which is an algebraic data type (ADT). We are defining it through a `sealed` class on this sample. 
+Those ops can be combined as blocks to create more complex ones. Then, we need an **interpreter** which will be in charge to provide implementation details for the moment when the user decides to run the whole AST providing semantics to it and a `Monad` instance to resolve all the effects. The user has the power of chosing which interpreter to use and which monad instance he wants to solve the problem. That enables testing, since we can easily remove our real side effects in the app at our testing environment by switching the interpreter by a fake one.
 
 # Goals and rationales
 
