@@ -11,7 +11,7 @@ import kategory.*
     object GetAll : HeroesAlgebra<List<CharacterDto>>()
     class GetSingle(val heroId: String) : HeroesAlgebra<CharacterDto>()
     class HandlePresentationEffects(val result: Either<CharacterError, List<CharacterDto>>) : HeroesAlgebra<Unit>()
-    class Attempt<A>(val fa: FreeHeroesAlgebra<A>): HeroesAlgebra<Either<CharacterError, A>>()
+    class Attempt<A>(val fa: FreeHeroesAlgebra<A>): HeroesAlgebra<Either<Throwable, A>>()
     companion object : FreeMonadInstance<HeroesAlgebraHK>
 }
 
@@ -33,6 +33,6 @@ fun getSingleHero(heroId: String): FreeHeroesAlgebra<CharacterDto> =
 fun handlePresentationEffects(result: Either<CharacterError, List<CharacterDto>>): FreeHeroesAlgebra<Unit> =
         Free.liftF(HeroesAlgebra.HandlePresentationEffects(result))
 
-fun <A> attempt(fa: FreeHeroesAlgebra<A>): FreeHeroesAlgebra<Either<CharacterError, A>> =
+fun <A> attempt(fa: FreeHeroesAlgebra<A>): FreeHeroesAlgebra<Either<Throwable, A>> =
         Free.liftF(HeroesAlgebra.Attempt(fa))
 

@@ -9,13 +9,11 @@ import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.free.algebra.FreeHeroesAlgebra
 import com.github.jorgecastillo.kotlinandroid.free.interpreter.interpreter
-import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
-import com.github.jorgecastillo.kotlinandroid.functional.ev
-import com.github.jorgecastillo.kotlinandroid.functional.monadError
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
 import com.github.jorgecastillo.kotlinandroid.presentation.showSuperHeroes
 import com.github.jorgecastillo.kotlinandroid.view.adapter.HeroesCardAdapter
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
+import kategory.effects.*
 import kategory.foldMap
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -62,7 +60,8 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
 }
 
 
-inline fun <A> FreeHeroesAlgebra<A>.unsafePerformEffects(ctx: SuperHeroesContext): AsyncResult<SuperHeroesContext, A> {
-  val ME = AsyncResult.monadError<SuperHeroesContext>()
-  return this.foldMap(interpreter(ctx, ME), ME).ev()
+fun <A> FreeHeroesAlgebra<A>.unsafePerformEffects(ctx: SuperHeroesContext): Unit {
+  val ME = IO.monadError()
+  val result: IO<A> = this.foldMap(interpreter(ctx, ME, IO.asyncContext()), ME).ev()
+  result.unsafeRunAsync { TODO() }
 }

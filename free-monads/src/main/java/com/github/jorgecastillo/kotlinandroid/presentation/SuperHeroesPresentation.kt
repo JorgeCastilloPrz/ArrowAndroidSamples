@@ -3,10 +3,11 @@ package com.github.jorgecastillo.kotlinandroid.presentation
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.github.jorgecastillo.kotlinandroid.free.algebra.*
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
+import com.karumi.marvelapiclient.MarvelApiException
+import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
-import kategory.Either
-import kategory.binding
-import kategory.ev
+import kategory.*
+import java.net.HttpURLConnection
 
 interface SuperHeroesView {
   fun showNotFoundError()
@@ -24,15 +25,24 @@ interface SuperHeroDetailView : SuperHeroesView {
 
 fun showSuperHeroes(): FreeHeroesAlgebra<Unit> =
     HeroesAlgebra.binding {
-        val res: Either<CharacterError, List<CharacterDto>> = attempt(getAllHeroes()).bind()
-        val efRes = handlePresentationEffects(res).bind()
+        val res: Either<Throwable, List<CharacterDto>> = attempt(getAllHeroes()).bind()
+        val efRes = handlePresentationEffects(res.bimap(::exceptionAsCharacterError, ::identity)).bind()
         yields(efRes)
     }.ev()
 
 fun showSuperHeroDetail(heroId: String): FreeHeroesAlgebra<Unit> =
         HeroesAlgebra.binding {
-            val res: Either<CharacterError, CharacterDto> = attempt(getSingleHero(heroId)).bind()
-            val efRes = handlePresentationEffects(res.map(::listOf)).bind()
+            val res: Either<Throwable, CharacterDto> = attempt(getSingleHero(heroId)).bind()
+            val efRes = handlePresentationEffects(res.bimap(::exceptionAsCharacterError, ::listOf)).bind()
             yields(efRes)
         }.ev()
 
+
+fun exceptionAsCharacterError(e: Throwable): CharacterError =
+        when (e) {
+            is MarvelAuthApiException -> CharacterError.AuthenticationError
+            is MarvelApiException ->
+                if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) CharacterError.NotFoundError
+                else CharacterError.UnknownServerError(Option.Some(e))
+            else -> CharacterError.UnknownServerError((Option.Some(e)))
+        }

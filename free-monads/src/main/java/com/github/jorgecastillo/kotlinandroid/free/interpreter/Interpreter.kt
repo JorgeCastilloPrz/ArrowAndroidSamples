@@ -7,67 +7,78 @@ import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.*
 import com.github.jorgecastillo.kotlinandroid.free.algebra.*
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
-import com.karumi.marvelapiclient.MarvelApiException
-import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery.Builder
 import com.karumi.marvelapiclient.model.MarvelImage
 import kategory.*
 import kategory.Either.Left
 import kategory.Either.Right
-import java.net.HttpURLConnection
+import kategory.effects.AsyncContext
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 
 @Suppress("UNCHECKED_CAST")
-fun <F> interpreter(ctx: SuperHeroesContext, ME: MonadError<F, CharacterError>): FunctionK<HeroesAlgebraHK, F> =
+fun <F> interpreter(ctx: SuperHeroesContext, ME: MonadError<F, Throwable>, AC: AsyncContext<F>): FunctionK<HeroesAlgebraHK, F> =
         object : FunctionK<HeroesAlgebraHK, F> {
             override fun <A> invoke(fa: HeroesAlgebraKind<A>): HK<F, A> {
                 val op = fa.ev()
                 return when (op) {
-                    is HeroesAlgebra.GetAll -> getAllHeroesImpl(ctx, ME)
-                    is HeroesAlgebra.GetSingle -> getHeroDetailsImpl(ctx, ME, op.heroId)
-                    is HeroesAlgebra.HandlePresentationEffects -> ME.catch(
-                            { handlePresentationEffects(ctx, op.result) },
-                            { exceptionAsCharacterError(it) }
-                    )
+                    is HeroesAlgebra.GetAll -> getAllHeroesImpl(ctx, ME, AC)
+                    is HeroesAlgebra.GetSingle -> getHeroDetailsImpl(ctx, ME, AC, op.heroId)
+                    is HeroesAlgebra.HandlePresentationEffects -> {
+                        ME.catch({ handlePresentationEffectsImpl(ctx, op.result) })
+                    }
                     is HeroesAlgebra.Attempt<*> -> {
-                        val result = op.fa.foldMap(interpreter(ctx, ME), ME)
+                        val result = op.fa.foldMap(interpreter(ctx, ME, AC), ME)
                         ME.attempt(result)
                     }
                 } as HK<F, A>
             }
         }
 
-fun <F> getAllHeroesImpl(ctx: SuperHeroesContext, ME: MonadError<F, CharacterError>): HK<F, List<CharacterDto>> {
-    return ME.binding {
+private fun <F, A, B> runInAsyncContext(
+        f: () -> A,
+        onError: (Throwable) -> B,
+        onSuccess: (A) -> B, AC: AsyncContext<F>): HK<F, B> {
+    return AC.runAsync { proc ->
+        async(CommonPool) {
+            val result = Try { f() }.fold(onError, onSuccess)
+            proc(result.right())
+        }
+    }
+}
+
+fun <F> getAllHeroesImpl(
+        ctx: SuperHeroesContext,
+        ME: MonadError<F, Throwable>,
+        AC: AsyncContext<F>): HK<F, List<CharacterDto>> {
+    return ME.bindingE {
         val query = Builder.create().withOffset(0).withLimit(50).build()
-        ME.catch(
-                { ctx.apiClient.getAll(query).response.characters.toList() },
-                { exceptionAsCharacterError(it) }
-        )
+        runInAsyncContext(
+                f = {ctx.apiClient.getAll(query).response.characters.toList()},
+                onError = { ME.raiseError<List<CharacterDto>>(it) },
+                onSuccess = { ME.pure(it) },
+                AC = AC
+        ).bind()
     }
 }
 
 fun <F> getHeroDetailsImpl(
         ctx: SuperHeroesContext,
-        ME: MonadError<F, CharacterError>,
+        ME: MonadError<F, Throwable>,
+        AC: AsyncContext<F>,
         heroId: String): HK<F, CharacterDto> =
-        ME.binding {
-            ME.catch(
-                    { ctx.apiClient.getCharacter(heroId).response },
-                    { exceptionAsCharacterError(it) }
-            )
+        ME.bindingE {
+            runInAsyncContext(
+                    f = { ctx.apiClient.getCharacter(heroId).response },
+                    onError = { ME.raiseError<CharacterDto>(it) },
+                    onSuccess = { ME.pure(it) },
+                    AC = AC
+            ).bind()
         }
 
-fun exceptionAsCharacterError(e: Throwable): CharacterError =
-        when (e) {
-            is MarvelAuthApiException -> AuthenticationError
-            is MarvelApiException ->
-                if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) NotFoundError
-                else UnknownServerError(Option.Some(e))
-            else -> UnknownServerError((Option.Some(e)))
-        }
-
-fun handlePresentationEffects(
+fun handlePresentationEffectsImpl(
         ctx: SuperHeroesContext,
         result: Either<CharacterError, List<CharacterDto>>): Unit =
         when (result) {
