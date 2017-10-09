@@ -16,7 +16,10 @@ import kategory.Either.Right
 import kategory.HK
 import kategory.Reader
 import kategory.Try
+import kategory.bindingE
 import kategory.effects.AsyncContext
+import kategory.effects.IO
+import kategory.effects.monadError
 import kategory.map
 import kategory.right
 import kotlinx.coroutines.experimental.CommonPool
@@ -37,19 +40,23 @@ import java.net.HttpURLConnection
  */
 
 fun fetchAllHeroes() = Reader.ask<GetHeroesContext>().map({ ctx ->
-  runInAsyncContext(
-      { queryForHeroes(ctx) },
-      { mapExceptionsToDomainErrors(it) },
-      { Right(it) },
-      ctx.threading)
+  IO.monadError().bindingE {
+    runInAsyncContext(
+        { queryForHeroes(ctx) },
+        { mapExceptionsToDomainErrors(it) },
+        { Right(it) },
+        ctx.threading)
+  }
 })
 
 fun fetchHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>().map({ ctx ->
-  runInAsyncContext(
-      { queryForHero(ctx, heroId) },
-      { mapExceptionsToDomainErrors(it) },
-      { Right(it) },
-      ctx.threading)
+  IO.monadError().bindingE {
+    runInAsyncContext(
+        { queryForHero(ctx, heroId) },
+        { mapExceptionsToDomainErrors(it) },
+        { Right(it) },
+        ctx.threading)
+  }
 })
 
 private fun queryForHeroes(ctx: GetHeroesContext): List<CharacterDto> {

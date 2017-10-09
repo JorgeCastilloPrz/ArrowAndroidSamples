@@ -10,6 +10,7 @@ import com.github.jorgecastillo.kotlinandroid.domain.usecase.getHeroesUseCase
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.MarvelImage
 import kategory.Reader
+import kategory.effects.ev
 import kategory.flatMap
 import kategory.map
 
@@ -33,22 +34,24 @@ fun onHeroListItemClick(heroId: String) = Reader.ask<GetHeroesContext>().flatMap
 
 fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap({ (_, view: SuperHeroesListView) ->
   getHeroesUseCase().map({ res ->
-    res.map {
-      it.fold({ error ->
-        when (error) {
-          is NotFoundError -> view.showNotFoundError()
-          is UnknownServerError -> view.showGenericError()
-          is AuthenticationError -> view.showAuthenticationError()
-        }
-      }, { success ->
-        view.drawHeroes(success.map {
-          SuperHeroViewModel(
-              it.id,
-              it.name,
-              it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
-              it.description)
+    res.ev().unsafeRunAsync {
+      it.map {
+        it.fold({ error ->
+          when (error) {
+            is NotFoundError -> view.showNotFoundError()
+            is UnknownServerError -> view.showGenericError()
+            is AuthenticationError -> view.showAuthenticationError()
+          }
+        }, { success ->
+          view.drawHeroes(success.map {
+            SuperHeroViewModel(
+                it.id,
+                it.name,
+                it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
+                it.description)
+          })
         })
-      })
+      }
     }
   })
 })
@@ -56,22 +59,24 @@ fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap({ (_, view: SuperH
 fun getSuperHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>()
     .flatMap({ (_, view: SuperHeroDetailView) ->
       getHeroDetailsUseCase(heroId).map({ res ->
-        res.map {
-          it.fold({ error ->
-            when (error) {
-              is NotFoundError -> view.showNotFoundError()
-              is UnknownServerError -> view.showGenericError()
-              is AuthenticationError -> view.showAuthenticationError()
-            }
-          }, { success ->
-            view.drawHero(success.map {
-              SuperHeroViewModel(
-                  it.id,
-                  it.name,
-                  it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
-                  it.description)
-            }.first())
-          })
+        res.ev().unsafeRunAsync {
+          it.map {
+            it.fold({ error ->
+              when (error) {
+                is NotFoundError -> view.showNotFoundError()
+                is UnknownServerError -> view.showGenericError()
+                is AuthenticationError -> view.showAuthenticationError()
+              }
+            }, { success ->
+              view.drawHero(success.map {
+                SuperHeroViewModel(
+                    it.id,
+                    it.name,
+                    it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
+                    it.description)
+              }.first())
+            })
+          }
         }
       })
     })
