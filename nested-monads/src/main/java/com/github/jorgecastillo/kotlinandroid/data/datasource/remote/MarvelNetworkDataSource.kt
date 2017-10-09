@@ -2,17 +2,8 @@ package com.github.jorgecastillo.kotlinandroid.data.datasource.remote
 
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
-import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
-import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.AuthenticationError
-import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.NotFoundError
-import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.UnknownServerError
-import com.karumi.marvelapiclient.MarvelApiException
-import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery.Builder
-import kategory.Either
-import kategory.Either.Left
-import kategory.Either.Right
 import kategory.HK
 import kategory.Reader
 import kategory.Try
@@ -24,7 +15,6 @@ import kategory.map
 import kategory.right
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
-import java.net.HttpURLConnection
 
 /*
  * This is the network data source. Calls are made using Karumi's MarvelApiClient.
@@ -42,20 +32,21 @@ import java.net.HttpURLConnection
 fun fetchAllHeroes() = Reader.ask<GetHeroesContext>().map({ ctx ->
   IO.monadError().bindingE {
     runInAsyncContext(
-        { queryForHeroes(ctx) },
-        { mapExceptionsToDomainErrors(it) },
-        { Right(it) },
-        ctx.threading)
+        f = { queryForHeroes(ctx) },
+        onError = { IO.raiseError<List<CharacterDto>>(it) },
+        onSuccess = { IO.pure(it) },
+        AC = ctx.threading
+    ).bind()
   }
 })
 
 fun fetchHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>().map({ ctx ->
   IO.monadError().bindingE {
     runInAsyncContext(
-        { queryForHero(ctx, heroId) },
-        { mapExceptionsToDomainErrors(it) },
-        { Right(it) },
-        ctx.threading)
+        f = { queryForHero(ctx, heroId) },
+        onError = { IO.raiseError<List<CharacterDto>>(it) },
+        onSuccess = { IO.pure(it) },
+        AC = ctx.threading).bind()
   }
 })
 
@@ -66,18 +57,6 @@ private fun queryForHeroes(ctx: GetHeroesContext): List<CharacterDto> {
 
 private fun queryForHero(ctx: GetHeroDetailsContext, heroId: String): List<CharacterDto> =
     listOf(ctx.apiClient.getCharacter(heroId).response)
-
-private fun mapExceptionsToDomainErrors(
-    it: Throwable): Either<CharacterError, Nothing> {
-  return when (it as MarvelApiException) {
-    is MarvelAuthApiException -> Left(AuthenticationError())
-    else -> if (it.httpCode == HttpURLConnection.HTTP_NOT_FOUND) {
-      Left(NotFoundError())
-    } else {
-      Left(UnknownServerError())
-    }
-  }
-}
 
 /**
  * Just syntax to improve readability.
