@@ -3,18 +3,15 @@ package com.github.jorgecastillo.kotlinandroid.domain.usecase
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.NetworkOnly
 import com.github.jorgecastillo.kotlinandroid.data.getHeroDetails
 import com.github.jorgecastillo.kotlinandroid.data.getHeroes
-import com.github.jorgecastillo.kotlinandroid.data.getHeroesFromAvengerComics
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.MarvelImage
 import kategory.Either
 import kategory.Either.Left
 import kategory.Either.Right
-import kategory.*
+import kategory.map
 
-fun getHeroesUseCase() = getHeroes(NetworkOnly).map({ future ->
-  future.map { discardNonValidHeroes(it) }
-})
+fun getHeroesUseCase() = getHeroes(NetworkOnly).map { it.map { discardNonValidHeroes(it) } }
 
 private fun discardNonValidHeroes(maybeHeroes: Either<CharacterError, List<CharacterDto>>) =
     when (maybeHeroes) {
@@ -29,6 +26,3 @@ private fun discardNonValidHeroes(maybeHeroes: Either<CharacterError, List<Chara
 
 fun getHeroDetailsUseCase(heroId: String) = getHeroDetails(NetworkOnly, heroId)
 
-fun getHeroesFromAvengerComicsUseCase() = getHeroesFromAvengerComics(NetworkOnly).map({ future ->
-  future.map { discardNonValidHeroes(it) }
-})

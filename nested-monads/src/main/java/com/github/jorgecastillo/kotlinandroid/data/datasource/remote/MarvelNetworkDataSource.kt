@@ -2,18 +2,25 @@ package com.github.jorgecastillo.kotlinandroid.data.datasource.remote
 
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
+import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.AuthenticationError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.NotFoundError
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.UnknownServerError
-import com.github.jorgecastillo.kotlinandroid.functional.Future
 import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
-import com.karumi.marvelapiclient.model.CharactersQuery
+import com.karumi.marvelapiclient.model.CharactersQuery.Builder
+import kategory.Either
 import kategory.Either.Left
 import kategory.Either.Right
-import kategory.*
+import kategory.HK
 import kategory.Reader
+import kategory.Try
+import kategory.effects.AsyncContext
+import kategory.map
+import kategory.right
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
 import java.net.HttpURLConnection
 
 /*
@@ -30,49 +37,52 @@ import java.net.HttpURLConnection
  */
 
 fun fetchAllHeroes() = Reader.ask<GetHeroesContext>().map({ ctx ->
-  Future {
-    try {
-      val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
-      Right<List<CharacterDto>>(ctx.apiClient.getAll(query).response.characters)
-    } catch (e: MarvelAuthApiException) {
-      Left(AuthenticationError())
-    } catch (e: MarvelApiException) {
-      if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) {
-        Left(NotFoundError())
-      } else {
-        Left(UnknownServerError())
-      }
-    }
-  }
+  runInAsyncContext(
+      { queryForHeroes(ctx) },
+      { mapExceptionsToDomainErrors(it) },
+      { Right(it) },
+      ctx.threading)
 })
 
 fun fetchHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>().map({ ctx ->
-  Future {
-    try {
-      Right<List<CharacterDto>>(listOf(ctx.apiClient.getCharacter(heroId).response))
-    } catch (e: MarvelAuthApiException) {
-      Left(AuthenticationError())
-    } catch (e: MarvelApiException) {
-      if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) {
-        Left(NotFoundError())
-      } else {
-        Left(UnknownServerError())
-      }
-    }
-  }
+  runInAsyncContext(
+      { queryForHero(ctx, heroId) },
+      { mapExceptionsToDomainErrors(it) },
+      { Right(it) },
+      ctx.threading)
 })
 
-fun fetchHeroesFromAvengerComics() = fetchAllHeroes().map({ future ->
-  future.map {
-    when (it) {
-      is Right -> it.map {
-        it.filter {
-          it.comics.items.map { it.name }.filter {
-            it.contains("Avenger", true)
-          }.count() > 0
-        }
-      }
-      is Left -> it
+private fun queryForHeroes(ctx: GetHeroesContext): List<CharacterDto> {
+  val query = Builder.create().withOffset(0).withLimit(50).build()
+  return ctx.apiClient.getAll(query).response.characters
+}
+
+private fun queryForHero(ctx: GetHeroDetailsContext, heroId: String): List<CharacterDto> =
+    listOf(ctx.apiClient.getCharacter(heroId).response)
+
+private fun mapExceptionsToDomainErrors(
+    it: Throwable): Either<CharacterError, Nothing> {
+  return when (it as MarvelApiException) {
+    is MarvelAuthApiException -> Left(AuthenticationError())
+    else -> if (it.httpCode == HttpURLConnection.HTTP_NOT_FOUND) {
+      Left(NotFoundError())
+    } else {
+      Left(UnknownServerError())
     }
   }
-})
+}
+
+/**
+ * Just syntax to improve readability.
+ */
+private fun <F, A, B> runInAsyncContext(
+    f: () -> A,
+    onError: (Throwable) -> B,
+    onSuccess: (A) -> B, AC: AsyncContext<F>): HK<F, B> {
+  return AC.runAsync { proc ->
+    async(CommonPool) {
+      val result = Try { f() }.fold(onError, onSuccess)
+      proc(result.right())
+    }
+  }
+}
