@@ -33,8 +33,8 @@ fun onHeroListItemClick(heroId: String) = Reader.ask<GetHeroesContext>().flatMap
 })
 
 fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap({ (_, view: SuperHeroesListView) ->
-  getHeroesUseCase().map({ res ->
-    res.ev().unsafeRunAsync {
+  getHeroesUseCase().map({ io ->
+    io.ev().unsafeRunAsync {
       it.map {
         it.fold({ error ->
           when (error) {
@@ -58,8 +58,8 @@ fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap({ (_, view: SuperH
 
 fun getSuperHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>()
     .flatMap({ (_, view: SuperHeroDetailView) ->
-      getHeroDetailsUseCase(heroId).map({ res ->
-        res.ev().unsafeRunAsync {
+      getHeroDetailsUseCase(heroId).map({ io ->
+        io.ev().unsafeRunAsync {
           it.map {
             it.fold({ error ->
               when (error) {
