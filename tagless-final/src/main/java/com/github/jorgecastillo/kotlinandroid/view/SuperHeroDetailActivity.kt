@@ -48,21 +48,21 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
     Toast.makeText(this, string.hero_id_needed, Toast.LENGTH_SHORT).show()
   }
 
-  override fun drawHero(hero: SuperHeroViewModel) {
+  override fun drawHero(hero: SuperHeroViewModel) = runOnUiThread  {
     collapsingToolbar.title = hero.name
     description.text = hero.description.let { if (it.isNotEmpty()) it else getString(string.empty_description) }
     headerImage.loadImageAsync(hero.photoUrl)
   }
 
-  override fun showNotFoundError() {
+  override fun showNotFoundError() = runOnUiThread  {
     Snackbar.make(appBar, string.not_found, Snackbar.LENGTH_SHORT).show()
   }
 
-  override fun showGenericError() {
+  override fun showGenericError() = runOnUiThread  {
     Snackbar.make(appBar, string.generic, Snackbar.LENGTH_SHORT).show()
   }
 
-  override fun showAuthenticationError() {
+  override fun showAuthenticationError() = runOnUiThread  {
     Snackbar.make(appBar, string.authentication, Snackbar.LENGTH_SHORT).show()
   }
 }
