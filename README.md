@@ -32,7 +32,7 @@ strategies / gradle modules available.
 
 ## Nested Monads
 On this module, you will find a not very common approach using nested Monads like `Reader`, 
-`Future`, or `Either` to construct the asynchronous result I want to get. This module showcases 
+`IO`, or `Either` to construct the asynchronous result I want to get. This module showcases 
 the first natural step that any OOP Android developer would probably implement on his first attempt 
 to use Monads. You need some nested behaviors, so you move on and nest them. But in the end, It's 
 not a quite common approach on FP, since we usually would end up combining all the properties from 
