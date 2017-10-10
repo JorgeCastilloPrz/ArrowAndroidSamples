@@ -31,17 +31,6 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
       else -> UnknownServerError((Option.Some(e)))
     }
 
-/*
-fun fetchAllHeroes(): AsyncResult<List<CharacterDto>> =
-    AsyncResult.bind {
-      val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
-      val ctx = AsyncResult.ask().bind()
-      AsyncResult.catch(
-          { ctx.apiClient.getAll(query).response.characters },
-          { exceptionAsCharacterError(it) }
-      ).ev()
-    }*/
-
 fun <D : SuperHeroesContext> fetchAllHeroes(): AsyncResult<D, List<CharacterDto>> {
   val ME = AsyncResult.monadError<D>()
   return ME.binding {
@@ -76,7 +65,7 @@ fun <D : SuperHeroesContext> fetchHeroDetails(heroId: String): AsyncResult<D, Li
         f = { listOf(ctx.apiClient.getCharacter(heroId).response) },
         onError = { ME.raiseError<List<CharacterDto>>(exceptionAsCharacterError(it)) },
         onSuccess = { AsyncResult.pure(it) },
-        AC = ctx.threading
+        AC = ctx.threading<D>()
     ).bind()
   }.ev()
 }

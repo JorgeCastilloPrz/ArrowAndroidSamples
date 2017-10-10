@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.widget.Toast
 import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
@@ -42,9 +41,7 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
 
   override fun onResume() {
     super.onResume()
-    getSuperHeroes().run(heroesContext).value.ev().unsafeRunAsync {
-      Toast.makeText(this, "asdf", Toast.LENGTH_LONG).show()
-    }
+    getSuperHeroes().run(heroesContext).value.ev().unsafeRunAsync {}
   }
 
   override fun drawHeroes(heroes: List<SuperHeroViewModel>) = runOnUiThread {

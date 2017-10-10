@@ -17,7 +17,6 @@ import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.MarvelImage
 import kategory.Reader
 import kategory.binding
-import kategory.effects.IO
 import kategory.flatMap
 
 interface HeroesView {
@@ -46,7 +45,7 @@ fun <D : SuperHeroesContext> displayErrors(c: CharacterError): AsyncResult<D, Un
         is UnknownServerError -> ctx.view.showGenericError()
         is AuthenticationError -> ctx.view.showAuthenticationError()
       }
-        AsyncResult.pure<D, Unit>(Unit)
+      AsyncResult.pure<D, Unit>(Unit)
     }.ev()
 
 fun drawHeroes(heroes: List<SuperHeroViewModel>): AsyncResult<GetHeroesContext, Unit> =
@@ -78,13 +77,13 @@ fun charactersToHero(characters: List<CharacterDto>): SuperHeroViewModel =
 
 fun getSuperHeroes(): AsyncResult<GetHeroesContext, Unit> =
     getHeroesUseCase<GetHeroesContext>()
-        .map { it.map(::charactersToHeroes) }
-        .flatMap { it.map { drawHeroes(it) } }
+        .map { charactersToHeroes(it) }
+        .flatMap { drawHeroes(it) }
         .handleErrorWith { displayErrors(it) }
 
 fun getSuperHeroDetails(
-    heroId: String): AsyncResult<GetHeroDetailsContext, IO<AsyncResult<GetHeroDetailsContext, Unit>>> =
+    heroId: String): AsyncResult<GetHeroDetailsContext, Unit> =
     getHeroDetailsUseCase<GetHeroDetailsContext>(heroId)
-        .map { it.map(::charactersToHero) }
-        .map { it.map { drawHero(it) } }
+        .map { charactersToHero(it) }
+        .flatMap { drawHero(it) }
         .handleErrorWith { displayErrors(it) }

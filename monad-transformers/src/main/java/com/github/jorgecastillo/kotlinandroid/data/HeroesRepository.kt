@@ -9,7 +9,6 @@ import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.fetchHeroDe
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
 import com.karumi.marvelapiclient.model.CharacterDto
-import kategory.effects.IO
 
 sealed class CachePolicy {
   object NetworkOnly : CachePolicy()
@@ -18,7 +17,7 @@ sealed class CachePolicy {
   object LocalFirst : CachePolicy()
 }
 
-fun <D : SuperHeroesContext> getHeroes(policy: CachePolicy): AsyncResult<D, IO<List<CharacterDto>>> = when (policy) {
+fun <D : SuperHeroesContext> getHeroes(policy: CachePolicy): AsyncResult<D, List<CharacterDto>> = when (policy) {
   is NetworkOnly -> fetchAllHeroes()
   is NetworkFirst -> fetchAllHeroes() // TODO change to conditional call
   is LocalOnly -> fetchAllHeroes() // TODO change to local only cache call
@@ -26,7 +25,7 @@ fun <D : SuperHeroesContext> getHeroes(policy: CachePolicy): AsyncResult<D, IO<L
 }
 
 fun <D : SuperHeroesContext> getHeroDetails(policy: CachePolicy,
-    heroId: String): AsyncResult<D, IO<List<CharacterDto>>> = when (policy) {
+    heroId: String): AsyncResult<D, List<CharacterDto>> = when (policy) {
   is NetworkOnly -> fetchHeroDetails(heroId)
   is NetworkFirst -> fetchHeroDetails(heroId) // TODO change to conditional call
   is LocalOnly -> fetchHeroDetails(heroId) // TODO change to local only cache call

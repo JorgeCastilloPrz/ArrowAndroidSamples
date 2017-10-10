@@ -7,12 +7,11 @@ import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.MarvelImage
-import kategory.effects.IO
 
 fun <D : SuperHeroesContext> getHeroesUseCase(): AsyncResult<D, List<CharacterDto>> =
-    getHeroes<D>(NetworkOnly).map { it.map { discardNonValidHeroes(it) } }
+    getHeroes<D>(NetworkOnly).map { discardNonValidHeroes(it) }
 
-fun <D : SuperHeroesContext> getHeroDetailsUseCase(heroId: String): AsyncResult<D, IO<List<CharacterDto>>> =
+fun <D : SuperHeroesContext> getHeroDetailsUseCase(heroId: String): AsyncResult<D, List<CharacterDto>> =
     getHeroDetails(NetworkOnly, heroId)
 
 private fun discardNonValidHeroes(heroes: List<CharacterDto>) =
