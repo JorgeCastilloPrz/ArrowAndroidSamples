@@ -9,7 +9,7 @@ import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.MarvelImage
 import kategory.effects.IO
 
-fun <D : SuperHeroesContext> getHeroesUseCase(): AsyncResult<D, IO<List<CharacterDto>>> =
+fun <D : SuperHeroesContext> getHeroesUseCase(): AsyncResult<D, List<CharacterDto>> =
     getHeroes<D>(NetworkOnly).map { it.map { discardNonValidHeroes(it) } }
 
 fun <D : SuperHeroesContext> getHeroDetailsUseCase(heroId: String): AsyncResult<D, IO<List<CharacterDto>>> =

@@ -38,7 +38,7 @@ fun onHeroListItemClick(heroId: String) = Reader.ask<GetHeroesContext>().flatMap
   it.heroDetailsPage.go(heroId)
 })
 
-fun <D : SuperHeroesContext> displayErrors(c: CharacterError): AsyncResult<D, IO<AsyncResult<D, Unit>>> =
+fun <D : SuperHeroesContext> displayErrors(c: CharacterError): AsyncResult<D, Unit> =
     AsyncResult.monad<D>().binding {
       val ctx = AsyncResult.ask<D>().bind()
       when (c) {
@@ -46,7 +46,7 @@ fun <D : SuperHeroesContext> displayErrors(c: CharacterError): AsyncResult<D, IO
         is UnknownServerError -> ctx.view.showGenericError()
         is AuthenticationError -> ctx.view.showAuthenticationError()
       }
-      AsyncResult.pure<D, IO<AsyncResult<D, Unit>>>(IO.pure(AsyncResult.pure(Unit)))
+        AsyncResult.pure<D, Unit>(Unit)
     }.ev()
 
 fun drawHeroes(heroes: List<SuperHeroViewModel>): AsyncResult<GetHeroesContext, Unit> =
@@ -76,10 +76,10 @@ fun characterToHero(character: CharacterDto): SuperHeroViewModel =
 fun charactersToHero(characters: List<CharacterDto>): SuperHeroViewModel =
     characters.map(::characterToHero).first()
 
-fun getSuperHeroes(): AsyncResult<GetHeroesContext, IO<AsyncResult<GetHeroesContext, Unit>>> =
+fun getSuperHeroes(): AsyncResult<GetHeroesContext, Unit> =
     getHeroesUseCase<GetHeroesContext>()
         .map { it.map(::charactersToHeroes) }
-        .map { it.map { drawHeroes(it) } }
+        .flatMap { it.map { drawHeroes(it) } }
         .handleErrorWith { displayErrors(it) }
 
 fun getSuperHeroDetails(

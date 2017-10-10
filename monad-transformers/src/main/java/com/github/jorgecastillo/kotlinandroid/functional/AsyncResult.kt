@@ -2,22 +2,11 @@ package com.github.jorgecastillo.kotlinandroid.functional
 
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
-import kategory.Applicative
-import kategory.Either
-import kategory.EitherT
-import kategory.EitherTKindPartial
-import kategory.Functor
-import kategory.HK
-import kategory.Kleisli
-import kategory.KleisliMonadErrorInstance
-import kategory.KleisliMonadErrorInstanceImplicits
-import kategory.KleisliMonadReaderInstance
-import kategory.KleisliMonadReaderInstanceImplicits
-import kategory.Monad
-import kategory.MonadError
-import kategory.andThen
+import kategory.*
+import kategory.effects.AsyncContext
+import kategory.effects.IO
 import kategory.effects.IOHK
-import kategory.ev
+import kategory.effects.Proc
 
 typealias Result<D, A> = Kleisli<EitherTKindPartial<IOHK, CharacterError>, D, A>
 
@@ -154,3 +143,19 @@ object AsyncResultMonadErrorInstanceImplicits {
 
 fun <D : SuperHeroesContext> AsyncResult.Companion.monadError(): AsyncResultMonadErrorInstance<D> =
     AsyncResultMonadErrorInstanceImplicits.instance()
+
+interface AsyncResultAsyncContextInstance<D : SuperHeroesContext> : AsyncContext<AsyncResultKindPartial<D>> {
+
+  override fun <A> runAsync(fa: Proc<A>): AsyncResult<D, A> =
+    AsyncResult<D, A>(Kleisli({ _: D -> EitherT(IO.runAsync(fa).map { it.right() }) }))
+
+}
+
+object AsyncResultAsyncContextInstanceImplicits {
+  @JvmStatic
+  fun <D : SuperHeroesContext> instance(): AsyncResultAsyncContextInstance<D> =
+          object : AsyncResultAsyncContextInstance<D> {}
+}
+
+fun <D : SuperHeroesContext> AsyncResult.Companion.asyncContext(): AsyncResultAsyncContextInstance<D> =
+        AsyncResultAsyncContextInstanceImplicits.instance()

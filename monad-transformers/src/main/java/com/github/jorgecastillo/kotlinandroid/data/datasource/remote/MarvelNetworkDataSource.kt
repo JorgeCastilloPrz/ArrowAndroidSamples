@@ -51,7 +51,7 @@ fun <D : SuperHeroesContext> fetchAllHeroes(): AsyncResult<D, List<CharacterDto>
         f = { ctx.apiClient.getAll(query).response.characters },
         onError = { ME.raiseError<List<CharacterDto>>(exceptionAsCharacterError(it)) },
         onSuccess = { AsyncResult.pure(it) },
-        AC = ctx.threading
+        AC = ctx.threading<D>()
     ).bind()
   }.ev()
 }
