@@ -11,6 +11,7 @@ import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
 import com.github.jorgecastillo.kotlinandroid.presentation.onHeroListItemClick
 import com.github.jorgecastillo.kotlinandroid.view.adapter.HeroesCardAdapter
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
+import kategory.effects.ev
 import kotlinx.android.synthetic.main.activity_main.heroesList
 
 class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
@@ -40,7 +41,7 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
 
   override fun onResume() {
     super.onResume()
-    getSuperHeroes().run(heroesContext)
+    getSuperHeroes().run(heroesContext).value.ev().unsafeRunAsync {}
   }
 
   override fun drawHeroes(heroes: List<SuperHeroViewModel>) = runOnUiThread {
