@@ -12,6 +12,7 @@ import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery
+import com.karumi.marvelapiclient.model.CharactersQuery.Builder
 import kategory.HK
 import kategory.Option
 import kategory.Try
@@ -31,19 +32,32 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
       else -> UnknownServerError((Option.Some(e)))
     }
 
-fun <D : SuperHeroesContext> fetchAllHeroes(): AsyncResult<D, List<CharacterDto>> {
-  val ME = AsyncResult.monadError<D>()
-  return ME.binding {
-    val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
-    val ctx = AsyncResult.ask<D>().bind()
-    runInAsyncContext(
-        f = { ctx.apiClient.getAll(query).response.characters },
-        onError = { ME.raiseError<List<CharacterDto>>(exceptionAsCharacterError(it)) },
-        onSuccess = { AsyncResult.pure(it) },
-        AC = ctx.threading<D>()
-    ).bind()
-  }.ev()
-}
+fun <D : SuperHeroesContext> fetchAllHeroes(): AsyncResult<D, List<CharacterDto>> =
+    AsyncResult.monadError<D>().binding {
+      val query = buildFetchHeroesQuery()
+      val ctx = AsyncResult.ask<D>().bind()
+      runInAsyncContext(
+          f = { fetchHeroes(ctx, query) },
+          onError = { liftError<D>(it) },
+          onSuccess = { liftSuccess(it) },
+          AC = ctx.threading<D>()
+      ).bind()
+    }.ev()
+
+fun <D : SuperHeroesContext> fetchHeroDetails(heroId: String): AsyncResult<D, List<CharacterDto>> =
+    AsyncResult.monadError<D>().binding {
+      val ctx = AsyncResult.ask<D>().bind()
+      runInAsyncContext(
+          f = { fetchHero(ctx, heroId) },
+          onError = { liftError<D>(it) },
+          onSuccess = { liftSuccess(it) },
+          AC = ctx.threading<D>()
+      ).bind()
+    }.ev()
+
+private fun <D : SuperHeroesContext> liftSuccess(
+    it: List<CharacterDto>): AsyncResult<D, List<CharacterDto>> =
+    AsyncResult.pure(it)
 
 private fun <F, A, B> runInAsyncContext(
     f: () -> A,
@@ -57,15 +71,13 @@ private fun <F, A, B> runInAsyncContext(
   }
 }
 
-fun <D : SuperHeroesContext> fetchHeroDetails(heroId: String): AsyncResult<D, List<CharacterDto>> {
-  val ME = AsyncResult.monadError<D>()
-  return ME.binding {
-    val ctx = AsyncResult.ask<D>().bind()
-    runInAsyncContext(
-        f = { listOf(ctx.apiClient.getCharacter(heroId).response) },
-        onError = { ME.raiseError<List<CharacterDto>>(exceptionAsCharacterError(it)) },
-        onSuccess = { AsyncResult.pure(it) },
-        AC = ctx.threading<D>()
-    ).bind()
-  }.ev()
-}
+private fun buildFetchHeroesQuery() = Builder.create().withOffset(0).withLimit(50).build()
+
+private fun <D : SuperHeroesContext> fetchHeroes(ctx: D,
+    query: CharactersQuery?) = ctx.apiClient.getAll(query).response.characters
+
+private fun <D : SuperHeroesContext> fetchHero(ctx: D,
+    heroId: String) = listOf(ctx.apiClient.getCharacter(heroId).response)
+
+private fun <D : SuperHeroesContext> liftError(
+    it: Throwable) = AsyncResult.monadError<D>().raiseError<List<CharacterDto>>(exceptionAsCharacterError(it))
