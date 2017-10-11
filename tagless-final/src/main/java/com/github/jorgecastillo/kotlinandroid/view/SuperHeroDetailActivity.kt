@@ -14,6 +14,8 @@ import com.github.jorgecastillo.kotlinandroid.functional.ev
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroDetailView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroDetails
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
+import kategory.effects.ev
+import kategory.value
 import kotlinx.android.synthetic.main.activity_detail.appBar
 import kotlinx.android.synthetic.main.activity_detail.collapsingToolbar
 import kotlinx.android.synthetic.main.activity_detail.description
@@ -40,7 +42,8 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
     super.onResume()
     intent.extras?.let {
       val heroId = it.getString(EXTRA_HERO_ID)
-      getSuperHeroDetails(heroId, AsyncResult<GetHeroDetailsContext>()).ev().run(GetHeroDetailsContext(this, this))
+      getSuperHeroDetails(heroId, AsyncResult<GetHeroDetailsContext>()).ev()
+          .run(GetHeroDetailsContext(this, this)).value().ev().unsafeRunAsync {}
     } ?: closeWithError()
   }
 
@@ -48,21 +51,21 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
     Toast.makeText(this, string.hero_id_needed, Toast.LENGTH_SHORT).show()
   }
 
-  override fun drawHero(hero: SuperHeroViewModel) = runOnUiThread  {
+  override fun drawHero(hero: SuperHeroViewModel) = runOnUiThread {
     collapsingToolbar.title = hero.name
     description.text = hero.description.let { if (it.isNotEmpty()) it else getString(string.empty_description) }
     headerImage.loadImageAsync(hero.photoUrl)
   }
 
-  override fun showNotFoundError() = runOnUiThread  {
+  override fun showNotFoundError() = runOnUiThread {
     Snackbar.make(appBar, string.not_found, Snackbar.LENGTH_SHORT).show()
   }
 
-  override fun showGenericError() = runOnUiThread  {
+  override fun showGenericError() = runOnUiThread {
     Snackbar.make(appBar, string.generic, Snackbar.LENGTH_SHORT).show()
   }
 
-  override fun showAuthenticationError() = runOnUiThread  {
+  override fun showAuthenticationError() = runOnUiThread {
     Snackbar.make(appBar, string.authentication, Snackbar.LENGTH_SHORT).show()
   }
 }

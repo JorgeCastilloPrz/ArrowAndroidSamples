@@ -8,12 +8,13 @@ import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
 import com.github.jorgecastillo.kotlinandroid.functional.ev
-import com.github.jorgecastillo.kotlinandroid.functional.monadControl
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
 import com.github.jorgecastillo.kotlinandroid.presentation.onHeroListItemClick
 import com.github.jorgecastillo.kotlinandroid.view.adapter.HeroesCardAdapter
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
+import kategory.effects.ev
+import kategory.value
 import kotlinx.android.synthetic.main.activity_main.heroesList
 
 class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
@@ -36,14 +37,16 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
     heroesList.setHasFixedSize(true)
     heroesList.layoutManager = LinearLayoutManager(this)
     adapter = HeroesCardAdapter(itemClick = {
-      onHeroListItemClick(it.heroId, AsyncResult<GetHeroesContext>()).ev().run(heroesContext)
+      onHeroListItemClick(it.heroId, AsyncResult<GetHeroesContext>()).ev().run(
+          heroesContext).value().ev().unsafeRunAsync {}
     })
     heroesList.adapter = adapter
   }
 
   override fun onResume() {
     super.onResume()
-    getSuperHeroes(AsyncResult<GetHeroesContext>()).ev().run(GetHeroesContext(this, this))
+    getSuperHeroes(AsyncResult<GetHeroesContext>()).ev().run(
+        GetHeroesContext(this, this)).value().ev().unsafeRunAsync {}
   }
 
   override fun drawHeroes(heroes: List<SuperHeroViewModel>) = runOnUiThread {
