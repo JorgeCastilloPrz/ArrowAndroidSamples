@@ -55,10 +55,6 @@ fun <D : SuperHeroesContext> fetchHeroDetails(heroId: String): AsyncResult<D, Li
       ).bind()
     }.ev()
 
-private fun <D : SuperHeroesContext> liftSuccess(
-    it: List<CharacterDto>): AsyncResult<D, List<CharacterDto>> =
-    AsyncResult.pure(it)
-
 private fun <F, A, B> runInAsyncContext(
     f: () -> A,
     onError: (Throwable) -> B,
@@ -81,3 +77,7 @@ private fun <D : SuperHeroesContext> fetchHero(ctx: D,
 
 private fun <D : SuperHeroesContext> liftError(
     it: Throwable) = AsyncResult.monadError<D>().raiseError<List<CharacterDto>>(exceptionAsCharacterError(it))
+
+private fun <D : SuperHeroesContext> liftSuccess(
+    it: List<CharacterDto>): AsyncResult<D, List<CharacterDto>> =
+    AsyncResult.pure(it)

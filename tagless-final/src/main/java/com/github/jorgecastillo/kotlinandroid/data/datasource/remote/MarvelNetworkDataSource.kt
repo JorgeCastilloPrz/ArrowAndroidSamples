@@ -1,5 +1,6 @@
 package com.github.jorgecastillo.kotlinandroid.data.datasource.remote
 
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
@@ -12,23 +13,54 @@ import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery
+import com.karumi.marvelapiclient.model.CharactersQuery.Builder
 import kategory.HK
 import kategory.Option
+import kategory.Try
 import kategory.binding
+import kategory.effects.AsyncContext
+import kategory.right
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
 import java.net.HttpURLConnection
 
-/*
- * This is the network data source. Calls are made using Karumi's MarvelApiClient.
- * @see "https://github.com/Karumi/MarvelApiClientAndroid"
- *
- * Both requests return a new Reader enclosing an action to resolve when you provide them with the
- * required execution context.
- *
- * The getHeroesFromAvengerComicsUseCase() method maps the fetchAllHeroes() result to filter the list with just the
- * elements with given conditions. It's returning heroes appearing on comics with the  "Avenger"
- * word in the title. Yep, I wanted to retrieve Avengers but the Marvel API is a bit weird
- * sometimes.
- */
+inline fun <reified F> fetchAllHeroes(
+    C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): HK<F, List<CharacterDto>> =
+    C.binding {
+      val query = buildFetchHeroesQuery()
+      val ctx = C.ask().bind()
+      runInAsyncContext(
+          f = { fetchHeroes(ctx, query) },
+          onError = { liftError(C, it) },
+          onSuccess = { liftSuccess(C, it) },
+          AC = C
+      ).bind()
+    }
+
+inline fun <reified F> fetchHeroDetails(heroId: String,
+    C: MonadControl<F, GetHeroDetailsContext, CharacterError> = monadControl()): HK<F, List<CharacterDto>> =
+    C.binding {
+      val ctx = C.ask().bind()
+      runInAsyncContext(
+          f = { fetchHero(ctx, heroId) },
+          onError = { liftError(C, it) },
+          onSuccess = { liftSuccess(C, it) },
+          AC = C
+      ).bind()
+    }
+
+fun <D : SuperHeroesContext> fetchHero(ctx: D, heroId: String) = listOf(ctx.apiClient.getCharacter(heroId).response)
+
+fun buildFetchHeroesQuery(): CharactersQuery = Builder.create().withOffset(0).withLimit(50).build()
+
+fun <D : SuperHeroesContext> fetchHeroes(ctx: D, query: CharactersQuery): List<CharacterDto> = ctx.apiClient.getAll(
+    query).response.characters
+
+fun <F, D : SuperHeroesContext> liftError(C: MonadControl<F, D, CharacterError>,
+    it: Throwable) = C.raiseError<List<CharacterDto>>(exceptionAsCharacterError(it))
+
+fun <F, D : SuperHeroesContext> liftSuccess(C: MonadControl<F, D, CharacterError>, it: List<CharacterDto>) = C.pure(it)
+
 fun exceptionAsCharacterError(e: Throwable): CharacterError =
     when (e) {
       is MarvelAuthApiException -> AuthenticationError
@@ -38,34 +70,15 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
       else -> UnknownServerError((Option.Some(e)))
     }
 
-
-inline fun <reified F> fetchAllHeroes(
-    C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): HK<F, List<CharacterDto>> =
-    C.binding {
-      val query = CharactersQuery.Builder.create().withOffset(0).withLimit(50).build()
-      val ctx = C.ask().bind()
-      C.catch(
-          { ctx.apiClient.getAll(query).response.characters },
-          { exceptionAsCharacterError(it) }
-      )
+fun <F, A, B> runInAsyncContext(
+    f: () -> A,
+    onError: (Throwable) -> B,
+    onSuccess: (A) -> B, AC: AsyncContext<F>): HK<F, B> {
+  return AC.runAsync { proc ->
+    async(CommonPool) {
+      val result = Try { f() }.fold(onError, onSuccess)
+      proc(result.right())
     }
+  }
+}
 
-inline fun <reified F> fetchHeroDetails(heroId: String,
-    C: MonadControl<F, GetHeroDetailsContext, CharacterError> = monadControl()): HK<F, CharacterDto> =
-    C.binding {
-      val ctx = C.ask().bind()
-      C.catch(
-          { ctx.apiClient.getCharacter(heroId).response },
-          { exceptionAsCharacterError(it) }
-      )
-    }
-
-inline fun <reified F> fetchHeroesFromAvengerComics(
-    C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): HK<F, List<CharacterDto>> =
-    C.map(fetchAllHeroes(C), {
-      it.filter {
-        it.comics.items.map { it.name }.filter {
-          it.contains("Avenger", true)
-        }.count() > 0
-      }
-    })
