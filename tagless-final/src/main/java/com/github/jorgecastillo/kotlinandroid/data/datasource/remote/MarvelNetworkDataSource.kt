@@ -31,35 +31,30 @@ inline fun <reified F> fetchAllHeroes(
       val ctx = C.ask().bind()
       runInAsyncContext(
           f = { fetchHeroes(ctx, query) },
-          onError = { liftError(C, it) },
-          onSuccess = { liftSuccess(C, it) },
+          onError = { C.raiseError<List<CharacterDto>>(exceptionAsCharacterError(it)) },
+          onSuccess = { C.pure(it) },
           AC = C
       ).bind()
     }
 
 inline fun <reified F> fetchHeroDetails(heroId: String,
-    C: MonadControl<F, GetHeroDetailsContext, CharacterError> = monadControl()): HK<F, List<CharacterDto>> =
+    C: MonadControl<F, GetHeroDetailsContext, CharacterError> = monadControl()): HK<F, CharacterDto> =
     C.binding {
       val ctx = C.ask().bind()
       runInAsyncContext(
           f = { fetchHero(ctx, heroId) },
-          onError = { liftError(C, it) },
-          onSuccess = { liftSuccess(C, it) },
+          onError = { C.raiseError<CharacterDto>(exceptionAsCharacterError(it)) },
+          onSuccess = { C.pure(it) },
           AC = C
       ).bind()
     }
 
-fun <D : SuperHeroesContext> fetchHero(ctx: D, heroId: String) = listOf(ctx.apiClient.getCharacter(heroId).response)
+fun <D : SuperHeroesContext> fetchHero(ctx: D, heroId: String) = ctx.apiClient.getCharacter(heroId).response
 
 fun buildFetchHeroesQuery(): CharactersQuery = Builder.create().withOffset(0).withLimit(50).build()
 
 fun <D : SuperHeroesContext> fetchHeroes(ctx: D, query: CharactersQuery): List<CharacterDto> = ctx.apiClient.getAll(
     query).response.characters
-
-fun <F, D : SuperHeroesContext> liftError(C: MonadControl<F, D, CharacterError>,
-    it: Throwable) = C.raiseError<List<CharacterDto>>(exceptionAsCharacterError(it))
-
-fun <F, D : SuperHeroesContext> liftSuccess(C: MonadControl<F, D, CharacterError>, it: List<CharacterDto>) = C.pure(it)
 
 fun exceptionAsCharacterError(e: Throwable): CharacterError =
     when (e) {

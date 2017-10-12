@@ -23,7 +23,7 @@ inline fun <reified F> getHeroesWithCachePolicy(policy: CachePolicy): HK<F, List
   is LocalFirst -> fetchAllHeroes() // TODO change to conditional call
 }
 
-inline fun <reified F> getHeroDetails(policy: CachePolicy, heroId: String): HK<F, List<CharacterDto>> = when (policy) {
+inline fun <reified F> getHeroDetails(policy: CachePolicy, heroId: String): HK<F, CharacterDto> = when (policy) {
   is NetworkOnly -> fetchHeroDetails(heroId)
   is NetworkFirst -> fetchHeroDetails(heroId) // TODO change to conditional call
   is LocalOnly -> fetchHeroDetails(heroId) // TODO change to local only cache call

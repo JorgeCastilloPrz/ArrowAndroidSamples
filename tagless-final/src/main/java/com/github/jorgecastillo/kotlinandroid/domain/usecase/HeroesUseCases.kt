@@ -9,5 +9,5 @@ import kategory.HK
 inline fun <reified F> getHeroesUseCase(): HK<F, List<CharacterDto>> =
     getHeroesWithCachePolicy(NetworkOnly)
 
-inline fun <reified F> getHeroDetailsUseCase(heroId: String): HK<F, List<CharacterDto>> =
+inline fun <reified F> getHeroDetailsUseCase(heroId: String): HK<F, CharacterDto> =
     getHeroDetails(NetworkOnly, heroId)
