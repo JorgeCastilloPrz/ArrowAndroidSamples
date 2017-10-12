@@ -11,7 +11,8 @@ import com.github.jorgecastillo.kotlinandroid.domain.usecase.getHeroesUseCase
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
-import com.karumi.marvelapiclient.model.MarvelImage
+import com.karumi.marvelapiclient.model.CharacterDto
+import com.karumi.marvelapiclient.model.MarvelImage.Size.PORTRAIT_UNCANNY
 import kategory.Option
 import kategory.Reader
 import kategory.effects.ev
@@ -41,21 +42,9 @@ fun onHeroListItemClick(heroId: String) = Reader.ask<GetHeroesContext>().flatMap
 fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap({ (_, view: SuperHeroesListView) ->
   getHeroesUseCase().map({ io ->
     io.ev().unsafeRunAsync { maybeHeroes ->
-      maybeHeroes.bimap(::exceptionAsCharacterError, ::identity).fold({ error ->
-        when (error) {
-          is NotFoundError -> view.showNotFoundError()
-          is UnknownServerError -> view.showGenericError()
-          is AuthenticationError -> view.showAuthenticationError()
-        }
-      }, { success ->
-        view.drawHeroes(success.map {
-          SuperHeroViewModel(
-              it.id,
-              it.name,
-              it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
-              it.description)
-        })
-      })
+      maybeHeroes.bimap(::exceptionAsCharacterError, ::identity).fold(
+          { error -> drawError(error, view) },
+          { success -> drawHeroes(view, success) })
     }
   })
 })
@@ -64,21 +53,9 @@ fun getSuperHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>()
     .flatMap({ (_, view: SuperHeroDetailView) ->
       getHeroDetailsUseCase(heroId).map({ io ->
         io.ev().unsafeRunAsync { maybeHeroes ->
-          maybeHeroes.bimap(::exceptionAsCharacterError, ::identity).fold({ error ->
-            when (error) {
-              is NotFoundError -> view.showNotFoundError()
-              is UnknownServerError -> view.showGenericError()
-              is AuthenticationError -> view.showAuthenticationError()
-            }
-          }, { success ->
-            view.drawHero(success.map {
-              SuperHeroViewModel(
-                  it.id,
-                  it.name,
-                  it.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY),
-                  it.description)
-            }.first())
-          })
+          maybeHeroes.bimap(::exceptionAsCharacterError, ::identity).fold(
+              { error -> drawError(error, view) },
+              { hero -> drawHero(hero, view) })
         }
       })
     })
@@ -91,3 +68,34 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
         else CharacterError.UnknownServerError(Option.Some(e))
       else -> CharacterError.UnknownServerError((Option.Some(e)))
     }
+
+private fun drawError(error: CharacterError,
+    view: HeroesView) {
+  when (error) {
+    is NotFoundError -> view.showNotFoundError()
+    is UnknownServerError -> view.showGenericError()
+    is AuthenticationError -> view.showAuthenticationError()
+  }
+}
+
+private fun drawHeroes(view: SuperHeroesListView, success: List<CharacterDto>) {
+  view.drawHeroes(success.map {
+    SuperHeroViewModel(
+        it.id,
+        it.name,
+        it.thumbnail.getImageUrl(PORTRAIT_UNCANNY),
+        it.description)
+  })
+}
+
+private fun drawHero(success: List<CharacterDto>, view: SuperHeroDetailView) {
+  view.drawHero(success.map {
+    SuperHeroViewModel(
+        it.id,
+        it.name,
+        it.thumbnail.getImageUrl(PORTRAIT_UNCANNY),
+        it.description)
+  }.first())
+}
+
+

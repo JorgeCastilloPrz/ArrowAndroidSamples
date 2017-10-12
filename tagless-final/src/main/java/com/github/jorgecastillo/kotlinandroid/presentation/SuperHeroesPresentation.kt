@@ -45,7 +45,8 @@ fun displayErrors(ctx: SuperHeroesContext, c: CharacterError): Unit {
   }
 }
 
-inline fun <reified F> getSuperHeroes(C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): HK<F, Unit> =
+inline fun <reified F> getSuperHeroes(
+    C: MonadControl<F, GetHeroesContext, CharacterError> = monadControl()): HK<F, Unit> =
     C.binding {
       val ctx = C.ask().bind()
       val result = C.handleError(getHeroesUseCase(), { displayErrors(ctx, it); emptyList() }).bind()

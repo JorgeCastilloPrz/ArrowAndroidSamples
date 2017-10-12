@@ -78,6 +78,7 @@ dependencies {
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
   compile "com.squareup.picasso:picasso:2.5.2"
   compile "io.kategory:kategory-annotations:$kategory_version"
+  compile "io.kategory:kategory-effects:$kategory_version"
   compile "io.kategory:kategory:$kategory_version"
   compile 'com.karumi:marvelapiclient:1.0.1'
 }

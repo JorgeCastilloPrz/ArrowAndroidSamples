@@ -5,7 +5,9 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.github.jorgecastillo.kotlinandroid.R
+import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
+import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
 import com.github.jorgecastillo.kotlinandroid.presentation.onHeroListItemClick
@@ -41,7 +43,7 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
 
   override fun onResume() {
     super.onResume()
-    getSuperHeroes().run(heroesContext).value.ev().unsafeRunAsync {}
+    getSuperHeroes().unsafePerformEffects(heroesContext)
   }
 
   override fun drawHeroes(heroes: List<SuperHeroViewModel>) = runOnUiThread {
@@ -60,4 +62,8 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
   override fun showAuthenticationError() = runOnUiThread {
     Snackbar.make(heroesList, R.string.authentication, Snackbar.LENGTH_SHORT).show()
   }
+}
+
+fun <D : SuperHeroesContext, A> AsyncResult<D, A>.unsafePerformEffects(ctx: D) {
+  this.run(ctx).value.ev().unsafeRunAsync {}
 }

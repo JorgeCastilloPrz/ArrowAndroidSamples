@@ -18,7 +18,12 @@ import kategory.MonadReader
 import kategory.Tuple2
 import kategory.Typeclass
 import kategory.andThen
+import kategory.effects.AsyncContext
+import kategory.effects.IO
+import kategory.effects.IOHK
+import kategory.effects.Proc
 import kategory.instance
+import kategory.right
 
 class AsyncResultHK private constructor()
 typealias AsyncResultKind<D, A> = kategory.HK2<AsyncResultHK, D, A>
@@ -28,12 +33,12 @@ typealias AsyncResultKindPartial<D> = kategory.HK<AsyncResultHK, D>
 inline fun <D : SuperHeroesContext, A> AsyncResultKind<D, A>.ev(): AsyncResult<D, A> =
     this as AsyncResult<D, A>
 
-typealias Result<D, A> = Kleisli<EitherTKindPartial<FutureHK, CharacterError>, D, A>
+typealias Result<D, A> = Kleisli<EitherTKindPartial<IOHK, CharacterError>, D, A>
 
 class AsyncResult<D : SuperHeroesContext, A>(
     val value: Result<D, A>) : AsyncResultKind<D, A> {
 
-  fun run(ctx: D): HK<EitherTKindPartial<FutureHK, CharacterError>, A> = value.run(ctx)
+  fun run(ctx: D): HK<EitherTKindPartial<IOHK, CharacterError>, A> = value.run(ctx)
 
   companion object {
     inline operator fun <reified D : SuperHeroesContext> invoke(): MonadControl<AsyncResultKindPartial<D>, D, CharacterError> = monadControl()
@@ -50,6 +55,7 @@ inline fun <reified F, reified D : SuperHeroesContext, E> monadControl(): MonadC
 interface MonadControl<F, D, E> :
     MonadError<F, E>,
     MonadReader<F, D>,
+    AsyncContext<F>,
     Typeclass
 
 interface AsyncResultMonadControl<D : SuperHeroesContext> : MonadControl<AsyncResultKindPartial<D>, D, CharacterError> {
@@ -57,13 +63,13 @@ interface AsyncResultMonadControl<D : SuperHeroesContext> : MonadControl<AsyncRe
   companion object {
   }
 
-  fun ETME(): MonadError<EitherTKindPartial<FutureHK, CharacterError>, CharacterError> =
+  fun ETME(): MonadError<EitherTKindPartial<IOHK, CharacterError>, CharacterError> =
       EitherT.monadError()
 
-  fun <D : SuperHeroesContext> KME(): KleisliMonadErrorInstance<EitherTKindPartial<FutureHK, CharacterError>, D, CharacterError> =
+  fun <D : SuperHeroesContext> KME(): KleisliMonadErrorInstance<EitherTKindPartial<IOHK, CharacterError>, D, CharacterError> =
       KleisliMonadErrorInstanceImplicits.instance(ETME())
 
-  fun <D : SuperHeroesContext> KMR(): KleisliMonadReaderInstance<EitherTKindPartial<FutureHK, CharacterError>, D> =
+  fun <D : SuperHeroesContext> KMR(): KleisliMonadReaderInstance<EitherTKindPartial<IOHK, CharacterError>, D> =
       KleisliMonadReaderInstanceImplicits.instance(ETME())
 
   override fun <A, B> map(fa: HK<AsyncResultKindPartial<D>, A>, f: (A) -> B): AsyncResult<D, B> {
@@ -102,6 +108,9 @@ interface AsyncResultMonadControl<D : SuperHeroesContext> : MonadControl<AsyncRe
   override fun <A> local(f: (D) -> D, fa: HK<AsyncResultKindPartial<D>, A>): AsyncResult<D, A> {
     return AsyncResult(KMR<D>().local(f, fa.ev().value))
   }
+
+  override fun <A> runAsync(fa: Proc<A>): HK<AsyncResultKindPartial<D>, A> =
+      AsyncResult<D, A>(Kleisli({ _: D -> EitherT(IO.runAsync(fa).map { it.right() }) }))
 }
 
 @instance(AsyncResultMonadControl::class)
