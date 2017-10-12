@@ -10,12 +10,9 @@ import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.R.string
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
-import com.github.jorgecastillo.kotlinandroid.functional.ev
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroDetailView
 import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroDetails
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
-import kategory.effects.ev
-import kategory.value
 import kotlinx.android.synthetic.main.activity_detail.appBar
 import kotlinx.android.synthetic.main.activity_detail.collapsingToolbar
 import kotlinx.android.synthetic.main.activity_detail.description
@@ -42,8 +39,8 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
     super.onResume()
     intent.extras?.let {
       val heroId = it.getString(EXTRA_HERO_ID)
-      getSuperHeroDetails(heroId, AsyncResult<GetHeroDetailsContext>()).ev()
-          .run(GetHeroDetailsContext(this, this)).value().ev().unsafeRunAsync {}
+      getSuperHeroDetails(heroId, AsyncResult<GetHeroDetailsContext>())
+          .unsafePerformEffects(GetHeroDetailsContext(this, this))
     } ?: closeWithError()
   }
 
