@@ -22,11 +22,6 @@ import kotlinx.coroutines.experimental.async
  *
  * Both requests return a new Reader enclosing an action to resolve when you provide them with the
  * required execution context.
- *
- * The getHeroesFromAvengerComicsUseCase() method maps the fetchAllHeroes() result to filter the list with just the
- * elements with given conditions. It's returning heroes appearing on comics with the  "Avenger"
- * word in the title. Yep, I wanted to retrieve Avengers but the Marvel API is a bit weird
- * sometimes.
  */
 
 fun fetchAllHeroes() = Reader.ask<GetHeroesContext>().map({ ctx ->
