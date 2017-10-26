@@ -31,18 +31,14 @@ This project showcases a different functional architecture approach per module. 
 strategies / gradle modules available.
 
 ## Nested Monads
-On this module, you will find a not very common approach using nested Monads like `Reader`, 
-`IO`, or `Either` to construct the asynchronous result I want to get. This module showcases 
-the first natural step that any OOP Android developer would probably implement on his first attempt 
-to use Monads. You need some nested behaviors, so you move on and nest them. But in the end, It's 
-not a quite common approach on FP, since we usually would end up combining all the properties from 
-all those Monads into a single one much more powerful representing the result, just to simplify 
-things. We can find that improvement under **Monad Transformers** module. 
+This module showcases an approach based on a **stack of monads** resolving all the concerns that an app could 
+have, including Dependency Injection, error handling, asynchrony and threading, IO computations, and so on.
+* [Read this detailed post](https://medium.com/@JorgeCastilloPr/kotlin-functional-programming-i-monad-stack-518d1bd8fbee) to use it as the best documentation out there for this approach. 
 
 ## Monad Transformers
 This module would be like **nested monads 2.0**. It presents a second iteration over the 
 **nested-monads** module, where we are simplifying things a lot by applying transformers on top of 
-Monads to bind additional behaviors to them, so we can achieve the same behaviors with less code. 
+the Monad stack to bind additional behaviors to them, so we can achieve the same behaviors with less code. 
 That is indeed a very common approach in Functional Programming. We are adding `AsyncResult` Monad 
 which is going to cover all the needs we have: DI + Error Handling + Async.
 [You probably want to look at this PR for more description details](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/3).
