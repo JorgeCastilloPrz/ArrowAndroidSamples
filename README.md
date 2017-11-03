@@ -109,6 +109,9 @@ Developed By
 ------------
 * Jorge Castillo Pérez - <jorge.castillo.prz@gmail.com>
 
+<a href="https://twitter.com/jorgecastillopr">
+  <img alt="Twitter profile" src="https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/blob/master/assets/twitter_logo.png" />
+</a>
 <a href="https://medium.com/@jorgecastillopr">
   <img alt="Medium blog" src="https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/blob/master/assets/medium_blog_logo.png" />
 </a>
