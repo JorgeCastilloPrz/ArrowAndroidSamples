@@ -1,1 +1,1 @@
-include ':nested-monads', ':tagless-final', ':monad-transformers', ':shared', ':free-monads'
+include ':monad-stack', ':tagless-final', ':monad-transformers', ':shared', ':free-monads'
