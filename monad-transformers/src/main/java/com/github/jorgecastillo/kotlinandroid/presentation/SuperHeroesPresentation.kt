@@ -1,6 +1,5 @@
 package com.github.jorgecastillo.kotlinandroid.presentation
 
-import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
@@ -37,15 +36,26 @@ fun onHeroListItemClick(heroId: String) = Reader.ask<GetHeroesContext>().flatMap
   it.heroDetailsPage.go(heroId)
 })
 
-fun <D : SuperHeroesContext> displayErrors(c: CharacterError): AsyncResult<D, Unit> =
-    AsyncResult.monad<D>().binding {
-      val ctx = AsyncResult.ask<D>().bind()
+fun displayGetHeroesErrors(c: CharacterError): AsyncResult<GetHeroesContext, Unit> =
+    AsyncResult.monad<GetHeroesContext>().binding {
+      val ctx = AsyncResult.ask<GetHeroesContext>().bind()
       when (c) {
         is NotFoundError -> ctx.view.showNotFoundError()
         is UnknownServerError -> ctx.view.showGenericError()
         is AuthenticationError -> ctx.view.showAuthenticationError()
       }
-      AsyncResult.pure<D, Unit>(Unit)
+      AsyncResult.pure<GetHeroesContext, Unit>(Unit)
+    }.ev()
+
+fun displayGetDetailsErrors(c: CharacterError): AsyncResult<GetHeroDetailsContext, Unit> =
+    AsyncResult.monad<GetHeroDetailsContext>().binding {
+      val ctx = AsyncResult.ask<GetHeroDetailsContext>().bind()
+      when (c) {
+        is NotFoundError -> ctx.view.showNotFoundError()
+        is UnknownServerError -> ctx.view.showGenericError()
+        is AuthenticationError -> ctx.view.showAuthenticationError()
+      }
+      AsyncResult.pure<GetHeroDetailsContext, Unit>(Unit)
     }.ev()
 
 fun drawHeroes(heroes: List<SuperHeroViewModel>): AsyncResult<GetHeroesContext, Unit> =
@@ -79,11 +89,11 @@ fun getSuperHeroes(): AsyncResult<GetHeroesContext, Unit> =
     getHeroesUseCase<GetHeroesContext>()
         .map { charactersToHeroes(it) }
         .flatMap { drawHeroes(it) }
-        .handleErrorWith { displayErrors(it) }
+        .handleErrorWith { displayGetHeroesErrors(it) }
 
 fun getSuperHeroDetails(
     heroId: String): AsyncResult<GetHeroDetailsContext, Unit> =
     getHeroDetailsUseCase<GetHeroDetailsContext>(heroId)
         .map { charactersToHero(it) }
         .flatMap { drawHero(it) }
-        .handleErrorWith { displayErrors(it) }
+        .handleErrorWith { displayGetDetailsErrors(it) }

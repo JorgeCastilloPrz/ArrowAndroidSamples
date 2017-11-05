@@ -13,9 +13,9 @@ import com.karumi.marvelapiclient.MarvelApiConfig.Builder
 import kategory.effects.IO
 import kategory.effects.asyncContext
 
-sealed class SuperHeroesContext(ctx: Context) {
+sealed class SuperHeroesContext {
 
-  abstract val view: HeroesView
+  abstract val ctx: Context
 
   val heroDetailsPage = HeroDetailsPage()
   val apiClient
@@ -24,6 +24,7 @@ sealed class SuperHeroesContext(ctx: Context) {
         BuildConfig.MARVEL_PRIVATE_KEY).debug().build())
   fun <D: SuperHeroesContext> threading() = AsyncResult.asyncContext<D>()
 
-  data class GetHeroesContext(val ctx: Context, override val view: SuperHeroesListView) : SuperHeroesContext(ctx)
-  data class GetHeroDetailsContext(val ctx: Context, override val view: SuperHeroDetailView) : SuperHeroesContext(ctx)
+  data class ApplicationContext(override val ctx: Context) : SuperHeroesContext()
+  data class GetHeroesContext(override val ctx: Context, val view: SuperHeroesListView) : SuperHeroesContext()
+  data class GetHeroDetailsContext(override val ctx: Context, val view: SuperHeroDetailView) : SuperHeroesContext()
 }
