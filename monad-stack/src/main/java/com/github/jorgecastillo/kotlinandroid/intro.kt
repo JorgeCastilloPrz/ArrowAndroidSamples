@@ -4,22 +4,37 @@ import android.content.res.Resources.NotFoundException
 import com.github.jorgecastillo.kotlinandroid.domain.model.SuperHero
 import kategory.Option
 import kategory.Either
+import kategory.Option.None
+import kategory.Option.Some
+import kategory.Tuple2
+import java.util.logging.Level
+import java.util.logging.Logger
 
 // Pure functions
 
-fun add(a: Int, b: Int) = a + b
+val cachedComputations: Map<Tuple2<Int, Int>, Int> = mapOf()
 
-fun product(a: Int, b: Int) = a * b
+fun add(a: Int, b: Int): Int = a + b
 
-fun division(a: Int, b: Int) = a / b
+fun product(a: Int, b: Int): Int = a * b
 
-fun triangleArea(b: Int, h: Int) = b * h / 2
+fun division(a: Int, b: Int): Int = a / b
 
-fun squareArea(side: Int) = side * side
+fun triangleArea(b: Int, h: Int): Int = b * h / 2
+
+fun squareArea(side: Int): Int = side * side
+
+fun purityTest() {
+  add(3, 2) // 5
+  val five = 5
+}
+
+val presence = Some(SuperHero("IronMan"))
+val absence = None
 
 fun findHeroByName(heroName: String): Option<SuperHero> {
   return if (heroName == "Goku") {
-    Option.fromNullable(SuperHero("Goku"))
+    Option(SuperHero("Goku"))
   } else {
     Option.None
   }
@@ -32,12 +47,6 @@ fun findHeroById(id: Long): Either<Exception, SuperHero> {
     Either.Left(NotFoundException())
   }
 }
-
-
-
-
-
-
 
 
 fun test() {

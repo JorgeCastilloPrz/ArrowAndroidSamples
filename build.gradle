@@ -6,7 +6,7 @@ buildscript {
   ext.build_tools_version = '26.0.1'
   ext.compileVersion = 26
   ext.appId = "com.github.jorgecastillo.kotlinandroid"
-  ext.minSdk = 16
+  ext.minSdk = 19
   ext.targetSdk = 26
   ext.version_code = 1
   ext.version_name = "1.0"
