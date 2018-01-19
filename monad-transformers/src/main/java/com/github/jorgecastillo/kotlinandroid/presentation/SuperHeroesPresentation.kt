@@ -1,5 +1,9 @@
 package com.github.jorgecastillo.kotlinandroid.presentation
 
+import arrow.core.IdHK
+import arrow.data.Reader
+import arrow.data.flatMap
+import arrow.typeclasses.binding
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
@@ -14,9 +18,6 @@ import com.github.jorgecastillo.kotlinandroid.functional.monad
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.MarvelImage
-import kategory.Reader
-import kategory.binding
-import kategory.flatMap
 
 interface HeroesView {
   fun showNotFoundError()
@@ -32,7 +33,7 @@ interface SuperHeroDetailView : HeroesView {
   fun drawHero(hero: SuperHeroViewModel): Unit
 }
 
-fun onHeroListItemClick(heroId: String) = Reader.ask<GetHeroesContext>().flatMap({
+fun onHeroListItemClick(heroId: String) = Reader.ask<IdHK, GetHeroesContext>().flatMap({
   it.heroDetailsPage.go(heroId)
 })
 

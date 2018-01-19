@@ -1,5 +1,6 @@
 package com.github.jorgecastillo.kotlinandroid.data
 
+import arrow.HK
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.LocalFirst
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.LocalOnly
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.NetworkFirst
@@ -7,7 +8,6 @@ import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.NetworkOnly
 import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.fetchAllHeroes
 import com.github.jorgecastillo.kotlinandroid.data.datasource.remote.fetchHeroDetails
 import com.karumi.marvelapiclient.model.CharacterDto
-import kategory.HK
 
 sealed class CachePolicy {
   object NetworkOnly : CachePolicy()

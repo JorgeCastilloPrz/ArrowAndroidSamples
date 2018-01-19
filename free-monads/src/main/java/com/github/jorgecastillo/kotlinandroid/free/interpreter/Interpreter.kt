@@ -1,5 +1,16 @@
 package com.github.jorgecastillo.kotlinandroid.free.interpreter
 
+import arrow.HK
+import arrow.core.Either
+import arrow.core.Either.Left
+import arrow.core.Either.Right
+import arrow.core.FunctionK
+import arrow.data.Try
+import arrow.effects.AsyncContext
+import arrow.syntax.applicativeerror.catch
+import arrow.syntax.either.right
+import arrow.typeclasses.MonadError
+import arrow.typeclasses.bindingE
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
@@ -10,23 +21,10 @@ import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.Unknow
 import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesAlgebra
 import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesAlgebraHK
 import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesAlgebraKind
-import com.github.jorgecastillo.kotlinandroid.free.algebra.ev
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery.Builder
 import com.karumi.marvelapiclient.model.MarvelImage
-import kategory.Either
-import kategory.Either.Left
-import kategory.Either.Right
-import kategory.FunctionK
-import kategory.HK
-import kategory.MonadError
-import kategory.Try
-import kategory.bindingE
-import kategory.catch
-import kategory.effects.AsyncContext
-import kategory.foldMap
-import kategory.right
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 
@@ -118,9 +116,9 @@ fun handlePresentationEffectsImpl(
 
 fun displayErrors(ctx: SuperHeroesContext, c: CharacterError): Unit {
   when (c) {
-    is NotFoundError -> ctx.view.showNotFoundError()
+    NotFoundError -> ctx.view.showNotFoundError()
     is UnknownServerError -> ctx.view.showGenericError()
-    is AuthenticationError -> ctx.view.showAuthenticationError()
+    AuthenticationError -> ctx.view.showAuthenticationError()
   }
 }
 

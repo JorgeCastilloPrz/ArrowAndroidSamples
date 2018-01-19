@@ -4,14 +4,11 @@ import android.content.Context
 import com.github.jorgecastillo.kotlinandroid.BuildConfig
 import com.github.jorgecastillo.kotlinandroid.functional.AsyncResult
 import com.github.jorgecastillo.kotlinandroid.functional.asyncContext
-import com.github.jorgecastillo.kotlinandroid.presentation.HeroesView
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroDetailView
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
 import com.github.jorgecastillo.kotlinandroid.presentation.navigation.HeroDetailsPage
 import com.karumi.marvelapiclient.CharacterApiClient
 import com.karumi.marvelapiclient.MarvelApiConfig.Builder
-import kategory.effects.IO
-import kategory.effects.asyncContext
 
 sealed class SuperHeroesContext {
 

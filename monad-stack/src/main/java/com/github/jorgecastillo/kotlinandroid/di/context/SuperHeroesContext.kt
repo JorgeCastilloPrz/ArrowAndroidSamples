@@ -1,14 +1,14 @@
 package com.github.jorgecastillo.kotlinandroid.di.context
 
 import android.content.Context
+import arrow.effects.IO
+import arrow.effects.asyncContext
 import com.github.jorgecastillo.kotlinandroid.BuildConfig
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroDetailView
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
 import com.github.jorgecastillo.kotlinandroid.presentation.navigation.HeroDetailsPage
 import com.karumi.marvelapiclient.CharacterApiClient
 import com.karumi.marvelapiclient.MarvelApiConfig
-import kategory.effects.IO
-import kategory.effects.asyncContext
 
 sealed class SuperHeroesContext(ctx: Context) {
 

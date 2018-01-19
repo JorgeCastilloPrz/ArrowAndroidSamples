@@ -1,12 +1,29 @@
 package com.github.jorgecastillo.kotlinandroid.functional
 
+import arrow.HK
+import arrow.HK2
+import arrow.core.Either
+import arrow.core.andThen
+import arrow.data.EitherT
+import arrow.data.EitherTKindPartial
+import arrow.data.Kleisli
+import arrow.data.KleisliMonadErrorInstanceImplicits
+import arrow.data.KleisliMonadReaderInstanceImplicits
+import arrow.data.ev
+import arrow.data.monadError
+import arrow.effects.AsyncContext
+import arrow.effects.IO
+import arrow.effects.IOHK
+import arrow.effects.Proc
+import arrow.instances.KleisliMonadErrorInstance
+import arrow.mtl.instances.KleisliMonadReaderInstance
+import arrow.syntax.either.right
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Monad
+import arrow.typeclasses.MonadError
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
-import kategory.*
-import kategory.effects.AsyncContext
-import kategory.effects.IO
-import kategory.effects.IOHK
-import kategory.effects.Proc
 
 typealias Result<D, A> = Kleisli<EitherTKindPartial<IOHK, CharacterError>, D, A>
 
@@ -14,9 +31,9 @@ fun <D : SuperHeroesContext, A> Result<D, A>.asyncResult(): AsyncResult<D, A> = 
 
 class AsyncResultHK private constructor()
 
-typealias AsyncResultKind<D, A> = kategory.HK2<AsyncResultHK, D, A>
+typealias AsyncResultKind<D, A> = HK2<AsyncResultHK, D, A>
 
-typealias AsyncResultKindPartial<D> = kategory.HK<AsyncResultHK, D>
+typealias AsyncResultKindPartial<D> = HK<AsyncResultHK, D>
 @Suppress("UNCHECKED_CAST")
 inline fun <D : SuperHeroesContext, A> AsyncResultKind<D, A>.ev(): AsyncResult<D, A> =
     this as AsyncResult<D, A>

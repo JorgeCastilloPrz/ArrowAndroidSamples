@@ -1,5 +1,11 @@
 package com.github.jorgecastillo.kotlinandroid.data.datasource.remote
 
+import arrow.HK
+import arrow.core.Some
+import arrow.data.Try
+import arrow.effects.AsyncContext
+import arrow.syntax.either.right
+import arrow.typeclasses.binding
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
@@ -14,12 +20,6 @@ import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery
 import com.karumi.marvelapiclient.model.CharactersQuery.Builder
-import kategory.HK
-import kategory.Option
-import kategory.Try
-import kategory.binding
-import kategory.effects.AsyncContext
-import kategory.right
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import java.net.HttpURLConnection
@@ -61,8 +61,8 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
       is MarvelAuthApiException -> AuthenticationError
       is MarvelApiException ->
         if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) NotFoundError
-        else UnknownServerError(Option.Some(e))
-      else -> UnknownServerError((Option.Some(e)))
+        else UnknownServerError(Some(e))
+      else -> UnknownServerError((Some(e)))
     }
 
 fun <F, A, B> runInAsyncContext(
