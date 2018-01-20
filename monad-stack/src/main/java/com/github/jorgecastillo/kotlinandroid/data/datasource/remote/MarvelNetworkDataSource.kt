@@ -1,18 +1,19 @@
 package com.github.jorgecastillo.kotlinandroid.data.datasource.remote
 
+import arrow.HK
+import arrow.core.IdHK
+import arrow.data.Reader
+import arrow.data.Try
+import arrow.data.map
+import arrow.effects.AsyncContext
+import arrow.effects.IO
+import arrow.effects.monadError
+import arrow.syntax.either.right
+import arrow.typeclasses.bindingE
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery.Builder
-import kategory.HK
-import kategory.Reader
-import kategory.Try
-import kategory.bindingE
-import kategory.effects.AsyncContext
-import kategory.effects.IO
-import kategory.effects.monadError
-import kategory.map
-import kategory.right
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 
@@ -24,7 +25,7 @@ import kotlinx.coroutines.experimental.async
  * required execution context.
  */
 
-fun fetchAllHeroes() = Reader.ask<GetHeroesContext>().map({ ctx ->
+fun fetchAllHeroes() = Reader.ask<IdHK, GetHeroesContext>().map({ ctx ->
   IO.monadError().bindingE {
     runInAsyncContext(
         f = { queryForHeroes(ctx) },
@@ -35,7 +36,7 @@ fun fetchAllHeroes() = Reader.ask<GetHeroesContext>().map({ ctx ->
   }
 })
 
-fun fetchHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>().map({ ctx ->
+fun fetchHeroDetails(heroId: String) = Reader.ask<IdHK, GetHeroDetailsContext>().map({ ctx ->
   IO.monadError().bindingE {
     runInAsyncContext(
         f = { queryForHero(ctx, heroId) },

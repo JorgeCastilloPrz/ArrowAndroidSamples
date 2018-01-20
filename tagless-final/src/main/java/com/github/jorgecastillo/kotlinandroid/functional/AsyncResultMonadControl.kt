@@ -1,33 +1,35 @@
 package com.github.jorgecastillo.kotlinandroid.functional
 
+import arrow.HK
+import arrow.HK2
+import arrow.TC
+import arrow.core.Either
+import arrow.core.Tuple2
+import arrow.core.andThen
+import arrow.data.EitherT
+import arrow.data.EitherTKindPartial
+import arrow.data.Kleisli
+import arrow.data.KleisliMonadErrorInstanceImplicits
+import arrow.data.KleisliMonadReaderInstanceImplicits
+import arrow.data.monadError
+import arrow.effects.AsyncContext
+import arrow.effects.IO
+import arrow.effects.IOHK
+import arrow.effects.Proc
+import arrow.instance
+import arrow.instances.KleisliMonadErrorInstance
+import arrow.mtl.MonadReader
+import arrow.mtl.instances.KleisliMonadReaderInstance
+import arrow.syntax.either.right
+import arrow.typeclasses.MonadError
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
-import kategory.Either
-import kategory.EitherT
-import kategory.EitherTKindPartial
-import kategory.HK
-import kategory.Kleisli
-import kategory.KleisliMonadErrorInstance
-import kategory.KleisliMonadErrorInstanceImplicits
-import kategory.KleisliMonadReaderInstance
-import kategory.KleisliMonadReaderInstanceImplicits
-import kategory.MonadError
-import kategory.MonadReader
-import kategory.Tuple2
-import kategory.Typeclass
-import kategory.andThen
-import kategory.effects.AsyncContext
-import kategory.effects.IO
-import kategory.effects.IOHK
-import kategory.effects.Proc
-import kategory.instance
-import kategory.right
 
 class AsyncResultHK private constructor()
-typealias AsyncResultKind<D, A> = kategory.HK2<AsyncResultHK, D, A>
-typealias AsyncResultKindPartial<D> = kategory.HK<AsyncResultHK, D>
+typealias AsyncResultKind<D, A> = HK2<AsyncResultHK, D, A>
+typealias AsyncResultKindPartial<D> = HK<AsyncResultHK, D>
 
 @Suppress("UNCHECKED_CAST")
 inline fun <D : SuperHeroesContext, A> AsyncResultKind<D, A>.ev(): AsyncResult<D, A> =
@@ -56,7 +58,7 @@ interface MonadControl<F, D, E> :
     MonadError<F, E>,
     MonadReader<F, D>,
     AsyncContext<F>,
-    Typeclass
+    TC
 
 interface AsyncResultMonadControl<D : SuperHeroesContext> : MonadControl<AsyncResultKindPartial<D>, D, CharacterError> {
 

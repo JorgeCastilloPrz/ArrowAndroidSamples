@@ -1,13 +1,22 @@
 package com.github.jorgecastillo.kotlinandroid.free.algebra
 
+import arrow.HK
+import arrow.core.Either
+import arrow.core.FunctionK
+import arrow.free.Free
+import arrow.free.foldMap
+import arrow.free.instances.FreeMonadInstance
+import arrow.higherkind
+import arrow.typeclasses.Monad
+import arrow.typeclasses.monad
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.karumi.marvelapiclient.model.CharacterDto
-import kategory.*
 
 /**
  * Algebra for Hero data sources. Algebras are defined by a sealed class (ADT) with a limited amount of implementations reflecting the operations available.
  */
-@higherkind sealed class HeroesAlgebra<A> : HeroesAlgebraKind<A> {
+@higherkind
+sealed class HeroesAlgebra<A> : HeroesAlgebraKind<A> {
     object GetAll : HeroesAlgebra<List<CharacterDto>>()
     class GetSingle(val heroId: String) : HeroesAlgebra<CharacterDto>()
     class HandlePresentationEffects(val result: Either<CharacterError, List<CharacterDto>>) : HeroesAlgebra<Unit>()

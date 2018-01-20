@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import arrow.HK
+import arrow.data.value
+import arrow.effects.ev
 import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
@@ -15,9 +18,6 @@ import com.github.jorgecastillo.kotlinandroid.presentation.getSuperHeroes
 import com.github.jorgecastillo.kotlinandroid.presentation.onHeroListItemClick
 import com.github.jorgecastillo.kotlinandroid.view.adapter.HeroesCardAdapter
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
-import kategory.HK
-import kategory.effects.ev
-import kategory.value
 import kotlinx.android.synthetic.main.activity_main.heroesList
 
 class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
@@ -69,6 +69,6 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
 }
 
 fun <D : SuperHeroesContext> HK<AsyncResultKindPartial<D>, Unit>.unsafePerformEffects(ctx: D): Unit {
-  this.ev().run(ctx).value().ev().unsafeRunAsync {}
+  this.ev().run(ctx).value().ev().unsafeRunAsync {  }
 }
 

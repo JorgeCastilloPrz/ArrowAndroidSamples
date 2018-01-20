@@ -1,6 +1,6 @@
 package com.github.jorgecastillo.kotlinandroid.domain.model
 
-import kategory.*
+import arrow.core.*
 
 /**
  * This sealed class represents all the possible errors that the app is going to model inside its
@@ -17,5 +17,5 @@ import kategory.*
 sealed class CharacterError {
   object AuthenticationError : CharacterError()
   object NotFoundError : CharacterError()
-  data class UnknownServerError(val e: Option<Throwable> = Option.None) : CharacterError()
+  data class UnknownServerError(val e: Option<Throwable> = None) : CharacterError()
 }

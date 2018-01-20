@@ -1,5 +1,12 @@
 package com.github.jorgecastillo.kotlinandroid.presentation
 
+import arrow.core.IdHK
+import arrow.core.Some
+import arrow.core.identity
+import arrow.data.Reader
+import arrow.data.flatMap
+import arrow.data.map
+import arrow.effects.ev
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
@@ -13,12 +20,6 @@ import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.MarvelImage.Size.PORTRAIT_UNCANNY
-import kategory.Option
-import kategory.Reader
-import kategory.effects.ev
-import kategory.flatMap
-import kategory.identity
-import kategory.map
 import java.net.HttpURLConnection
 
 interface HeroesView {
@@ -35,11 +36,11 @@ interface SuperHeroDetailView : HeroesView {
   fun drawHero(hero: SuperHeroViewModel)
 }
 
-fun onHeroListItemClick(heroId: String) = Reader.ask<GetHeroesContext>().flatMap({
+fun onHeroListItemClick(heroId: String) = Reader.ask<IdHK, GetHeroesContext>().flatMap({
   it.heroDetailsPage.go(heroId)
 })
 
-fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap({ (_, view: SuperHeroesListView) ->
+fun getSuperHeroes() = Reader.ask<IdHK, GetHeroesContext>().flatMap({ (_, view: SuperHeroesListView) ->
   getHeroesUseCase().map({ io ->
     io.ev().unsafeRunAsync { maybeHeroes ->
       maybeHeroes.bimap(::exceptionAsCharacterError, ::identity).fold(
@@ -49,7 +50,7 @@ fun getSuperHeroes() = Reader.ask<GetHeroesContext>().flatMap({ (_, view: SuperH
   })
 })
 
-fun getSuperHeroDetails(heroId: String) = Reader.ask<GetHeroDetailsContext>()
+fun getSuperHeroDetails(heroId: String) = Reader.ask<IdHK, GetHeroDetailsContext>()
     .flatMap({ (_, view: SuperHeroDetailView) ->
       getHeroDetailsUseCase(heroId).map({ io ->
         io.ev().unsafeRunAsync { maybeHeroes ->
@@ -65,8 +66,8 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
       is MarvelAuthApiException -> CharacterError.AuthenticationError
       is MarvelApiException ->
         if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) CharacterError.NotFoundError
-        else CharacterError.UnknownServerError(Option.Some(e))
-      else -> CharacterError.UnknownServerError((Option.Some(e)))
+        else CharacterError.UnknownServerError(Some(e))
+      else -> CharacterError.UnknownServerError(Some(e))
     }
 
 private fun drawError(error: CharacterError,

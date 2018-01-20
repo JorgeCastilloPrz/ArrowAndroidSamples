@@ -1,5 +1,8 @@
 package com.github.jorgecastillo.kotlinandroid.presentation
 
+import arrow.HK
+import arrow.syntax.monad.flatMap
+import arrow.typeclasses.binding
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
@@ -14,9 +17,6 @@ import com.github.jorgecastillo.kotlinandroid.functional.monadControl
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.MarvelImage
-import kategory.HK
-import kategory.binding
-import kategory.flatMap
 
 interface SuperHeroesView {
   fun showNotFoundError()

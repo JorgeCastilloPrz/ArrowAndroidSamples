@@ -68,7 +68,6 @@ detekt {
 dependencies {
   compile project(':shared')
 
-  kapt "io.kategory:kategory-annotations-processor:$kategory_version"
   compile "com.android.support:appcompat-v7:$supportLibrary"
   compile "com.android.support:design:$supportLibrary"
   compile "com.android.support:cardview-v7:$supportLibrary"
@@ -77,8 +76,14 @@ dependencies {
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
   compile "com.squareup.picasso:picasso:2.5.2"
-  compile "io.kategory:kategory-annotations:$kategory_version"
-  compile "io.kategory:kategory:$kategory_version"
-  compile "io.kategory:kategory-effects:$kategory_version"
+
+  kapt "io.arrow-kt:arrow-annotations-processor:$arrow_version"
+  compile "io.arrow-kt:arrow-core:$arrow_version"
+  compile "io.arrow-kt:arrow-typeclasses:$arrow_version"
+  compile "io.arrow-kt:arrow-instances:$arrow_version"
+  compile "io.arrow-kt:arrow-effects:$arrow_version"
+  compile "io.arrow-kt:arrow-syntax:$arrow_version"
+  compile "io.arrow-kt:arrow-free:$arrow_version"
+
   compile 'com.karumi:marvelapiclient:1.0.1'
 }
