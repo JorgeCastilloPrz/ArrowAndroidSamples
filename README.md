@@ -1,5 +1,5 @@
-Kotlin Android Functional Architecture
-======================================
+ArrowAndroidSamples
+===================
 [![Build Status](https://www.bitrise.io/app/10edb6301af99ad4/status.svg?token=V3W1vKcNZknWnWzEX1M7Hw&branch=master)](https://www.bitrise.io/app/10edb6301af99ad4)
 [![Kotlin version badge](https://img.shields.io/badge/kotlin-1.2.10-blue.svg)](http://kotlinlang.org/)
 
