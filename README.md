@@ -5,6 +5,7 @@ Kotlin Android Functional Architecture
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 
 ![Kotlin logo](assets/ic_launcher.png)
+<img height="100" src="https://avatars2.githubusercontent.com/u/29458023?v=4&amp;s=200" width="100">
 
 Functional Programing Android architecture approaches using [Arrow](http://arrow-kt.io/)
 
