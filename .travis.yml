@@ -7,7 +7,6 @@ android:
   components:
     - tools
     - build-tools-27.0.3
-    - android-27
     - extra-android-support
     - extra-google-m2repository
     - extra-android-m2repository
@@ -19,6 +18,9 @@ addons:
       description: ""
     notification_email: jorge.castillo.prz@gmail.com
     branch_pattern: develop
+
+before_install:
+  - yes | sdkmanager "platforms;android-27"
 
 script:
   ./gradlew clean detektCheck build -PmarvelPublicKey="\"whatever\"" -PmarvelPrivateKey="\"whatever\""
