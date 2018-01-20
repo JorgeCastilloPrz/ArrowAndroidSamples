@@ -1,12 +1,17 @@
 package com.github.jorgecastillo.kotlinandroid.presentation
 
+import arrow.core.Either
+import arrow.core.Option
+import arrow.core.Some
+import arrow.core.identity
+import arrow.free.ev
+import arrow.typeclasses.binding
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
 import com.github.jorgecastillo.kotlinandroid.free.algebra.*
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.MarvelApiException
 import com.karumi.marvelapiclient.MarvelAuthApiException
 import com.karumi.marvelapiclient.model.CharacterDto
-import kategory.*
 import java.net.HttpURLConnection
 
 interface SuperHeroesView {
@@ -43,6 +48,6 @@ fun exceptionAsCharacterError(e: Throwable): CharacterError =
             is MarvelAuthApiException -> CharacterError.AuthenticationError
             is MarvelApiException ->
                 if (e.httpCode == HttpURLConnection.HTTP_NOT_FOUND) CharacterError.NotFoundError
-                else CharacterError.UnknownServerError(Option.Some(e))
-            else -> CharacterError.UnknownServerError((Option.Some(e)))
+                else CharacterError.UnknownServerError(Some(e))
+            else -> CharacterError.UnknownServerError((Some(e)))
         }
