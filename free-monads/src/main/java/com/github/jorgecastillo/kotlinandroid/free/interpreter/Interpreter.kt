@@ -6,12 +6,12 @@ import arrow.core.Either.Left
 import arrow.core.Either.Right
 import arrow.core.FunctionK
 import arrow.data.Try
-import arrow.effects.AsyncContext
+import arrow.effects.Async
 import arrow.free.foldMap
 import arrow.syntax.applicativeerror.catch
 import arrow.syntax.either.right
 import arrow.typeclasses.MonadError
-import arrow.typeclasses.bindingE
+import arrow.typeclasses.bindingCatch
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
@@ -32,7 +32,7 @@ import kotlinx.coroutines.experimental.async
 
 @Suppress("UNCHECKED_CAST")
 fun <F> interpreter(ctx: SuperHeroesContext, ME: MonadError<F, Throwable>,
-    AC: AsyncContext<F>): FunctionK<HeroesAlgebraHK, F> =
+    AC: Async<F>): FunctionK<HeroesAlgebraHK, F> =
     object : FunctionK<HeroesAlgebraHK, F> {
       override fun <A> invoke(fa: HeroesAlgebraKind<A>): HK<F, A> {
         val op = fa.ev()
@@ -54,8 +54,8 @@ private fun <F, A, B> runInAsyncContext(
     f: () -> A,
     onError: (Throwable) -> B,
     onSuccess: (A) -> B,
-    AC: AsyncContext<F>): HK<F, B> {
-  return AC.runAsync { proc ->
+    AC: Async<F>): HK<F, B> {
+  return AC.async { proc ->
     async(CommonPool) {
       val result = Try { f() }.fold(onError, onSuccess)
       proc(result.right())
@@ -66,8 +66,8 @@ private fun <F, A, B> runInAsyncContext(
 fun <F> getAllHeroesImpl(
     ctx: SuperHeroesContext,
     ME: MonadError<F, Throwable>,
-    AC: AsyncContext<F>): HK<F, List<CharacterDto>> {
-  return ME.bindingE {
+    AC: Async<F>): HK<F, List<CharacterDto>> {
+  return ME.bindingCatch {
     val query = Builder.create().withOffset(0).withLimit(50).build()
     runInAsyncContext(
         f = { ctx.apiClient.getAll(query).response.characters.toList() },
@@ -81,9 +81,9 @@ fun <F> getAllHeroesImpl(
 fun <F> getHeroDetailsImpl(
     ctx: SuperHeroesContext,
     ME: MonadError<F, Throwable>,
-    AC: AsyncContext<F>,
+    AC: Async<F>,
     heroId: String): HK<F, CharacterDto> =
-    ME.bindingE {
+    ME.bindingCatch {
       runInAsyncContext(
           f = { ctx.apiClient.getCharacter(heroId).response },
           onError = { ME.raiseError<CharacterDto>(it) },

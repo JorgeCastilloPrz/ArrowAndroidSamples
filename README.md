@@ -1,6 +1,6 @@
 ArrowAndroidSamples
 ===================
-[![Build Status](https://www.bitrise.io/app/10edb6301af99ad4/status.svg?token=V3W1vKcNZknWnWzEX1M7Hw&branch=master)](https://www.bitrise.io/app/10edb6301af99ad4)
+[![Build Status](https://travis-ci.org/JorgeCastilloPrz/ArrowAndroidSamples.svg?branch=improve-reader-usage)](https://travis-ci.org/JorgeCastilloPrz/ArrowAndroidSamples)
 [![Kotlin version badge](https://img.shields.io/badge/kotlin-1.2.10-blue.svg)](http://kotlinlang.org/)
 
 <img height="100" src="https://avatars2.githubusercontent.com/u/29458023?v=4&amp;s=200" width="100">
@@ -34,18 +34,15 @@ This module showcases an approach based on a **stack of monads** resolving all t
 have, including Dependency Injection, error handling, asynchrony and threading, IO computations, and so on.
 * [Read this detailed post](https://medium.com/@JorgeCastilloPr/kotlin-functional-programming-i-monad-stack-518d1bd8fbee) to use it as the best documentation out there for this approach. 
 
-## Monad Transformers
-This module presents a second iteration over the **monad-stack** approach, where we are simplifying things a lot by applying transformers on top of 
-the IO monad to bind additional behaviors to it, so we can achieve the same behaviors we had with the monad stack but with less code. 
-That is indeed a very common approach in Functional Programming. We are adding `AsyncResult` Monad 
-which is going to cover all the needs we have: DI + Error Handling + Async.
-[You probably want to look at this PR for more description details](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/3).
-
 ## Tagless-Final
 Tagless-Final style is focused on never depending on concrete types like Option or Try, but use 
 Higher Kinds to make our code depend on typeclass constrained behaviors, leaving the decision about 
 which concrete types to use to the moment when we want to run the code.
 [You will really want to look at this PR to have a very good and detailed description of what tagless-final is](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/2).
+
+## IO
+This approach is equivalent to the **Tagless-Final** one but fixing the Typeclasses parametrized type `F` to `IO`. It's a simplification
+about how to solve the app concerns without the need for depending on abstractions and therefore for the typeclass inherent ad-hoc polymorphism.
 
 ## Free Monads 
 This FP style is very trendy. We are applying it over Android thanks to Arrow here, on the `free-monads` project module. It's highly recommended to take a look at [this PR](https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/pull/6) in order to understand the approach.
@@ -118,7 +115,7 @@ Developed By
 License
 -------
 
-    Copyright 2017 Jorge Castillo Pérez
+    Copyright 2018 Jorge Castillo Pérez
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -131,4 +128,3 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-

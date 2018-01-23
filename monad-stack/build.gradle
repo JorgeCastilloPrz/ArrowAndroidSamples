@@ -76,6 +76,7 @@ dependencies {
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
   compile "com.squareup.picasso:picasso:2.5.2"
+  compile 'com.karumi:marvelapiclient:1.0.1'
 
   kapt "io.arrow-kt:arrow-annotations-processor:$arrow_version"
   compile "io.arrow-kt:arrow-core:$arrow_version"
@@ -83,6 +84,4 @@ dependencies {
   compile "io.arrow-kt:arrow-instances:$arrow_version"
   compile "io.arrow-kt:arrow-effects:$arrow_version"
   compile "io.arrow-kt:arrow-syntax:$arrow_version"
-
-  compile 'com.karumi:marvelapiclient:1.0.1'
 }
