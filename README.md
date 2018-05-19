@@ -82,7 +82,7 @@ to it (`when` statement) to achieve different behaviors depending on that.
 
 ## Alternative roads to Dependency Injection
 From centuries ago, Android devs have been using complex frameworks like Dagger to achieve 
-dependency injection. But **DI is just a concept not bound to any library. It's is all about 
+dependency injection. But **DI is just a concept not bound to any library. It's all about 
 passing collaborators to your classes from the outside world**. That means DI would also be to 
 just add some setters or a constructor with some collaborator arguments to your class. 
 
