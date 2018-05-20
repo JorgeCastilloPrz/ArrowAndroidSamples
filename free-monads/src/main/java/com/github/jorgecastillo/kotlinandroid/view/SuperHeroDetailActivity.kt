@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.R.string
-import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
+import com.github.jorgecastillo.kotlinandroid.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroDetailView
 import com.github.jorgecastillo.kotlinandroid.presentation.showSuperHeroDetail
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_detail.*
 class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
 
   companion object {
-    val EXTRA_HERO_ID = "EXTRA_HERO_ID"
+    const val EXTRA_HERO_ID = "EXTRA_HERO_ID"
 
     fun launch(source: Context, heroId: String) {
       val intent = Intent(source, SuperHeroDetailActivity::class.java)
@@ -43,21 +43,21 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
     Toast.makeText(this, string.hero_id_needed, Toast.LENGTH_SHORT).show()
   }
 
-  override fun drawHero(hero: SuperHeroViewModel) = runOnUiThread  {
+  override fun drawHero(hero: SuperHeroViewModel) = runOnUiThread {
     collapsingToolbar.title = hero.name
     description.text = hero.description.let { if (it.isNotEmpty()) it else getString(string.empty_description) }
     headerImage.loadImageAsync(hero.photoUrl)
   }
 
-  override fun showNotFoundError() = runOnUiThread  {
+  override fun showNotFoundError() = runOnUiThread {
     Snackbar.make(appBar, string.not_found, Snackbar.LENGTH_SHORT).show()
   }
 
-  override fun showGenericError() = runOnUiThread  {
+  override fun showGenericError() = runOnUiThread {
     Snackbar.make(appBar, string.generic, Snackbar.LENGTH_SHORT).show()
   }
 
-  override fun showAuthenticationError() = runOnUiThread  {
+  override fun showAuthenticationError() = runOnUiThread {
     Snackbar.make(appBar, string.authentication, Snackbar.LENGTH_SHORT).show()
   }
 }

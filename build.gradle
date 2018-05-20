@@ -1,6 +1,7 @@
 buildscript {
-  ext.kotlin_version = '1.2.20'
-  ext.arrow_version = '0.6.0'
+  ext.kotlin_version = '1.2.41'
+  ext.arrow_version = '0.7.1'
+  ext.dagger_version = '2.5'
   ext.supportLibrary = '27.0.2'
   ext.coroutinesVersion = '0.16'
   ext.build_tools_version = '27.0.3'
@@ -16,10 +17,11 @@ buildscript {
     maven { url "http://dl.bintray.com/kategory/maven" }
     jcenter()
     google()
+    maven { url 'https://oss.jfrog.org/oss-snapshot-local/' }
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.0.1'
+    classpath 'com.android.tools.build:gradle:3.1.2'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
   }
@@ -33,6 +35,7 @@ allprojects {
     maven { url 'https://maven.google.com' }
     maven { url 'https://kotlin.bintray.com/kotlinx' }
     maven { url "http://dl.bintray.com/kotlin/kotlin-dev" }
+    maven { url 'https://oss.jfrog.org/oss-snapshot-local/' }
   }
 }
 

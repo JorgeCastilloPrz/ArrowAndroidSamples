@@ -1,14 +1,16 @@
 package com.github.jorgecastillo.kotlinandroid.data.datasource.remote
 
-import arrow.HK
-import arrow.core.IdHK
+import arrow.Kind
+import arrow.core.Try
+import arrow.core.right
 import arrow.data.Reader
-import arrow.data.Try
+import arrow.data.ReaderApi
 import arrow.data.map
-import arrow.effects.Async
 import arrow.effects.IO
-import arrow.effects.monadSuspend
-import arrow.syntax.either.right
+import arrow.effects.fix
+import arrow.effects.monadDefer
+import arrow.effects.typeclasses.Async
+import arrow.typeclasses.binding
 import arrow.typeclasses.bindingCatch
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
 import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
@@ -25,26 +27,30 @@ import kotlinx.coroutines.experimental.async
  * required execution context.
  */
 
-fun fetchAllHeroes() = Reader.ask<IdHK, GetHeroesContext>().map({ ctx ->
-  IO.monadSuspend().bindingCatch {
-    runInAsyncContext(
-        f = { queryForHeroes(ctx) },
-        onError = { IO.raiseError<List<CharacterDto>>(it) },
-        onSuccess = { IO.pure(it) },
-        AC = ctx.threading
-    ).bind()
-  }
-})
+fun fetchAllHeroes(): Reader<GetHeroesContext, IO<List<CharacterDto>>> =
+    ReaderApi.ask<GetHeroesContext>().map({ ctx ->
+      IO.monadDefer().binding {
+        val result = runInAsyncContext(
+            f = { queryForHeroes(ctx) },
+            onError = { IO.raiseError<List<CharacterDto>>(it) },
+            onSuccess = { IO.just(it) },
+            AC = ctx.threading
+        ).bind()
+        result.bind()
+      }.fix()
+    })
 
-fun fetchHeroDetails(heroId: String) = Reader.ask<IdHK, GetHeroDetailsContext>().map({ ctx ->
-  IO.monadSuspend().bindingCatch {
-    runInAsyncContext(
-        f = { queryForHero(ctx, heroId) },
-        onError = { IO.raiseError<List<CharacterDto>>(it) },
-        onSuccess = { IO.pure(it) },
-        AC = ctx.threading).bind()
-  }
-})
+fun fetchHeroDetails(heroId: String): Reader<GetHeroDetailsContext, IO<List<CharacterDto>>> =
+    ReaderApi.ask<GetHeroDetailsContext>().map({ ctx ->
+      IO.monadDefer().bindingCatch {
+        val result = runInAsyncContext(
+            f = { queryForHero(ctx, heroId) },
+            onError = { IO.raiseError<List<CharacterDto>>(it) },
+            onSuccess = { IO.just(it) },
+            AC = ctx.threading).bind()
+        result.bind()
+      }.fix()
+    })
 
 private fun queryForHeroes(ctx: GetHeroesContext): List<CharacterDto> {
   val query = Builder.create().withOffset(0).withLimit(50).build()
@@ -60,7 +66,8 @@ private fun queryForHero(ctx: GetHeroDetailsContext, heroId: String): List<Chara
 private fun <F, A, B> runInAsyncContext(
     f: () -> A,
     onError: (Throwable) -> B,
-    onSuccess: (A) -> B, AC: Async<F>): HK<F, B> {
+    onSuccess: (A) -> B, AC: Async<F>
+): Kind<F, B> {
   return AC.async { proc ->
     async(CommonPool) {
       val result = Try { f() }.fold(onError, onSuccess)

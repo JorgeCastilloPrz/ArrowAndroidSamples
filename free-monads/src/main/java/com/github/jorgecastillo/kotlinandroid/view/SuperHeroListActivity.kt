@@ -6,12 +6,12 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import arrow.effects.IO
 import arrow.effects.async
-import arrow.effects.ev
+import arrow.effects.fix
 import arrow.effects.monadError
 import arrow.free.foldMap
 import com.github.jorgecastillo.kotlinandroid.R
-import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
-import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
+import com.github.jorgecastillo.kotlinandroid.context.SuperHeroesContext
+import com.github.jorgecastillo.kotlinandroid.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.free.algebra.FreeHeroesAlgebra
 import com.github.jorgecastillo.kotlinandroid.free.interpreter.interpreter
 import com.github.jorgecastillo.kotlinandroid.presentation.SuperHeroesListView
@@ -65,6 +65,6 @@ class SuperHeroListActivity : AppCompatActivity(), SuperHeroesListView {
 
 fun <A> FreeHeroesAlgebra<A>.unsafePerformEffects(ctx: SuperHeroesContext): Unit {
   val ME = IO.monadError()
-  val result: IO<A> = this.foldMap(interpreter(ctx, ME, IO.async()), ME).ev()
+  val result: IO<A> = this.foldMap(interpreter(ctx, ME, IO.async()), ME).fix()
   result.unsafeRunAsync { TODO() }
 }

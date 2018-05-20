@@ -1,4 +1,4 @@
-package com.github.jorgecastillo.kotlinandroid.di.context
+package com.github.jorgecastillo.kotlinandroid.context
 
 import android.content.Context
 import com.github.jorgecastillo.kotlinandroid.BuildConfig

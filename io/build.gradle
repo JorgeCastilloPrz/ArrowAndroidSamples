@@ -61,24 +61,25 @@ detekt {
 }
 
 dependencies {
-  compile project(':shared')
+  implementation project(':shared')
 
-  compile "com.android.support:appcompat-v7:$supportLibrary"
-  compile "com.android.support:design:$supportLibrary"
-  compile "com.android.support:cardview-v7:$supportLibrary"
-  compile "com.android.support:recyclerview-v7:$supportLibrary"
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-  compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-  compile "com.squareup.picasso:picasso:2.5.2"
+  implementation "com.android.support:appcompat-v7:$supportLibrary"
+  implementation "com.android.support:design:$supportLibrary"
+  implementation "com.android.support:cardview-v7:$supportLibrary"
+  implementation "com.android.support:recyclerview-v7:$supportLibrary"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+  implementation "com.squareup.picasso:picasso:2.5.2"
 
   kapt "io.arrow-kt:arrow-annotations-processor:$arrow_version"
-  compile "io.arrow-kt:arrow-core:$arrow_version"
-  compile "io.arrow-kt:arrow-typeclasses:$arrow_version"
-  compile "io.arrow-kt:arrow-instances:$arrow_version"
-  compile "io.arrow-kt:arrow-effects:$arrow_version"
-  compile "io.arrow-kt:arrow-syntax:$arrow_version"
-  compile "io.arrow-kt:arrow-mtl:$arrow_version"
+  implementation "io.arrow-kt:arrow-core:$arrow_version"
+  implementation "io.arrow-kt:arrow-typeclasses:$arrow_version"
+  implementation "io.arrow-kt:arrow-instances-core:$arrow_version"
+  implementation "io.arrow-kt:arrow-instances-data:$arrow_version"
+  implementation "io.arrow-kt:arrow-effects:$arrow_version"
+  implementation "io.arrow-kt:arrow-syntax:$arrow_version"
+  implementation "io.arrow-kt:arrow-mtl:$arrow_version"
 
-  compile 'com.karumi:marvelapiclient:1.0.1'
+  implementation 'com.karumi:marvelapiclient:1.0.1'
 }

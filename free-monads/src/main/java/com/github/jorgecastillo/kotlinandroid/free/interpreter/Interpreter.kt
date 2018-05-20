@@ -1,28 +1,23 @@
 package com.github.jorgecastillo.kotlinandroid.free.interpreter
 
-import arrow.HK
+import arrow.Kind
 import arrow.core.Either
 import arrow.core.Either.Left
 import arrow.core.Either.Right
 import arrow.core.FunctionK
-import arrow.data.Try
-import arrow.effects.Async
+import arrow.core.Try
+import arrow.core.right
+import arrow.effects.typeclasses.Async
 import arrow.free.foldMap
-import arrow.syntax.applicativeerror.catch
-import arrow.syntax.either.right
 import arrow.typeclasses.MonadError
 import arrow.typeclasses.bindingCatch
-import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext
-import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroDetailsContext
-import com.github.jorgecastillo.kotlinandroid.di.context.SuperHeroesContext.GetHeroesContext
+import com.github.jorgecastillo.kotlinandroid.context.SuperHeroesContext
+import com.github.jorgecastillo.kotlinandroid.context.SuperHeroesContext.GetHeroDetailsContext
+import com.github.jorgecastillo.kotlinandroid.context.SuperHeroesContext.GetHeroesContext
 import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError
-import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.AuthenticationError
-import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.NotFoundError
-import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.UnknownServerError
+import com.github.jorgecastillo.kotlinandroid.domain.model.CharacterError.*
 import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesAlgebra
-import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesAlgebraHK
-import com.github.jorgecastillo.kotlinandroid.free.algebra.HeroesAlgebraKind
-import com.github.jorgecastillo.kotlinandroid.free.algebra.ev
+import com.github.jorgecastillo.kotlinandroid.free.algebra.fix
 import com.github.jorgecastillo.kotlinandroid.view.viewmodel.SuperHeroViewModel
 import com.karumi.marvelapiclient.model.CharacterDto
 import com.karumi.marvelapiclient.model.CharactersQuery.Builder
@@ -32,21 +27,21 @@ import kotlinx.coroutines.experimental.async
 
 @Suppress("UNCHECKED_CAST")
 fun <F> interpreter(ctx: SuperHeroesContext, ME: MonadError<F, Throwable>,
-    AC: Async<F>): FunctionK<HeroesAlgebraHK, F> =
-    object : FunctionK<HeroesAlgebraHK, F> {
-      override fun <A> invoke(fa: HeroesAlgebraKind<A>): HK<F, A> {
-        val op = fa.ev()
+                    AC: Async<F>): FunctionK<HeroesAlgebra.F, F> =
+    object : FunctionK<HeroesAlgebra.F, F> {
+      override fun <A> invoke(fa: Kind<HeroesAlgebra.F, A>): Kind<F, A> {
+        val op = fa.fix()
         return when (op) {
           is HeroesAlgebra.GetAll -> getAllHeroesImpl(ctx, ME, AC)
           is HeroesAlgebra.GetSingle -> getHeroDetailsImpl(ctx, ME, AC, op.heroId)
           is HeroesAlgebra.HandlePresentationEffects -> {
-            ME.catch({ handlePresentationEffectsImpl(ctx, op.result) })
+            ME.run { catch { handlePresentationEffectsImpl(ctx, op.result) } }
           }
           is HeroesAlgebra.Attempt<*> -> {
             val result = op.fa.foldMap(interpreter(ctx, ME, AC), ME)
-            ME.attempt(result)
+            ME.run { result.attempt() }
           }
-        } as HK<F, A>
+        } as Kind<F, A>
       }
     }
 
@@ -54,7 +49,7 @@ private fun <F, A, B> runInAsyncContext(
     f: () -> A,
     onError: (Throwable) -> B,
     onSuccess: (A) -> B,
-    AC: Async<F>): HK<F, B> {
+    AC: Async<F>): Kind<F, B> {
   return AC.async { proc ->
     async(CommonPool) {
       val result = Try { f() }.fold(onError, onSuccess)
@@ -66,15 +61,16 @@ private fun <F, A, B> runInAsyncContext(
 fun <F> getAllHeroesImpl(
     ctx: SuperHeroesContext,
     ME: MonadError<F, Throwable>,
-    AC: Async<F>): HK<F, List<CharacterDto>> {
+    AC: Async<F>): Kind<F, List<CharacterDto>> {
   return ME.bindingCatch {
     val query = Builder.create().withOffset(0).withLimit(50).build()
-    runInAsyncContext(
+    val result = runInAsyncContext(
         f = { ctx.apiClient.getAll(query).response.characters.toList() },
         onError = { ME.raiseError<List<CharacterDto>>(it) },
-        onSuccess = { ME.pure(it) },
+        onSuccess = { ME.just(it) },
         AC = AC
     ).bind()
+    result.bind()
   }
 }
 
@@ -82,14 +78,15 @@ fun <F> getHeroDetailsImpl(
     ctx: SuperHeroesContext,
     ME: MonadError<F, Throwable>,
     AC: Async<F>,
-    heroId: String): HK<F, CharacterDto> =
+    heroId: String): Kind<F, CharacterDto> =
     ME.bindingCatch {
-      runInAsyncContext(
+      val result = runInAsyncContext(
           f = { ctx.apiClient.getCharacter(heroId).response },
           onError = { ME.raiseError<CharacterDto>(it) },
-          onSuccess = { ME.pure(it) },
+          onSuccess = { ME.just(it) },
           AC = AC
       ).bind()
+      result.bind()
     }
 
 fun handlePresentationEffectsImpl(

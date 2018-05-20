@@ -6,22 +6,19 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import arrow.effects.ev
+import arrow.effects.fix
 import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.R.string
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.Presentation
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.SuperHeroDetailView
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.extensions.loadImageAsync
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.model.SuperHeroViewModel
-import kotlinx.android.synthetic.main.activity_detail.appBar
-import kotlinx.android.synthetic.main.activity_detail.collapsingToolbar
-import kotlinx.android.synthetic.main.activity_detail.description
-import kotlinx.android.synthetic.main.activity_detail.headerImage
+import kotlinx.android.synthetic.main.activity_detail.*
 
 class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
 
   companion object {
-    val EXTRA_HERO_ID = "EXTRA_HERO_ID"
+    const val EXTRA_HERO_ID = "EXTRA_HERO_ID"
 
     fun launch(source: Context, heroId: String) {
       val intent = Intent(source, SuperHeroDetailActivity::class.java)
@@ -41,7 +38,7 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
     intent.extras?.let {
       val heroId = it.getString(
           EXTRA_HERO_ID)
-      Presentation.drawSuperHeroDetails(heroId, this).ev().unsafeRunAsync { }
+      Presentation.drawSuperHeroDetails(heroId, this).fix().unsafeRunAsync { }
     } ?: closeWithError()
   }
 

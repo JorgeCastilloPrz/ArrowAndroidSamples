@@ -1,27 +1,17 @@
 package com.github.jorgecastillo.kotlinandroid.tagless.runtime.instances
 
-import arrow.effects.IO
-import arrow.effects.IOHK
-import arrow.instance
-import com.github.jorgecastillo.kotlinandroid.tagless.algebras.persistence.DataSource
-import com.github.jorgecastillo.kotlinandroid.tagless.algebras.persistence.HeroesRepository
-import com.github.jorgecastillo.kotlinandroid.tagless.algebras.business.HeroesUseCases
-import com.github.jorgecastillo.kotlinandroid.tagless.algebras.ui.Navigation
+import arrow.dagger.effects.instances.ArrowEffectsInstances
+import arrow.dagger.instances.ArrowInstances
+import arrow.effects.ForIO
 import com.github.jorgecastillo.kotlinandroid.tagless.algebras.ui.Presentation
+import dagger.Component
 
-typealias TargetRuntime = IOHK
+@Component(modules = [
+    ArrowInstances::class,
+    ArrowEffectsInstances::class
+])
+interface Instances {
+    fun presentation(): Presentation<ForIO>
+}
 
-@instance(IO::class)
-interface IOPresentationInstance<F> : Presentation<F>
-
-@instance(IO::class)
-interface IONavigationInstance<F> : Navigation<F>
-
-@instance(IO::class)
-interface IOHeroesUseCasesInstance<F> : HeroesUseCases<F>
-
-@instance(IO::class)
-interface IOHeroesRepositoryInstance<F> : HeroesRepository<F>
-
-@instance(IO::class)
-interface IODataSourceInstance<F> : DataSource<F>
+fun instances(): Instances = DaggerInstances.create()

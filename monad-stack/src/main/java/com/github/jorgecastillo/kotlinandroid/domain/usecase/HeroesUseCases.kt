@@ -1,7 +1,6 @@
 package com.github.jorgecastillo.kotlinandroid.domain.usecase
 
 import arrow.data.map
-import arrow.syntax.functor.map
 import com.github.jorgecastillo.kotlinandroid.data.CachePolicy.NetworkOnly
 import com.github.jorgecastillo.kotlinandroid.data.getHeroDetails
 import com.github.jorgecastillo.kotlinandroid.data.getHeroes
