@@ -1,7 +1,7 @@
 buildscript {
   ext.kotlin_version = '1.2.41'
-  ext.arrow_version = '0.7.1'
-  ext.dagger_version = '2.5'
+  ext.arrow_version = '0.7.2'
+  ext.dagger_version = '2.15'
   ext.supportLibrary = '27.0.2'
   ext.coroutinesVersion = '0.16'
   ext.build_tools_version = '27.0.3'
