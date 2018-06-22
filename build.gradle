@@ -14,9 +14,9 @@ buildscript {
   ext.testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
 
   repositories {
+    google()
     maven { url "http://dl.bintray.com/kategory/maven" }
     jcenter()
-    google()
     maven { url 'https://oss.jfrog.org/oss-snapshot-local/' }
   }
 
@@ -29,10 +29,10 @@ buildscript {
 
 allprojects {
   repositories {
+    google()
     jcenter()
     mavenCentral()
     maven { url "http://dl.bintray.com/kategory/maven" }
-    maven { url 'https://maven.google.com' }
     maven { url 'https://kotlin.bintray.com/kotlinx' }
     maven { url "http://dl.bintray.com/kotlin/kotlin-dev" }
     maven { url 'https://oss.jfrog.org/oss-snapshot-local/' }
