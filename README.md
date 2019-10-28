@@ -2,6 +2,7 @@ Arrow Android Samples
 =====================
 [![Build Status](https://travis-ci.org/JorgeCastilloPrz/ArrowAndroidSamples.svg?branch=improve-reader-usage)](https://travis-ci.org/JorgeCastilloPrz/ArrowAndroidSamples)
 [![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.50-blue.svg)](http://kotlinlang.org/)
+[![Arrow version badge](https://img.shields.io/badge/arrow-0.10.2-blue.svg)](http://arrow-kt.io/)
 
 <img height="100" src="https://avatars2.githubusercontent.com/u/29458023?v=4&amp;s=200" width="100">
 
