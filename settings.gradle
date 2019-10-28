@@ -1,1 +1,1 @@
-include ':monad-stack', ':tagless-final', ':io', ':shared', ':free-monads'
+include ':app'
