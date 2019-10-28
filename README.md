@@ -1,5 +1,5 @@
-ArrowAndroidSamples
-===================
+Arrow Android Samples
+=====================
 [![Build Status](https://travis-ci.org/JorgeCastilloPrz/ArrowAndroidSamples.svg?branch=improve-reader-usage)](https://travis-ci.org/JorgeCastilloPrz/ArrowAndroidSamples)
 [![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.50-blue.svg)](http://kotlinlang.org/)
 
