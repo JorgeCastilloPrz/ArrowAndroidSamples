@@ -23,4 +23,4 @@ before_install:
   - yes | sdkmanager "platforms;android-27"
 
 script:
-  ./gradlew clean detektCheck build -PmarvelPublicKey="\"whatever\"" -PmarvelPrivateKey="\"whatever\""
+  ./gradlew clean detektCheck build test -PnewsApiKey="\"whatever\""

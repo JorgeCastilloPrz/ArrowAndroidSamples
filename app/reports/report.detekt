@@ -1,3 +1,1 @@
-NamingConventionViolation - [ETME] at src/main/java/com/github/jorgecastillo/kotlinandroid/functional/predef.kt:38:3 - Signature=predef.kt$AsyncResultMonadControl$fun ETME(): MonadError<EitherTKindPartial<Future.F, CharacterError>, CharacterError>
-NamingConventionViolation - [KME] at src/main/java/com/github/jorgecastillo/kotlinandroid/functional/predef.kt:41:3 - Signature=predef.kt$AsyncResultMonadControl$fun KME(): KleisliMonadErrorInstance<EitherTKindPartial<Future.F, CharacterError>, GetHeroesContext, CharacterError>
-NamingConventionViolation - [KMR] at src/main/java/com/github/jorgecastillo/kotlinandroid/functional/predef.kt:44:3 - Signature=predef.kt$AsyncResultMonadControl$fun KMR(): KleisliMonadReaderInstance<EitherTKindPartial<Future.F, CharacterError>, GetHeroesContext>
+EmptyClassBlock - [<UnknownName>] at src/main/java/com/github/jorgecastillo/kotlinandroid/io/runtime/context/IORuntime.kt:21:49 - Signature=IORuntime.kt$<no name provided> : Runtime
