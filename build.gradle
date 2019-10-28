@@ -10,6 +10,9 @@ buildscript {
   ext.cardViewVersion = '1.0.0'
   ext.retrofitVersion = '2.6.2'
   ext.moshiVersion = '1.8.0'
+  ext.hiroakiVersion = '0.1.0'
+  ext.mockWebServerVersion = '3.12.0'
+  ext.junitVersion = '4.12'
   ext.build_tools_version = '28.0.3'
   ext.compileVersion = 28
   ext.appId = "com.github.jorgecastillo.kotlinandroid"

@@ -7,6 +7,6 @@ import retrofit2.http.Query
 
 interface NewsApiService {
 
-    @GET("everything?q=android")
+    @GET("everything")
     fun fetchNews(@Query("q") query: String): Call<NewsResponse>
 }

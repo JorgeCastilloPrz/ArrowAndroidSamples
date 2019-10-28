@@ -6,3 +6,8 @@ fun Int.toNetworkError() = when (this) {
     401 -> NetworkError.Unauthorized
     else -> NetworkError.ServerError
 }
+
+fun Throwable.normalizeError() = when (this) {
+    is NetworkError -> this
+    else -> NetworkError.ServerError
+}

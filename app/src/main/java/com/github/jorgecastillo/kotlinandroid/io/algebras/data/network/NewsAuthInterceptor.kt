@@ -5,13 +5,13 @@ import okhttp3.Interceptor
 import okhttp3.Response
 
 
-class NewsAuthInterceptor : Interceptor {
+class NewsAuthInterceptor(private val apiKey: String = BuildConfig.NEWS_API_KEY) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
         val url = request.url()
             .newBuilder()
-            .addQueryParameter("apiKey", BuildConfig.NEWS_API_KEY)
+            .addQueryParameter("apiKey", apiKey)
             .build()
 
         request = request.newBuilder().url(url).build()
