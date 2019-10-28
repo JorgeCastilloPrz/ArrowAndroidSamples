@@ -11,35 +11,29 @@ import arrow.fx.extensions.io.unsafeRun.runNonBlocking
 import arrow.unsafe
 import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.R.string
-import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.SuperHeroDetailView
+import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.NewsItemDetailView
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.extensions.loadImageAsync
-import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.getSuperHeroDetails
-import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.model.HeroViewState
-import com.github.jorgecastillo.kotlinandroid.io.runtime.context.RuntimeContext
+import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.getNewsItemDetails
+import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.model.NewsItemViewState
+import com.github.jorgecastillo.kotlinandroid.io.runtime.application
 import com.github.jorgecastillo.kotlinandroid.io.runtime.context.runtime
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.coroutines.Dispatchers
 
-class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
+class NewsItemDetailActivity : AppCompatActivity(), NewsItemDetailView {
 
     companion object {
-        const val EXTRA_HERO_ID = "EXTRA_HERO_ID"
+        const val EXTRA_NEWS_ID = "EXTRA_ID"
 
         fun launch(
-                source: Context,
-                heroId: String
+            source: Context,
+            newsId: String
         ) {
-            val intent = Intent(source, SuperHeroDetailActivity::class.java)
-            intent.putExtra(EXTRA_HERO_ID, heroId)
+            val intent = Intent(source, NewsItemDetailActivity::class.java)
+            intent.putExtra(EXTRA_NEWS_ID, newsId)
             source.startActivity(intent)
         }
     }
-
-    private val ctx = RuntimeContext(
-            bgDispatcher = Dispatchers.IO,
-            mainDispatcher = Dispatchers.Main
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,25 +43,27 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
     override fun onResume() {
         super.onResume()
         intent.extras?.let {
-            val heroId = it.getString(EXTRA_HERO_ID)
-            if (heroId == null) {
+            val newsId = it.getString(EXTRA_NEWS_ID)
+            if (newsId == null) {
                 closeWithError()
             } else {
-                loadHeroDetails(heroId)
+                loadNewsItemDetails(newsId)
             }
         } ?: closeWithError()
     }
 
-    private fun loadHeroDetails(heroId: String) {
+    private fun loadNewsItemDetails(title: String) {
         unsafe {
             runNonBlocking({
-                IO.runtime(ctx).getSuperHeroDetails(heroId, this@SuperHeroDetailActivity)
+                IO.runtime(application().runtimeContext).getNewsItemDetails(
+                    title,
+                    this@NewsItemDetailActivity)
             }, {})
         }
     }
 
     private fun closeWithError() {
-        Toast.makeText(this, string.hero_id_needed, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, string.news_id_needed, Toast.LENGTH_SHORT).show()
     }
 
     override fun showLoading() {
@@ -78,12 +74,10 @@ class SuperHeroDetailActivity : AppCompatActivity(), SuperHeroDetailView {
         loader.visibility = View.GONE
     }
 
-    override fun drawHero(hero: HeroViewState) {
-        collapsingToolbar.title = hero.name
-        description.text = hero.description.let {
-            if (it.isNotEmpty()) it else getString(string.empty_description)
-        }
-        headerImage.loadImageAsync(hero.photoUrl)
+    override fun drawNewsItem(newsItem: NewsItemViewState) {
+        collapsingToolbar.title = newsItem.title
+        description.text = newsItem.description ?: getString(string.empty_description)
+        newsItem.photoUrl?.let { url -> headerImage.loadImageAsync(url) }
     }
 
     override fun showNotFoundError() {

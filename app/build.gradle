@@ -31,8 +31,7 @@ android {
     testInstrumentationRunner testInstrumentationRunner
     multiDexEnabled true
 
-    buildConfigField "String", "MARVEL_PUBLIC_KEY", marvelPublicKey
-    buildConfigField "String", "MARVEL_PRIVATE_KEY", marvelPrivateKey
+    buildConfigField "String", "NEWS_API_KEY", newsApiKey
   }
 
   buildTypes {
@@ -71,7 +70,10 @@ dependencies {
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
   implementation "com.squareup.picasso:picasso:$picassoVersion"
-  implementation "com.karumi:marvelapiclient:$marvelApiClientVersion"
+  implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+  implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
+  implementation "com.squareup.moshi:moshi:$moshiVersion"
+  implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
 
   kapt "io.arrow-kt:arrow-meta:$arrowVersion"
   implementation "io.arrow-kt:arrow-core:$arrowVersion"

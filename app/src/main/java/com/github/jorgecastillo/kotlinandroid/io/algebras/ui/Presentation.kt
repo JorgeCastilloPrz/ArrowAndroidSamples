@@ -2,35 +2,34 @@ package com.github.jorgecastillo.kotlinandroid.io.algebras.ui
 
 import android.content.Context
 import arrow.Kind
-import com.github.jorgecastillo.kotlinandroid.io.algebras.business.getHeroDetails
-import com.github.jorgecastillo.kotlinandroid.io.algebras.business.getHeroes
-import com.github.jorgecastillo.kotlinandroid.io.algebras.business.model.CharacterError
-import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.model.HeroViewState
+import com.github.jorgecastillo.kotlinandroid.io.algebras.business.getNewsItemDetails
+import com.github.jorgecastillo.kotlinandroid.io.algebras.business.getNews
+import com.github.jorgecastillo.kotlinandroid.io.algebras.business.model.DomainError
+import com.github.jorgecastillo.kotlinandroid.io.algebras.business.model.NewsItem
+import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.model.NewsItemViewState
 import com.github.jorgecastillo.kotlinandroid.io.runtime.context.Runtime
-import com.karumi.marvelapiclient.model.CharacterDto
-import com.karumi.marvelapiclient.model.MarvelImage.Size.PORTRAIT_UNCANNY
 
-interface SuperHeroesView {
+interface NewsView {
 
-  fun showLoading(): Unit
+    fun showLoading(): Unit
 
-  fun hideLoading(): Unit
+    fun hideLoading(): Unit
 
-  fun showNotFoundError(): Unit
+    fun showNotFoundError(): Unit
 
-  fun showGenericError(): Unit
+    fun showGenericError(): Unit
 
-  fun showAuthenticationError(): Unit
+    fun showAuthenticationError(): Unit
 }
 
-interface SuperHeroesListView : SuperHeroesView {
+interface NewsListView : NewsView {
 
-  fun drawHeroes(heroes: List<HeroViewState>): Unit
+    fun drawNews(news: List<NewsItemViewState>): Unit
 }
 
-interface SuperHeroDetailView : SuperHeroesView {
+interface NewsItemDetailView : NewsView {
 
-  fun drawHero(hero: HeroViewState)
+    fun drawNewsItem(newsItem: NewsItemViewState)
 }
 
 /**
@@ -38,53 +37,55 @@ interface SuperHeroDetailView : SuperHeroesView {
  * type. We'll end up running these methods using a valid F type that support Concurrent behaviors,
  * like IO.
  */
-fun <F> Runtime<F>.onHeroListItemClick(
-  ctx: Context,
-  heroId: String
+fun <F> Runtime<F>.onNewsItemClick(
+    ctx: Context,
+    title: String
 ): Kind<F, Unit> =
-  goToHeroDetailsPage(ctx, heroId)
+    goToNewsItemDetail(ctx, title)
 
 private fun displayErrors(
-  view: SuperHeroesView,
-  t: Throwable
+    view: NewsView,
+    t: Throwable
 ): Unit {
-  when (CharacterError.fromThrowable(t)) {
-    is CharacterError.NotFoundError -> view.showNotFoundError()
-    is CharacterError.UnknownServerError -> view.showGenericError()
-    is CharacterError.AuthenticationError -> view.showAuthenticationError()
-  }
+    when (DomainError.fromThrowable(t)) {
+        is DomainError.NotFoundError -> view.showNotFoundError()
+        is DomainError.UnknownServerError -> view.showGenericError()
+        is DomainError.AuthenticationError -> view.showAuthenticationError()
+    }
 }
 
-fun <F> Runtime<F>.getAllHeroes(view: SuperHeroesListView): Kind<F, Unit> = fx.concurrent {
-  !effect { view.showLoading() }
-  val maybeHeroes = !getHeroes().attempt()
-  !effect { view.hideLoading() }
-  !effect {
-    maybeHeroes.fold(
-      ifLeft = { displayErrors(view, it) },
-      ifRight = { view.drawHeroes(it.map { heroDto -> heroDto.toViewState() }) }
-    )
-  }
+fun <F> Runtime<F>.getAllNews(view: NewsListView): Kind<F, Unit> = fx.concurrent {
+    !effect { view.showLoading() }
+    val maybeNews = !getNews().attempt()
+    !effect { view.hideLoading() }
+    !effect {
+        maybeNews.fold(
+            ifLeft = { displayErrors(view, it) },
+            ifRight = { view.drawNews(it.map { newsItem -> newsItem.toViewState() }) }
+        )
+    }
 }
 
-fun <F> Runtime<F>.getSuperHeroDetails(
-  heroId: String,
-  view: SuperHeroDetailView
+fun <F> Runtime<F>.getNewsItemDetails(
+    title: String,
+    view: NewsItemDetailView
 ): Kind<F, Unit> = fx.concurrent {
-  !effect { view.showLoading() }
-  val maybeHero = !getHeroDetails(heroId).attempt()
-  !effect { view.hideLoading() }
-  !effect {
-    maybeHero.fold(
-      ifLeft = { displayErrors(view, it) },
-      ifRight = { heroDto -> view.drawHero(heroDto.toViewState()) }
-    )
-  }
+    !effect { view.showLoading() }
+    val maybeNewsItem = !getNewsItemDetails(title).attempt()
+    !effect { view.hideLoading() }
+    !effect {
+        maybeNewsItem.fold(
+            ifLeft = { displayErrors(view, it) },
+            ifRight = { newsItem -> view.drawNewsItem(newsItem.toViewState()) }
+        )
+    }
 }
 
-fun CharacterDto.toViewState() = HeroViewState(
-  id,
-  name,
-  thumbnail.getImageUrl(PORTRAIT_UNCANNY),
-  description
+fun NewsItem.toViewState() = NewsItemViewState(
+    title = title,
+    author = author,
+    photoUrl = urlToImage,
+    publishedAt = publishedAt,
+    description = description,
+    content = content
 )

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#d32f2f</color>
-    <color name="colorPrimaryDark">#c62828</color>
-    <color name="colorAccent">#2fd3d3</color>
+    <color name="colorPrimary">#00897B</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorAccent">#D81B60</color>
     <color name="blockingLoaderBg">#CC000000</color>
+    <color name="white">#ffffff</color>
 </resources>

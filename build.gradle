@@ -8,7 +8,8 @@ buildscript {
   ext.recyclerViewVersion = '1.1.0-rc01'
   ext.materialVersion = '1.2.0-alpha01'
   ext.cardViewVersion = '1.0.0'
-  ext.marvelApiClientVersion = '1.0.1'
+  ext.retrofitVersion = '2.6.2'
+  ext.moshiVersion = '1.8.0'
   ext.build_tools_version = '28.0.3'
   ext.compileVersion = 28
   ext.appId = "com.github.jorgecastillo.kotlinandroid"
@@ -21,8 +22,8 @@ buildscript {
   repositories {
     google()
     maven { url "http://dl.bintray.com/kategory/maven" }
+    maven { url = uri("https://dl.bintray.com/47deg/helios") }
     jcenter()
-    maven { url 'https://oss.jfrog.org/oss-snapshot-local/' }
   }
 
   dependencies {

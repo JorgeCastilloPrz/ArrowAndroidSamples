@@ -9,7 +9,7 @@
     <dimen name="spacing_xsmall">2dp</dimen>
 
     <dimen name="tab_layout_height">48dp</dimen>
-    <dimen name="card_height">200dp</dimen>
+    <dimen name="post_image_height">200dp</dimen>
     <dimen name="progress_loader_size">72dp</dimen>
 
     <!-- Text sizes -->

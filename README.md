@@ -10,7 +10,7 @@ Functional Programing Android architecture approaches using [Arrow](http://arrow
 
 # How to import it
 
-The library being used here to fetch super heroes is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid) 
+The library being used here to fetch super newsItems is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid)
 from [Karumi](https://github.com/Karumi). Since it's targeting the real [Marvel API](https://developer.marvel.com/), 
 you will need to add `marvelPublicKey=your_public_key` and `marvelPrivateKey=your_private_key` to 
 your home `gradle.properties` to be able to compile or run it. You can also add them by command line: 
@@ -27,7 +27,7 @@ Once you're at the "edge of the world" to run your program, you'll pass a proper
 
 Attributions
 ------------
-The library being used here to fetch super heroes is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid) 
+The library being used here to fetch super newsItems is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid)
 from [Karumi](https://github.com/Karumi).
 
 Developed By
