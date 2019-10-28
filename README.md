@@ -10,12 +10,10 @@ Functional Programing Android architecture approaches using [Arrow](http://arrow
 
 # How to import it
 
-The library being used here to fetch super newsItems is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid)
-from [Karumi](https://github.com/Karumi). Since it's targeting the real [Marvel API](https://developer.marvel.com/), 
-you will need to add `marvelPublicKey=your_public_key` and `marvelPrivateKey=your_private_key` to 
-your home `gradle.properties` to be able to compile or run it. You can also add them by command line: 
+Since the project uses the [News API](https://newsapi.org/) you will need to add `newsApiKey=your_news_api_key` to
+your home `gradle.properties` to be able to compile and run it. You can also add them by command line:
 
-`./gradlew detektCheck build -PmarvelPublicKey="\"whatever\"" -PmarvelPrivateKey="\"whatever\""`
+`./gradlew detektCheck build -PnewsApiKey="\"whatever\""`
 
 # Approach used
 
