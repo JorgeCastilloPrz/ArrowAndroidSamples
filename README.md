@@ -6,7 +6,7 @@ Arrow Android Samples
 
 <img height="100" src="https://avatars2.githubusercontent.com/u/29458023?v=4&amp;s=200" width="100">
 
-Functional Programing Android architecture approaches using [Arrow](http://arrow-kt.io/)
+Functional Programing Android architecture approaches using [Arrow](http://arrow-kt.io/).
 
 # How to import it
 
@@ -17,21 +17,13 @@ your home `gradle.properties` to be able to compile or run it. You can also add 
 
 `./gradlew detektCheck build -PmarvelPublicKey="\"whatever\"" -PmarvelPrivateKey="\"whatever\""`
 
-# Main framework being used
-
-To achieve **functional programing** over Kotlin I am using a library that we have been working on 
-in the spanish dev community. It's called [Arrow](https://github.com/arrow-kt/arrow) and its first
-official release is around the corner!
-
-Big thanks to all the lib contributors which I am part of. [Here they are](https://github.com/arrow-kt/arrow/graphs/contributors).
-
 # Approach used
 
-This project uses the so called `Tagless-Final` style. Tagless-Final is focused on never depending on concrete types like Option or Try, but use Higher Kinds to make our code depend on typeclass constrained behaviors, leaving the decision about which concrete types to use to the moment when we want to run the code, or in other words, the "Runtime".
+This project uses the so called `Tagless-Final` Functional Programming style. Tagless-Final is focused on never depending on concrete data types like Option or Try, but make the program depend on an unknown `F` type end to end instead. Then we use Type Class constraints (behaviors) that work over that `F` to encode our programs, leaving the decision about which concrete type to use (or in other words: what type fix `F` to) to the moment when we are ready to run the code, or in other words, the "Runtime".
 
 ## IO
 
-Once you're at the "edge of the world" to run your program, you'll pass a proper runtime. We're fixing the `F` type that the program remains agnostic of to be `IO`.
+Once you're at the "edge of the world" to run your program, you'll pass a proper runtime. In this sample we are fixing the `F` type that the program remains agnostic of to be `IO`. But it could actually be any type that supports asynchrony and concurrency, since those are the only constraints we have for this program.
 
 Attributions
 ------------
