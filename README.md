@@ -37,14 +37,13 @@ Developed By
 <a href="https://twitter.com/jorgecastillopr">
   <img alt="Twitter profile" src="https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/blob/master/assets/twitter_logo.png" />
 </a>
-<a href="https://medium.com/@jorgecastillopr">
-  <img alt="Medium blog" src="https://github.com/JorgeCastilloPrz/KotlinAndroidFunctional/blob/master/assets/medium_blog_logo.png" />
-</a>
+
+For more Functional Programming content applied to Android you can [have a look at my blog](https://jorgecastillo.dev) 👍
 
 License
 -------
 
-    Copyright 2018 Jorge Castillo Pérez
+    Copyright 2019 Jorge Castillo Pérez
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
