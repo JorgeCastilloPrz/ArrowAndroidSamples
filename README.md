@@ -23,11 +23,6 @@ This project uses the so called `Tagless-Final` Functional Programming style. Ta
 
 Once you're at the "edge of the world" to run your program, you'll pass a proper runtime. In this sample we are fixing the `F` type that the program remains agnostic of to be `IO`. But it could actually be any type that supports asynchrony and concurrency, since those are the only constraints we have for this program.
 
-Attributions
-------------
-The library being used here to fetch super newsItems is the [MarvelApiClientAndroid](https://github.com/Karumi/MarvelApiClientAndroid)
-from [Karumi](https://github.com/Karumi).
-
 Developed By
 ------------
 * Jorge Castillo Pérez - <jorge.castillo.prz@gmail.com>
