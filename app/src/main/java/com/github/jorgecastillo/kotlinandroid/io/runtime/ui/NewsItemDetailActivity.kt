@@ -7,8 +7,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import arrow.fx.IO
-import arrow.fx.extensions.io.unsafeRun.runNonBlocking
-import arrow.unsafe
 import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.R.string
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.NewsItemDetailView
@@ -16,9 +14,14 @@ import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.extensions.loadImag
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.getNewsItemDetails
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.model.NewsItemViewState
 import com.github.jorgecastillo.kotlinandroid.io.runtime.application
+import com.github.jorgecastillo.kotlinandroid.io.runtime.cancellation.unsafeRunScoped
 import com.github.jorgecastillo.kotlinandroid.io.runtime.context.runtime
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.activity_detail.appBar
+import kotlinx.android.synthetic.main.activity_detail.collapsingToolbar
+import kotlinx.android.synthetic.main.activity_detail.description
+import kotlinx.android.synthetic.main.activity_detail.headerImage
+import kotlinx.android.synthetic.main.activity_detail.loader
 
 class NewsItemDetailActivity : AppCompatActivity(), NewsItemDetailView {
 
@@ -26,8 +29,8 @@ class NewsItemDetailActivity : AppCompatActivity(), NewsItemDetailView {
         const val EXTRA_NEWS_ID = "EXTRA_ID"
 
         fun launch(
-            source: Context,
-            newsId: String
+                source: Context,
+                newsId: String
         ) {
             val intent = Intent(source, NewsItemDetailActivity::class.java)
             intent.putExtra(EXTRA_NEWS_ID, newsId)
@@ -53,13 +56,9 @@ class NewsItemDetailActivity : AppCompatActivity(), NewsItemDetailView {
     }
 
     private fun loadNewsItemDetails(title: String) {
-        unsafe {
-            runNonBlocking({
-                IO.runtime(application().runtimeContext).getNewsItemDetails(
-                    title,
-                    this@NewsItemDetailActivity)
-            }, {})
-        }
+        IO.runtime(application().runtimeContext)
+                .getNewsItemDetails(title, this@NewsItemDetailActivity)
+                .unsafeRunScoped(this) {}
     }
 
     private fun closeWithError() {

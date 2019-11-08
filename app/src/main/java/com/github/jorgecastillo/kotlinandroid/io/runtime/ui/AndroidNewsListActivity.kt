@@ -5,8 +5,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import arrow.fx.IO
-import arrow.fx.extensions.io.unsafeRun.runNonBlocking
-import arrow.unsafe
 import com.github.jorgecastillo.kotlinandroid.R
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.NewsListView
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.adapter.NewsRecyclerAdapter
@@ -14,9 +12,11 @@ import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.getAllNews
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.model.NewsItemViewState
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.onNewsItemClick
 import com.github.jorgecastillo.kotlinandroid.io.runtime.application
+import com.github.jorgecastillo.kotlinandroid.io.runtime.cancellation.unsafeRunScoped
 import com.github.jorgecastillo.kotlinandroid.io.runtime.context.runtime
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.loader
+import kotlinx.android.synthetic.main.activity_main.newsList
 
 class AndroidNewsListActivity : AppCompatActivity(), NewsListView {
 
@@ -36,22 +36,16 @@ class AndroidNewsListActivity : AppCompatActivity(), NewsListView {
     }
 
     private fun onNewsItemClick() = { newsItemViewState: NewsItemViewState ->
-        unsafe {
-            runNonBlocking({
-                IO.runtime(application().runtimeContext).onNewsItemClick(
-                        this@AndroidNewsListActivity,
-                        newsItemViewState.title)
-            }, {})
-        }
+        IO.runtime(application().runtimeContext)
+                .onNewsItemClick(this@AndroidNewsListActivity, newsItemViewState.title)
+                .unsafeRunScoped(this) {}
     }
 
     override fun onResume() {
         super.onResume()
-        unsafe {
-            runNonBlocking({
-                IO.runtime(application().runtimeContext).getAllNews(this@AndroidNewsListActivity)
-            }, {})
-        }
+        IO.runtime(application().runtimeContext)
+                .getAllNews(this@AndroidNewsListActivity)
+                .unsafeRunScoped(this) {}
     }
 
     override fun showLoading() {
