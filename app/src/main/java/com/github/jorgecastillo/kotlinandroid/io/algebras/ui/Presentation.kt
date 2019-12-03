@@ -56,7 +56,7 @@ private fun displayErrors(
 
 fun <F> Runtime<F>.getAllNews(view: NewsListView): Kind<F, Unit> = fx.concurrent {
     !effect { view.showLoading() }
-    val maybeNews = !getNews().attempt()
+    val maybeNews = !(getNews().attempt())
     !effect { view.hideLoading() }
     !effect {
         maybeNews.fold(

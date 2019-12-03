@@ -10,9 +10,9 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class NewsApplication : Application() {
+open class NewsApplication : Application() {
 
-    val runtimeContext by lazy {
+    open val runtimeContext by lazy {
         RuntimeContext(
             bgDispatcher = Dispatchers.IO,
             mainDispatcher = Dispatchers.Main,
@@ -20,7 +20,7 @@ class NewsApplication : Application() {
         )
     }
 
-    private val newsService: NewsApiService by lazy {
+    protected open val newsService: NewsApiService by lazy {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://newsapi.org/v2/")
             .addConverterFactory(MoshiConverterFactory.create())

@@ -13,7 +13,8 @@ import com.github.jorgecastillo.kotlinandroid.io.runtime.context.Runtime
 import retrofit2.Response
 
 fun <F> Runtime<F>.loadNews(): Kind<F, List<NewsItem>> = fx.concurrent {
-    val response = !effect(context.bgDispatcher) { fetchNews() }
+    continueOn(context.bgDispatcher)
+    val response = !effect { fetchNews() }
     continueOn(context.mainDispatcher)
 
     if (response.isSuccessful) {

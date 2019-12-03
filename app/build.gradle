@@ -28,7 +28,7 @@ android {
     targetSdkVersion targetSdk
     versionCode version_code
     versionName version_name
-    testInstrumentationRunner testInstrumentationRunner
+    testInstrumentationRunner "com.github.jorgecastillo.kotlinandroid.io.runtime.ui.TestApplicationRunner"
     multiDexEnabled true
 
     buildConfigField "String", "NEWS_API_KEY", newsApiKey
@@ -88,7 +88,7 @@ dependencies {
   testImplementation "me.jorgecastillo:hiroaki-core:$hiroakiVersion"
   testImplementation "com.squareup.okhttp3:mockwebserver:$mockWebServerVersion"
   testImplementation "junit:junit:$junitVersion"
-  testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineTestVersion"
+  testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
   testImplementation "io.arrow-kt:arrow-core:$arrowVersion"
   testImplementation "io.arrow-kt:arrow-fx:$arrowVersion"
 
@@ -98,7 +98,10 @@ dependencies {
   androidTestImplementation "androidx.test.ext:junit-ktx:$androidxJunitVersion"
   androidTestImplementation "androidx.test:runner:$androidxTestRunnerVersion"
   androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
-  androidTestImplementation "me.jorgecastillo:hiroaki-core:$hiroakiVersion"
+  androidTestImplementation "me.jorgecastillo:hiroaki-android:$hiroakiVersion"
+  androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+  androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+  androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
   androidTestImplementation "com.squareup.okhttp3:mockwebserver:$mockWebServerVersion"
   androidTestImplementation "io.arrow-kt:arrow-core:$arrowVersion"
   androidTestImplementation "io.arrow-kt:arrow-fx:$arrowVersion"
