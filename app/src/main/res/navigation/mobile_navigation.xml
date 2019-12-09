@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/news_list_screen">
+
+    <fragment
+        android:id="@+id/news_list_screen"
+        android:name="com.github.jorgecastillo.kotlinandroid.io.runtime.ui.AndroidNewsListFragment"
+        android:label="News list"
+        tools:layout="@layout/fragment_news_list" />
+    <fragment
+        android:id="@+id/favourites_screen"
+        android:name="com.github.jorgecastillo.kotlinandroid.io.runtime.ui.FavoritesListFragment"
+        android:label="Favorites"
+        tools:layout="@layout/fragment_favorites_list" />
+
+</navigation>

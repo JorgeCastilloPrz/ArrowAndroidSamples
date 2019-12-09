@@ -9,7 +9,7 @@ import com.github.jorgecastillo.kotlinandroid.io.algebras.business.model.NewsIte
 import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.model.NewsItemViewState
 import com.github.jorgecastillo.kotlinandroid.io.runtime.context.Runtime
 
-interface NewsView {
+interface ContentView {
 
     fun showLoading(): Unit
 
@@ -22,12 +22,17 @@ interface NewsView {
     fun showAuthenticationError(): Unit
 }
 
-interface NewsListView : NewsView {
+interface NewsListView : ContentView {
 
     fun drawNews(news: List<NewsItemViewState>): Unit
 }
 
-interface NewsItemDetailView : NewsView {
+interface FavouritesListView : ContentView {
+
+    fun drawFavs(items: List<NewsItemViewState>): Unit
+}
+
+interface NewsItemDetailView : ContentView {
 
     fun drawNewsItem(newsItem: NewsItemViewState)
 }
@@ -44,7 +49,7 @@ fun <F> Runtime<F>.onNewsItemClick(
     goToNewsItemDetail(ctx, title)
 
 private fun displayErrors(
-    view: NewsView,
+    view: ContentView,
     t: Throwable
 ): Unit {
     when (DomainError.fromThrowable(t)) {

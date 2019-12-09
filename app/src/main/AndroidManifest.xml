@@ -15,16 +15,20 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="n">
+        <activity
+            android:name=".io.runtime.ui.HomeActivity"
+            android:label="Home">
 
-        <activity android:name="com.github.jorgecastillo.kotlinandroid.io.runtime.ui.AndroidNewsListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.github.jorgecastillo.kotlinandroid.io.runtime.ui.NewsItemDetailActivity"
+            android:name=".io.runtime.ui.NewsItemDetailActivity"
             android:theme="@style/NoActionBar" />
     </application>
+
 </manifest>

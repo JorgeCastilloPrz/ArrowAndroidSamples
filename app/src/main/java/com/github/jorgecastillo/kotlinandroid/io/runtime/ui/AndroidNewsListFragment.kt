@@ -1,8 +1,12 @@
 package com.github.jorgecastillo.kotlinandroid.io.runtime.ui
 
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import arrow.fx.IO
 import arrow.fx.extensions.io.unsafeRun.runNonBlocking
@@ -16,30 +20,37 @@ import com.github.jorgecastillo.kotlinandroid.io.algebras.ui.onNewsItemClick
 import com.github.jorgecastillo.kotlinandroid.io.runtime.application
 import com.github.jorgecastillo.kotlinandroid.io.runtime.context.runtime
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_news_list.*
 
-class AndroidNewsListActivity : AppCompatActivity(), NewsListView {
+class AndroidNewsListFragment : Fragment(), NewsListView {
 
     private lateinit var adapter: NewsRecyclerAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is AppCompatActivity) context.setTitle(R.string.title_news_list)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_news_list, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupList()
     }
 
     private fun setupList() {
         newsList.setHasFixedSize(true)
-        newsList.layoutManager = LinearLayoutManager(this)
-        adapter = NewsRecyclerAdapter(itemClick = onNewsItemClick())
+        newsList.layoutManager = LinearLayoutManager(requireContext())
+        adapter = NewsRecyclerAdapter(itemClick = ::onNewsItemClick)
         newsList.adapter = adapter
     }
 
-    private fun onNewsItemClick() = { newsItemViewState: NewsItemViewState ->
+    private fun onNewsItemClick(newsItemViewState: NewsItemViewState): Unit {
         unsafe {
             runNonBlocking({
                 IO.runtime(application().runtimeContext).onNewsItemClick(
-                        this@AndroidNewsListActivity,
+                        requireContext(),
                         newsItemViewState.title)
             }, {})
         }
@@ -49,7 +60,7 @@ class AndroidNewsListActivity : AppCompatActivity(), NewsListView {
         super.onResume()
         unsafe {
             runNonBlocking({
-                IO.runtime(application().runtimeContext).getAllNews(this@AndroidNewsListActivity)
+                IO.runtime(application().runtimeContext).getAllNews(this@AndroidNewsListFragment)
             }, {})
         }
     }

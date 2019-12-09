@@ -2,6 +2,7 @@ package com.github.jorgecastillo.kotlinandroid.io.runtime
 
 import android.app.Application
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.github.jorgecastillo.kotlinandroid.io.algebras.data.network.NewsApiService
 import com.github.jorgecastillo.kotlinandroid.io.algebras.data.network.NewsAuthInterceptor
 import com.github.jorgecastillo.kotlinandroid.io.runtime.context.RuntimeContext
@@ -38,3 +39,4 @@ class NewsApplication : Application() {
 }
 
 fun Context.application(): NewsApplication = applicationContext as NewsApplication
+fun Fragment.application(): NewsApplication = requireContext().application()

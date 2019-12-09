@@ -4,4 +4,6 @@
     <string name="empty_description">No description available for this newsItem. Sorry!</string>
     <string name="description_placeholder">Some random description would go here. It should be brief given it\'s just a preview and you\'re expected to click on it to read the article in depth.</string>
     <string name="title_placeholder">Some title placeholder</string>
+    <string name="title_news_list">News</string>
+    <string name="title_favorites_list">Favorites</string>
 </resources>

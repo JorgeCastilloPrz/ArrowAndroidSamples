@@ -81,6 +81,12 @@ dependencies {
   implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
   implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
 
+  implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:4.2.0'
+
+  implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+  implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
+  implementation "io.reactivex.rxjava2:rxjava:2.2.14"
+
   kapt "io.arrow-kt:arrow-meta:$arrowVersion"
   implementation "io.arrow-kt:arrow-core:$arrowVersion"
   implementation "io.arrow-kt:arrow-fx:$arrowVersion"
