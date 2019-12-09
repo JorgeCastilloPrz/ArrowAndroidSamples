@@ -11,12 +11,13 @@ buildscript {
   }
 }
 
-apply plugin: 'kotlin-kapt'
 apply from: rootProject.file('gradle/generated-kotlin-sources.gradle')
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.gitlab.arturbosch.detekt'
+apply plugin: 'androidx.navigation.safeargs'
 
 android {
   compileSdkVersion compileVersion
@@ -42,8 +43,12 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  kotlinOptions {
+    jvmTarget = "1.8"
   }
 
   lintOptions {
@@ -59,7 +64,6 @@ detekt {
   output = "$project.projectDir.absolutePath/reports/"
   report = "$project.projectDir.absolutePath/reports/"
 }
-
 dependencies {
   implementation "androidx.appcompat:appcompat:$appCompatVersion"
   implementation "androidx.cardview:cardview:$cardViewVersion"
@@ -74,6 +78,8 @@ dependencies {
   implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
   implementation "com.squareup.moshi:moshi:$moshiVersion"
   implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
+  implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
+  implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
 
   kapt "io.arrow-kt:arrow-meta:$arrowVersion"
   implementation "io.arrow-kt:arrow-core:$arrowVersion"
